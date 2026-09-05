@@ -1,5 +1,7 @@
 ---
 title: "Sobre o REALMAT"
+kicker: "O projeto"
+description: "Uma biblioteca aberta para reunir, traduzir e compartilhar matemática."
 permalink: /sobre/
 ---
 

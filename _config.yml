@@ -1,5 +1,5 @@
 title: "REALMAT"
-subtitle: "Recursos Educacionais Abertos de Matemática"
+subtitle: "Biblioteca aberta de matemática"
 name: "REALMAT"
 description: "Recursos Educacionais Abertos de Matemática para ensino, estudo e tradução."
 url: "https://projetorealmat.github.io"
@@ -11,7 +11,7 @@ remote_theme: "mmistakes/minimal-mistakes@4.28.1"
 minimal_mistakes_skin: "air"
 
 search: true
-breadcrumbs: true
+breadcrumbs: false
 read_time: false
 words_per_minute: 200
 show_date: false
@@ -28,6 +28,9 @@ include:
 
 plugins:
   - jekyll-include-cache
+
+after_footer_scripts:
+  - assets/js/realmat.js
 
 author:
   name: "REALMAT"

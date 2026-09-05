@@ -1,6 +1,12 @@
 ---
 title: "Como contribuir"
+kicker: "Participar"
+description: "Veja como colaborar com uma tradução, uma revisão ou um novo recurso."
 permalink: /contribuir/
+toc: true
+toc_sticky: true
+share: true
+link: "https://github.com/projetorealmat"
 ---
 
 O REALMAT é construído de forma colaborativa. Você pode ajudar a melhorar uma tradução, revisar um trecho, apontar um erro ou sugerir um novo recurso.
