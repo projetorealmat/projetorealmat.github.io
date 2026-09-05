@@ -7,17 +7,35 @@
   var panel = document.getElementById("realmat-menu-panel");
   var navigation = document.getElementById("site-nav");
   var searchToggle = document.getElementById("realmat-search-toggle");
+  var searchPanel = document.getElementById("search-content");
 
-  function setSearchState() {
+  function syncSearchState() {
     if (!searchToggle) {
       return;
     }
-    var isExpanded = searchToggle.getAttribute("aria-expanded") === "true";
-    searchToggle.setAttribute("aria-expanded", String(!isExpanded));
+
+    var isOpen = Boolean(searchPanel && (
+      searchPanel.classList.contains("is--visible") ||
+      searchPanel.classList.contains("is-open")
+    ));
+    searchToggle.setAttribute("aria-expanded", String(isOpen));
   }
 
-  if (searchToggle) {
-    searchToggle.addEventListener("click", setSearchState);
+  if (searchPanel) {
+    syncSearchState();
+
+    if (window.MutationObserver) {
+      new MutationObserver(syncSearchState).observe(searchPanel, {
+        attributes: true,
+        attributeFilter: ["class"]
+      });
+    }
+
+    if (searchToggle) {
+      searchToggle.addEventListener("click", function () {
+        window.setTimeout(syncSearchState, 0);
+      });
+    }
   }
 
   if (!toggle || !panel || !navigation) {
@@ -25,10 +43,14 @@
   }
 
   function closeMenu(restoreFocus) {
+    var wasOpen = toggle.getAttribute("aria-expanded") === "true";
+    var focusInMenu = panel.contains(document.activeElement);
+
     toggle.setAttribute("aria-expanded", "false");
     panel.classList.remove("is-open");
     document.body.classList.remove("realmat-menu-open");
-    if (restoreFocus) {
+
+    if (restoreFocus && wasOpen && focusInMenu) {
       toggle.focus();
     }
   }
@@ -49,6 +71,7 @@
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape") {
       closeMenu(true);
+      syncSearchState();
     }
   });
 

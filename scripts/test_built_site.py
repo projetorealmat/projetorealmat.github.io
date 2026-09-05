@@ -21,8 +21,22 @@ EXPECTED_PAGES = {
         "https://github.com/projetorealmat/forallx",
     ),
     "sobre/index.html": ("realmat-page", "Uma biblioteca aberta de matemática"),
-    "contribuir/index.html": ("realmat-page", "Fluxo de colaboração"),
-    "atualizacoes/index.html": ("realmat-page", "Estrutura inicial do portal"),
+    "contribuir/index.html": (
+        "realmat-page",
+        "Fluxo de colaboração",
+        'class="toc"',
+        'class="page__share"',
+        'class="page__meta realmat-page__meta"',
+        'class="realmat-button realmat-button--solid"',
+        "https://github.com/projetorealmat",
+    ),
+    "atualizacoes/index.html": (
+        "realmat-page",
+        "Estrutura inicial do portal",
+        "realmat-page__container--with-sidebar",
+        'class="sidebar"',
+        'class="page__meta realmat-page__meta"',
+    ),
 }
 
 REQUIRED_ASSETS = (

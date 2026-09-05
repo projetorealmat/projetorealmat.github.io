@@ -3,6 +3,9 @@ title: "Atualizações"
 kicker: "Acompanhar"
 description: "Acompanhe a organização do portal e a chegada de novos projetos."
 permalink: /atualizacoes/
+sidebar:
+  - title: "Acompanhar"
+    text: "Novos livros, versões e informações aparecem aqui conforme os projetos avançam."
 ---
 
 ## Estrutura inicial do portal

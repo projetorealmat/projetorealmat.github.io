@@ -122,6 +122,56 @@ input:focus-visible {
   padding: 0;
 }
 
+.realmat-page__container {
+  display: grid;
+  grid-template-columns: minmax(0, 850px);
+  width: min(100% - 3rem, 1180px);
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.realmat-page__container--with-sidebar {
+  grid-template-columns: minmax(180px, 240px) minmax(0, 850px);
+  gap: clamp(2rem, 4vw, 4rem);
+  justify-content: stretch;
+}
+
+.realmat-page__container > .realmat-page {
+  grid-column: 1;
+  min-width: 0;
+}
+
+.realmat-page__container--with-sidebar > .realmat-page {
+  grid-column: 2;
+}
+
+.realmat-page__container .sidebar {
+  grid-column: 1;
+  grid-row: 1;
+  float: none;
+  width: auto;
+  max-height: calc(100vh - 7rem);
+  margin: clamp(3.5rem, 8vw, 6rem) 0 0;
+  overflow-y: auto;
+  opacity: 1;
+}
+
+.realmat-page__container > .page__related {
+  grid-column: 1;
+  min-width: 0;
+  float: none;
+  width: auto;
+  padding: 0;
+}
+
+.realmat-page__container--with-sidebar > .page__related {
+  grid-column: 2;
+}
+
+.realmat-page__container .page__related a {
+  color: inherit;
+}
+
 .realmat-kicker {
   margin-bottom: 0.9rem;
   color: var(--realmat-orange-dark);
@@ -778,12 +828,14 @@ input:focus-visible {
 }
 
 .realmat-page__body {
+  position: relative;
   width: min(100% - 3rem, 850px);
   margin: 0 auto;
   padding: clamp(3rem, 6vw, 5.6rem) 0 6rem;
 }
 
 .realmat-page__body .page__content {
+  position: relative;
   color: #3f474c;
   font-family: var(--realmat-serif);
   font-size: 1.12rem;
@@ -806,7 +858,7 @@ input:focus-visible {
   font-size: clamp(1.55rem, 2.8vw, 2.2rem);
 }
 
-.realmat-page__body .page__content a {
+.realmat-page__body .page__content a:not(.realmat-button) {
   color: var(--realmat-orange-dark);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
@@ -1022,6 +1074,30 @@ input:focus-visible {
 }
 
 @media (max-width: 900px) {
+  .realmat-page__container,
+  .realmat-page__container--with-sidebar {
+    grid-template-columns: minmax(0, 1fr);
+    width: min(100% - 3rem, 850px);
+    gap: 2.5rem;
+    justify-content: stretch;
+  }
+
+  .realmat-page__container > .realmat-page,
+  .realmat-page__container > .sidebar,
+  .realmat-page__container > .page__related,
+  .realmat-page__container--with-sidebar > .realmat-page,
+  .realmat-page__container--with-sidebar > .sidebar,
+  .realmat-page__container--with-sidebar > .page__related {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .realmat-page__container .sidebar {
+    max-height: none;
+    margin-top: 2rem;
+    overflow: visible;
+  }
+
   .realmat-masthead__inner {
     width: min(100% - 2.2rem, 1180px);
   }
@@ -1260,6 +1336,16 @@ input:focus-visible {
 
   .realmat-page__header {
     padding: 4rem 1rem 3rem;
+  }
+
+  .realmat-page__container,
+  .realmat-page__container--with-sidebar {
+    width: min(100% - 2rem, 850px);
+    gap: 2rem;
+  }
+
+  .realmat-page__container .sidebar {
+    margin-top: 1.5rem;
   }
 
   .realmat-page__body {

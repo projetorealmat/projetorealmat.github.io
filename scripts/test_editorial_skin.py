@@ -37,6 +37,9 @@ CHECKS = {
     "_layouts/single.html": (
         "realmat-page",
         "page__content",
+        "realmat-page__container--with-sidebar",
+        'class="page__meta realmat-page__meta"',
+        "page_description",
         "page__taxonomy.html",
         "page__date.html",
         "page__related.html",
@@ -52,6 +55,8 @@ CHECKS = {
         "--realmat-orange-dark: #a94a05",
         ".realmat-hero",
         ".realmat-layout .page__footer footer",
+        ".realmat-page__container--with-sidebar",
+        ".realmat-page__body .page__content a:not(.realmat-button)",
         ".realmat-menu-js .realmat-nav-links",
         "@media (max-width: 760px)",
     ),
@@ -59,11 +64,15 @@ CHECKS = {
         "data-menu-toggle",
         "aria-expanded",
         "is-open",
+        "MutationObserver",
+        "is--visible",
+        "panel.contains(document.activeElement)",
         "toggle.focus()",
     ),
     ".github/workflows/pages.yml": (
         "url: $" "{{ steps.deployment.outputs.page_url }}",
         "scripts/test_built_site.py ./_site",
+        "Verificar o site gerado",
     ),
 }
 
