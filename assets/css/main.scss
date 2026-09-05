@@ -29,6 +29,10 @@ html {
   scroll-behavior: smooth;
 }
 
+:where([id]) {
+  scroll-margin-top: 6rem;
+}
+
 body {
   margin: 0;
   background: var(--realmat-paper);
@@ -868,6 +872,101 @@ input:focus-visible {
   margin-bottom: 0.5rem;
 }
 
+
+.realmat-wayfinding {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--realmat-line);
+  border-bottom: 1px solid var(--realmat-line);
+}
+
+.realmat-wayfinding__card {
+  min-height: 230px;
+  padding: 1.65rem 1.5rem 1.7rem 0;
+}
+
+.realmat-wayfinding__card + .realmat-wayfinding__card {
+  padding-left: 1.5rem;
+  border-left: 1px solid var(--realmat-line);
+}
+
+.realmat-wayfinding__card h3 {
+  max-width: 14ch;
+  margin: 0 0 0.85rem;
+  font-size: clamp(1.6rem, 2.8vw, 2.45rem);
+}
+
+.realmat-wayfinding__card p {
+  max-width: 28rem;
+  color: var(--realmat-muted);
+  font-family: var(--realmat-serif);
+  font-size: 1.08rem;
+  line-height: 1.6;
+}
+
+.realmat-contribution-list {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.realmat-contribution-card {
+  padding: 1.6rem;
+  border-top: 4px solid var(--realmat-ink);
+  border-bottom: 1px solid var(--realmat-line);
+  background: var(--realmat-paper-deep);
+}
+
+.realmat-contribution-card h3 {
+  margin-top: 0;
+}
+
+.realmat-contribution-card > p:not(.realmat-kicker) {
+  max-width: 38rem;
+}
+
+.realmat-contribution-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-top: 1.4rem;
+}
+
+.realmat-update-list {
+  margin-top: 1.5rem;
+  border-top: 4px solid var(--realmat-ink);
+}
+
+.realmat-update {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.42fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--realmat-line);
+}
+
+.realmat-update__header h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 3.2vw, 3rem);
+}
+
+.realmat-update__body p {
+  max-width: 38rem;
+  color: var(--realmat-muted);
+  font-family: var(--realmat-serif);
+  font-size: 1.08rem;
+  line-height: 1.65;
+}
+
+.realmat-page-intro {
+  max-width: 49rem;
+  color: var(--realmat-muted);
+  font-family: var(--realmat-serif);
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
 .realmat-catalog__intro {
   max-width: 49rem;
   margin-bottom: 3rem;
@@ -964,7 +1063,7 @@ input:focus-visible {
 
 .realmat-footer__grid {
   display: grid;
-  grid-template-columns: 1.6fr 0.75fr 0.9fr;
+  grid-template-columns: 1.6fr repeat(3, minmax(0, 0.75fr));
   gap: 4rem;
   padding-bottom: 4.5rem;
 }
@@ -1455,6 +1554,37 @@ input:focus-visible {
   .search-content__inner-wrap {
     width: min(100% - 2rem, 1180px);
   }
+}
+
+@media (max-width: 760px) {
+
+  .realmat-wayfinding {
+    grid-template-columns: 1fr;
+  }
+
+  .realmat-wayfinding__card,
+  .realmat-wayfinding__card + .realmat-wayfinding__card {
+    min-height: 0;
+    padding: 1.35rem 0 1.6rem;
+    border-left: 0;
+    border-bottom: 1px solid var(--realmat-line);
+  }
+
+  .realmat-wayfinding__card:last-child {
+    border-bottom: 0;
+  }
+
+  .realmat-contribution-links {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .realmat-update {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 1.6rem 0;
+  }
+
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -15,19 +15,22 @@
       <div id="realmat-menu-panel" class="realmat-nav-links">
         <div class="realmat-nav-links__primary">
           {%- for link in site.data.navigation.main -%}
-            <a class="realmat-nav-link{% if page.url == link.url %} is-active{% endif %}" href="{{ link.url | relative_url }}"{% if page.url == link.url %} aria-current="page"{% endif %}{% if link.description %} title="{{ link.description }}"{% endif %}>{{ link.title }}</a>
+            {% assign link_is_active = false %}
+            {% if page.url == link.url %}
+              {% assign link_is_active = true %}
+            {% elsif link.url == '/livros/' and page.url contains '/livros/' %}
+              {% assign link_is_active = true %}
+            {% endif %}
+            <a class="realmat-nav-link{% if link_is_active %} is-active{% endif %}" href="{{ link.url | relative_url }}"{% if link_is_active %} aria-current="page"{% endif %}{% if link.description %} title="{{ link.description }}"{% endif %}>{{ link.title }}</a>
           {%- endfor -%}
         </div>
 
         <div class="realmat-nav-actions">
           {% if site.search == true %}
-            <button id="realmat-search-toggle" class="realmat-icon-button search__toggle" type="button" aria-label="Busca" aria-expanded="false" aria-controls="search-content">
+            <button id="realmat-search-toggle" class="realmat-icon-button search__toggle" type="button" aria-label="Buscar no portal" aria-expanded="false" aria-controls="search-content">
               <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.6"></circle><path d="m16 16 5 5"></path></svg>
             </button>
           {% endif %}
-          <a class="realmat-icon-button" href="https://github.com/projetorealmat" aria-label="REALMAT no GitHub">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a9.5 9.5 0 0 0-3 18.52c.48.09.66-.21.66-.46v-1.78c-2.7.59-3.27-1.15-3.27-1.15-.43-1.1-1.05-1.39-1.05-1.39-.88-.6.07-.59.07-.59.97.07 1.48 1 1.48 1 .87 1.48 2.28 1.05 2.84.8.09-.62.34-1.05.62-1.29-2.16-.25-4.43-1.08-4.43-4.8 0-1.06.38-1.93 1-2.61-.1-.25-.43-1.24.1-2.58 0 0 .82-.26 2.68 1a9.3 9.3 0 0 1 4.88 0c1.86-1.26 2.68-1 2.68-1 .53 1.34.2 2.33.1 2.58.62.68 1 1.55 1 2.61 0 3.73-2.27 4.55-4.44 4.79.35.3.66.89.66 1.8v2.67c0 .25.18.55.67.45A9.5 9.5 0 0 0 12 2.5Z"></path></svg>
-          </a>
         </div>
       </div>
     </nav>

@@ -1,18 +1,18 @@
 ---
-title: "Livros e traduções"
-kicker: "Catálogo"
-description: "Conheça os livros e projetos de tradução reunidos pelo REALMAT."
+title: "Livros"
+kicker: "Biblioteca"
+description: "Leia no portal as obras e traduções reunidas pelo REALMAT."
 permalink: /livros/
 ---
 
-<section class="realmat-catalog" id="traducoes">
+<section class="realmat-catalog" id="livros">
   <div class="realmat-catalog__intro">
-    <p>O catálogo cresce junto com os projetos. Cada obra possui um repositório próprio, onde ficam seu desenvolvimento, seus arquivos-fonte e suas versões.</p>
+    <p>Cada obra pode ser lida diretamente no portal. A página de cada livro informa o estado da tradução e oferece a edição disponível para leitura ou download.</p>
   </div>
 
   <div class="realmat-book-grid">
     <article class="realmat-book-card">
-      <a class="realmat-book-card__cover realmat-cover realmat-cover--forallx" href="{{ '/livros/forallx/' | relative_url }}" rel="noopener noreferrer" aria-label="Abrir a página de forallx">
+      <a class="realmat-book-card__cover realmat-cover realmat-cover--forallx" href="{{ '/livros/forallx/' | relative_url }}" aria-label="Ler forallx: Lógica">
         <span class="realmat-cover__number">01</span>
         <span class="realmat-cover__name">forallx</span>
         <span class="realmat-cover__subject">lógica</span>
@@ -20,19 +20,19 @@ permalink: /livros/
         <span class="realmat-cover__footer">tradução em português</span>
       </a>
       <div class="realmat-book-card__body">
-        <p class="realmat-kicker">Lógica · projeto de tradução</p>
-        <h2>forallx</h2>
-        <p>Projeto de tradução e organização do livro de lógica, com arquivos-fonte e desenvolvimento acompanhados no GitHub.</p>
+        <p class="realmat-kicker">Lógica · tradução</p>
+        <h2>forallx: Lógica</h2>
+        <p>Uma introdução à lógica formal, em tradução e adaptação brasileira. A edição atual está em revisão editorial.</p>
         <div class="realmat-book-card__meta">
           <span class="realmat-status">Em revisão editorial</span>
-          <a class="realmat-text-link" href="{{ '/livros/forallx/' | relative_url }}">Ler o livro <span aria-hidden="true">↗</span></a>
+          <a class="realmat-text-link" href="{{ '/livros/forallx/' | relative_url }}">Ler no portal <span aria-hidden="true">↗</span></a>
         </div>
       </div>
     </article>
   </div>
 
   <div class="realmat-catalog-note">
-    <span class="realmat-kicker">Próximos projetos</span>
-    <p>Novas obras serão incluídas quando seus repositórios e materiais estiverem preparados para apresentação.</p>
+    <span class="realmat-kicker">Novas obras</span>
+    <p>Outros livros serão acrescentados ao catálogo quando houver uma edição preparada para leitura.</p>
   </div>
 </section>
