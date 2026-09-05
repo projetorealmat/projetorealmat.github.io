@@ -7,66 +7,63 @@ permalink: /livros/forallx/
 classes: wide
 ---
 
-<section class="realmat-featured" aria-labelledby="forallx-detail-title">
-  <a class="realmat-cover realmat-cover--forallx" href="https://github.com/projetorealmat/forallx" rel="noopener noreferrer" aria-label="Abrir o repositório de forallx">
-    <span class="realmat-cover__number">01</span>
-    <span class="realmat-cover__name">forallx</span>
-    <span class="realmat-cover__subject">lógica</span>
-    <span class="realmat-cover__formula" aria-hidden="true">p → q</span>
-    <span class="realmat-cover__footer">tradução em português</span>
-  </a>
-
-  <div class="realmat-featured__copy">
-    <p class="realmat-kicker">Estado do projeto</p>
-    <h2 id="forallx-detail-title">Uma edição brasileira em revisão.</h2>
-    <p>O projeto reúne a tradução e a adaptação brasileira de <em>forall x: An Introduction to Formal Logic</em>, de P. D. Magnus, baseada na edição mantida pelo <a href="https://github.com/OpenLogicProject/forallx" rel="noopener noreferrer">Open Logic Project</a>.</p>
-    <p class="realmat-meta">Livro · tradução · código aberto</p>
+<section class="realmat-book-reader" aria-labelledby="forallx-reader-title">
+  <div class="realmat-book-reader__intro">
+    <p class="realmat-kicker">Leitura</p>
+    <h2 id="forallx-reader-title">Leia a edição atual no portal.</h2>
+    <p>O PDF abaixo é gerado a partir da edição em revisão e pode ser lido diretamente nesta página ou baixado para consulta offline.</p>
     <div class="realmat-actions">
-      <a class="realmat-button realmat-button--solid" href="https://github.com/projetorealmat/forallx" rel="noopener noreferrer">Abrir repositório</a>
-      <a class="realmat-text-link" href="https://github.com/projetorealmat/forallx/blob/main/forallx.tex" rel="noopener noreferrer">Ver fonte LaTeX <span aria-hidden="true">↗</span></a>
+      <a class="realmat-button realmat-button--solid" href="{{ '/assets/books/forallx.pdf' | relative_url }}">Ler o livro</a>
+      <a class="realmat-text-link" href="{{ '/assets/books/forallx.pdf' | relative_url }}" download>Baixar PDF <span aria-hidden="true">↗</span></a>
     </div>
   </div>
+
+  <div class="realmat-book-reader__frame">
+    <iframe src="{{ '/assets/books/forallx.pdf' | relative_url }}" title="Leitura do PDF de forallx: Lógica" loading="lazy"></iframe>
+  </div>
+
+  <p class="realmat-book-reader__fallback">Se o leitor não aparecer no seu navegador, <a href="{{ '/assets/books/forallx.pdf' | relative_url }}">abra o PDF em uma nova aba</a>.</p>
 </section>
 
 <section class="realmat-resource-section" aria-labelledby="forallx-resources-title">
   <div class="realmat-section-heading">
     <div>
-      <p class="realmat-kicker">Dentro do projeto</p>
-      <h2 id="forallx-resources-title">Fonte, processo e versões.</h2>
+      <p class="realmat-kicker">Sobre esta edição</p>
+      <h2 id="forallx-resources-title">Fonte, estado e continuidade.</h2>
     </div>
   </div>
 
   <div class="realmat-resource-grid">
     <article class="realmat-resource-card">
       <span class="realmat-resource-card__index">01</span>
-      <h3>Fonte LaTeX</h3>
-      <p>Os arquivos-fonte da edição ficam disponíveis para leitura, revisão e colaboração.</p>
-      <a class="realmat-text-link" href="https://github.com/projetorealmat/forallx/blob/main/forallx.tex" rel="noopener noreferrer">Abrir fonte <span aria-hidden="true">↗</span></a>
+      <h3>Edição atual</h3>
+      <p>A tradução e adaptação brasileira está em revisão editorial e será atualizada conforme o trabalho avançar.</p>
+      <a class="realmat-text-link" href="{{ '/atualizacoes/' | relative_url }}">Acompanhar atualizações <span aria-hidden="true">↗</span></a>
     </article>
 
     <article class="realmat-resource-card">
       <span class="realmat-resource-card__index">02</span>
-      <h3>Revisão editorial</h3>
-      <p>Correções e sugestões podem ser acompanhadas publicamente no histórico e nas discussões.</p>
-      <a class="realmat-text-link" href="https://github.com/projetorealmat/forallx/issues" rel="noopener noreferrer">Acompanhar issues <span aria-hidden="true">↗</span></a>
+      <h3>Sobre a obra</h3>
+      <p>O livro é uma introdução à lógica formal, baseada na edição de P. D. Magnus mantida pelo Open Logic Project.</p>
+      <span class="realmat-meta">P. D. Magnus · lógica formal</span>
     </article>
 
     <article class="realmat-resource-card">
       <span class="realmat-resource-card__index">03</span>
-      <h3>Compilação</h3>
-      <p>O workflow do projeto testa a compilação do PDF a cada alteração na branch principal.</p>
-      <a class="realmat-text-link" href="https://github.com/projetorealmat/forallx/actions" rel="noopener noreferrer">Ver Actions <span aria-hidden="true">↗</span></a>
+      <h3>Participação</h3>
+      <p>Correções, sugestões e discussões sobre a tradução estão reunidas na área própria de colaboração.</p>
+      <a class="realmat-text-link" href="{{ '/contribuir/' | relative_url }}">Como contribuir <span aria-hidden="true">↗</span></a>
     </article>
   </div>
 </section>
 
 <section class="realmat-statement" aria-labelledby="forallx-contribute-title">
   <div>
-    <p class="realmat-kicker">Construção coletiva</p>
-    <h2 id="forallx-contribute-title">Uma tradução que permanece aberta.</h2>
+    <p class="realmat-kicker">Acesso aberto</p>
+    <h2 id="forallx-contribute-title">O livro para quem quer estudar.</h2>
   </div>
   <div>
-    <p>A edição está em revisão editorial. Para consultar o trabalho atual, sugerir uma correção ou acompanhar futuras versões, visite o repositório do projeto.</p>
-    <a class="realmat-button realmat-button--light" href="https://github.com/projetorealmat/forallx" rel="noopener noreferrer">Contribuir no GitHub</a>
+    <p>O portal apresenta a edição para leitura. O desenvolvimento editorial, as fontes e as discussões ficam disponíveis para quem quiser participar.</p>
+    <a class="realmat-button realmat-button--light" href="{{ '/contribuir/' | relative_url }}">Área de contribuição</a>
   </div>
 </section>

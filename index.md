@@ -52,7 +52,7 @@ permalink: /
         <h2 id="realmat-featured-title">forallx: Lógica</h2>
         <p>Uma tradução em desenvolvimento, organizada em um repositório próprio para preservar os arquivos-fonte, as revisões e as versões publicadas.</p>
         <p class="realmat-meta">Livro · tradução · código aberto</p>
-        <a class="realmat-text-link" href="{{ '/livros/forallx/' | relative_url }}" rel="noopener noreferrer">Ver projeto <span aria-hidden="true">↗</span></a>
+        <a class="realmat-text-link" href="{{ '/livros/forallx/' | relative_url }}" rel="noopener noreferrer">Ler o livro <span aria-hidden="true">↗</span></a>
       </div>
     </article>
 

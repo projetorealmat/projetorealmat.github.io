@@ -25,7 +25,7 @@ permalink: /livros/
         <p>Projeto de tradução e organização do livro de lógica, com arquivos-fonte e desenvolvimento acompanhados no GitHub.</p>
         <div class="realmat-book-card__meta">
           <span class="realmat-status">Em revisão editorial</span>
-          <a class="realmat-text-link" href="https://github.com/projetorealmat/forallx" rel="noopener noreferrer">Repositório <span aria-hidden="true">↗</span></a>
+          <a class="realmat-text-link" href="{{ '/livros/forallx/' | relative_url }}">Ler o livro <span aria-hidden="true">↗</span></a>
         </div>
       </div>
     </article>

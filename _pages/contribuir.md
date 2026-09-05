@@ -19,6 +19,11 @@ O REALMAT é construído de forma colaborativa. Você pode ajudar a melhorar uma
 4. Abra um *pull request* descrevendo o que foi modificado.
 5. Aguarde a revisão e converse sobre os ajustes necessários.
 
+
+## Projeto forallx
+
+Para colaborar especificamente com a tradução de lógica, consulte a [página do livro no portal]({{ '/livros/forallx/' | relative_url }}), abra uma [issue no projeto forallx](https://github.com/projetorealmat/forallx/issues) ou proponha uma alteração no [repositório do projeto forallx](https://github.com/projetorealmat/forallx).
+
 ## Boas práticas
 
 - explique o motivo de cada alteração;
