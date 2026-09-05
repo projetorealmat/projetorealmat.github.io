@@ -39,6 +39,9 @@ jobs:
           source: ./
           destination: ./_site
 
+      - name: Verificar o site gerado
+        run: python3 scripts/test_built_site.py ./_site
+
       - name: Enviar artefato do Pages
         uses: actions/upload-pages-artifact@v3
         with:
@@ -48,7 +51,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     environment:
       name: github-pages
-      url: \${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
     permissions:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static smoke tests for the REALMAT editorial skin."""
+"""Static source checks for the REALMAT editorial skin."""
 
 from pathlib import Path
 import sys
@@ -16,6 +16,8 @@ CHECKS = {
         "realmat-masthead",
         "data-menu-toggle",
         "realmat-menu-panel",
+        'aria-current="page"',
+        'aria-controls="search-content"',
     ),
     "_includes/footer.html": (
         "realmat-footer",
@@ -25,6 +27,8 @@ CHECKS = {
         "realmat-layout",
         "head.html",
         "scripts.html",
+        "include masthead.html",
+        'id="search-content"',
     ),
     "_layouts/home.html": (
         "realmat-home",
@@ -33,6 +37,10 @@ CHECKS = {
     "_layouts/single.html": (
         "realmat-page",
         "page__content",
+        "page__taxonomy.html",
+        "page__date.html",
+        "page__related.html",
+        "post_pagination.html",
     ),
     "_pages/livros.md": (
         "realmat-book-card",
@@ -41,13 +49,21 @@ CHECKS = {
     ),
     "assets/css/main.scss": (
         "--realmat-orange",
+        "--realmat-orange-dark: #a94a05",
         ".realmat-hero",
+        ".realmat-layout .page__footer footer",
+        ".realmat-menu-js .realmat-nav-links",
         "@media (max-width: 760px)",
     ),
     "assets/js/realmat.js": (
         "data-menu-toggle",
         "aria-expanded",
         "is-open",
+        "toggle.focus()",
+    ),
+    ".github/workflows/pages.yml": (
+        "url: $" "{{ steps.deployment.outputs.page_url }}",
+        "scripts/test_built_site.py ./_site",
     ),
 }
 
@@ -65,6 +81,12 @@ def main() -> int:
         for marker in markers:
             if marker not in content:
                 errors.append(f"{relative_path}: marcador ausente: {marker}")
+
+    workflow = ROOT / ".github/workflows/pages.yml"
+    if workflow.exists():
+        workflow_content = workflow.read_text(encoding="utf-8")
+        if r"url: \${{" in workflow_content:
+            errors.append(".github/workflows/pages.yml: URL do ambiente contém uma barra invertida")
 
     if errors:
         print("Editorial skin checks failed:")
