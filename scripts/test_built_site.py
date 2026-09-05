@@ -117,7 +117,8 @@ def main() -> int:
             for label in ("Traduções", "Recursos", "Atualizações"):
                 if label in nav:
                     errors.append(f"index.html: item antigo ainda aparece no menu: {label}")
-            if nav.count('class="realmat-nav-link') != 3:
+            nav_link_count = len(re.findall(r'class="realmat-nav-link(?:\\s|")', nav))
+            if nav_link_count != 3:
                 errors.append("index.html: menu principal não contém exatamente três itens")
 
     for relative_path in REQUIRED_ASSETS:
