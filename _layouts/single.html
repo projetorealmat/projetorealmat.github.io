@@ -1,0 +1,21 @@
+---
+layout: default
+---
+<article class="realmat-page page h-entry" itemscope itemtype="https://schema.org/CreativeWork"{% if page.locale %} lang="{{ page.locale }}"{% endif %}>
+  {% if page.title %}<meta itemprop="headline" content="{{ page.title | replace: '|', '&#124;' | markdownify | strip_html | strip_newlines | escape_once }}">{% endif %}
+  {% if page.description %}<meta itemprop="description" content="{{ page.description | markdownify | strip_html | strip_newlines | escape_once }}">{% endif %}
+
+  <header class="realmat-page__header">
+    <div class="realmat-page__header-inner">
+      <p class="realmat-kicker">{{ page.kicker | default: "REALMAT" }}</p>
+      {% if page.title %}<h1 id="page-title" class="realmat-page__title p-name" itemprop="headline">{{ page.title }}</h1>{% endif %}
+      {% if page.description %}<p class="realmat-page__description">{{ page.description }}</p>{% endif %}
+    </div>
+  </header>
+
+  <div class="realmat-page__body">
+    <section class="page__content e-content" itemprop="text">
+      {{ content }}
+    </section>
+  </div>
+</article>

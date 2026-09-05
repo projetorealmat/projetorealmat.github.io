@@ -1,11 +1,11 @@
 main:
-  - title: "Início"
-    url: /
-  - title: "Sobre"
-    url: /sobre/
   - title: "Livros"
     url: /livros/
-  - title: "Como contribuir"
+  - title: "Traduções"
+    url: /livros/#traducoes
+  - title: "Recursos"
+    url: /#recursos
+  - title: "Sobre"
+    url: /sobre/
+  - title: "Contribuir"
     url: /contribuir/
-  - title: "Atualizações"
-    url: /atualizacoes/

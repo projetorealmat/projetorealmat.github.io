@@ -1,5 +1,7 @@
 ---
 title: "Atualizações"
+kicker: "Acompanhar"
+description: "Acompanhe a organização do portal e a chegada de novos projetos."
 permalink: /atualizacoes/
 ---
 

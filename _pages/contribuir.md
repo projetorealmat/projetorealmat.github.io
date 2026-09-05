@@ -1,5 +1,7 @@
 ---
 title: "Como contribuir"
+kicker: "Participar"
+description: "Veja como colaborar com uma tradução, uma revisão ou um novo recurso."
 permalink: /contribuir/
 ---
 
