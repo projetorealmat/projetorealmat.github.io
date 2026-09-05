@@ -34,7 +34,7 @@ EXPECTED_PAGES = {
         "realmat-page",
         "Estrutura inicial do portal",
         "realmat-page__container--with-sidebar",
-        'class="sidebar"',
+        'class="sidebar sticky"',
         'class="page__meta realmat-page__meta"',
     ),
 }
