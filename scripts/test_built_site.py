@@ -18,7 +18,14 @@ EXPECTED_PAGES = {
     "livros/index.html": (
         "realmat-book-card",
         'realmat-book-card__cover realmat-cover realmat-cover--forallx',
-        "https://github.com/projetorealmat/forallx",
+        'href="/livros/forallx/"',
+    ),
+    "forallx/index.html": (
+        "realmat-book-reader",
+        "Leia a edição atual no portal.",
+        "assets/books/forallx.pdf",
+        "realmat-book-reader__frame",
+        'href="/contribuir/"',
     ),
     "sobre/index.html": ("realmat-page", "Uma biblioteca aberta de matemática"),
     "contribuir/index.html": (
@@ -29,6 +36,7 @@ EXPECTED_PAGES = {
         'class="page__meta realmat-page__meta"',
         'class="realmat-button realmat-button--solid"',
         "https://github.com/projetorealmat",
+        "https://github.com/projetorealmat/forallx",
     ),
     "atualizacoes/index.html": (
         "realmat-page",
@@ -39,9 +47,15 @@ EXPECTED_PAGES = {
     ),
 }
 
+FORBIDDEN_PAGE_MARKERS = {
+    "livros/index.html": ("https://github.com/projetorealmat/forallx",),
+    "forallx/index.html": ("https://github.com/projetorealmat/forallx",),
+}
+
 REQUIRED_ASSETS = (
     "assets/css/main.css",
     "assets/js/realmat.js",
+    "assets/books/forallx.pdf",
 )
 
 
@@ -58,6 +72,9 @@ def main() -> int:
         for marker in markers:
             if marker not in content:
                 errors.append(f"{relative_path}: marcador ausente: {marker}")
+        for marker in FORBIDDEN_PAGE_MARKERS.get(relative_path, ()):
+            if marker in content:
+                errors.append(f"{relative_path}: marcador proibido: {marker}")
         if "{{" in content or "{%" in content:
             errors.append(f"{relative_path}: expressão Liquid não processada")
 
