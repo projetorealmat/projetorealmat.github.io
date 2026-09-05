@@ -12,7 +12,7 @@ permalink: /livros/
 
   <div class="realmat-book-grid">
     <article class="realmat-book-card">
-      <a class="realmat-book-card__cover realmat-cover realmat-cover--forallx" href="https://github.com/projetorealmat/forallx" rel="noopener noreferrer" aria-label="Abrir o repositório de forallx">
+      <a class="realmat-book-card__cover realmat-cover realmat-cover--forallx" href="{{ '/livros/forallx/' | relative_url }}" rel="noopener noreferrer" aria-label="Abrir a página de forallx">
         <span class="realmat-cover__number">01</span>
         <span class="realmat-cover__name">forallx</span>
         <span class="realmat-cover__subject">lógica</span>
@@ -24,7 +24,7 @@ permalink: /livros/
         <h2>forallx</h2>
         <p>Projeto de tradução e organização do livro de lógica, com arquivos-fonte e desenvolvimento acompanhados no GitHub.</p>
         <div class="realmat-book-card__meta">
-          <span class="realmat-status">Em organização</span>
+          <span class="realmat-status">Em revisão editorial</span>
           <a class="realmat-text-link" href="https://github.com/projetorealmat/forallx" rel="noopener noreferrer">Repositório <span aria-hidden="true">↗</span></a>
         </div>
       </div>
