@@ -1,0 +1,11 @@
+main:
+  - title: "Início"
+    url: /
+  - title: "Sobre"
+    url: /sobre/
+  - title: "Livros"
+    url: /livros/
+  - title: "Como contribuir"
+    url: /contribuir/
+  - title: "Atualizações"
+    url: /atualizacoes/
