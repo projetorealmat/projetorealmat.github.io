@@ -39,7 +39,7 @@ jobs:
       - name: Enviar artefato do Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ${{ steps.build.outputs.destination }}
+          path: ./_site
 
   deploy:
     if: github.ref == 'refs/heads/main'
