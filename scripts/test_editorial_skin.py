@@ -10,18 +10,24 @@ CHECKS = {
     "index.md": (
         "realmat-hero",
         "realmat-featured",
-        "repositório",
+        "Como usar o portal",
+    ),
+    "_data/navigation.yml": (
+        'title: "Livros"',
+        'title: "Sobre"',
+        'title: "Contribuir"',
     ),
     "_includes/masthead.html": (
         "realmat-masthead",
         "data-menu-toggle",
         "realmat-menu-panel",
-        'aria-current="page"',
+        "link_is_active",
         'aria-controls="search-content"',
     ),
     "_includes/footer.html": (
         "realmat-footer",
         "Como contribuir",
+        "Histórico de atualizações",
     ),
     "_layouts/default.html": (
         "realmat-layout",
@@ -48,24 +54,40 @@ CHECKS = {
     "_pages/livros.md": (
         "realmat-book-card",
         'class="realmat-book-card__cover realmat-cover realmat-cover--forallx"',
-        "livros/forallx",
+        "Cada obra pode ser lida diretamente no portal.",
     ),
     "_pages/forallx.md": (
         "realmat-book-reader",
+        'id="forallx-reader"',
+        'id="forallx-reader-frame"',
+        "Ir para o leitor",
         "assets/books/forallx.pdf",
         "/contribuir/",
     ),
-
+    "_pages/contribuir.md": (
+        "Projetos disponíveis",
+        "realmat-contribution-links",
+        "issue no projeto forallx",
+        'target="_blank"',
+    ),
+    "_pages/atualizacoes.md": (
+        "Histórico de novas obras e versões.",
+        "forallx-disponivel",
+    ),
     "assets/css/main.scss": (
         "--realmat-orange",
         "--realmat-orange-dark: #a94a05",
         ".realmat-hero",
         ".realmat-book-reader",
         ".realmat-book-reader__frame",
+        ".realmat-wayfinding",
+        ".realmat-update-list",
+        ".realmat-contribution-links",
         ".realmat-layout .page__footer footer",
         ".realmat-page__container--with-sidebar",
         ".realmat-page__body .page__content a:not(.realmat-button)",
         ".realmat-menu-js .realmat-nav-links",
+        "scroll-margin-top",
         "@media (max-width: 760px)",
     ),
     "assets/js/realmat.js": (
@@ -84,6 +106,29 @@ CHECKS = {
     ),
 }
 
+FORBIDDEN = {
+    "index.md": ("https://github.com/projetorealmat", "repositório"),
+    "_data/navigation.yml": (
+        'title: "Traduções"',
+        'title: "Recursos"',
+        'title: "Atualizações"',
+    ),
+    "_includes/masthead.html": ("https://github.com/projetorealmat",),
+    "_includes/footer.html": (
+        "https://github.com/projetorealmat",
+        "/feed.xml",
+    ),
+    "_pages/livros.md": (
+        "https://github.com/projetorealmat",
+        "repositório",
+    ),
+    "_pages/forallx.md": ("https://github.com/projetorealmat/forallx",),
+    "_pages/contribuir.md": (
+        'share: true',
+        'link: "https://github.com/projetorealmat"',
+    ),
+}
+
 
 def main() -> int:
     errors = []
@@ -98,6 +143,26 @@ def main() -> int:
         for marker in markers:
             if marker not in content:
                 errors.append(f"{relative_path}: marcador ausente: {marker}")
+        for marker in FORBIDDEN.get(relative_path, ()):
+            if marker in content:
+                errors.append(f"{relative_path}: marcador proibido: {marker}")
+
+    navigation = ROOT / "_data/navigation.yml"
+    if navigation.exists():
+        actual_titles = [
+            line.strip()
+            for line in navigation.read_text(encoding="utf-8").splitlines()
+            if line.strip().startswith("- title:")
+        ]
+        expected_titles = [
+            '- title: "Livros"',
+            '- title: "Sobre"',
+            '- title: "Contribuir"',
+        ]
+        if actual_titles != expected_titles:
+            errors.append(
+                "_data/navigation.yml: menu principal diferente do percurso definido"
+            )
 
     workflow = ROOT / ".github/workflows/pages.yml"
     if workflow.exists():

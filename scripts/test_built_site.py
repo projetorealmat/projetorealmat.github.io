@@ -2,7 +2,9 @@
 """Smoke tests for the generated REALMAT Pages site."""
 
 from pathlib import Path
+import re
 import sys
+from urllib.parse import urlsplit
 
 ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("_site")
 
@@ -11,45 +13,49 @@ EXPECTED_PAGES = {
         'class="realmat-masthead"',
         "realmat-hero",
         "realmat-featured",
-        'data-menu-toggle',
+        "Como usar o portal",
         'href="/livros/"',
+        'href="/contribuir/"',
         'src="/assets/js/realmat.js"',
     ),
     "livros/index.html": (
         "realmat-book-card",
         'realmat-book-card__cover realmat-cover realmat-cover--forallx',
         'href="/livros/forallx/"',
+        "Cada obra pode ser lida diretamente no portal.",
     ),
     "livros/forallx/index.html": (
         "realmat-book-reader",
-        "Leia a edição atual no portal.",
+        'id="forallx-reader"',
+        "Ir para o leitor",
+        'href="#forallx-reader-frame"',
+        'src="/assets/books/forallx.pdf"',
         "assets/books/forallx.pdf",
-        "realmat-book-reader__frame",
         'href="/contribuir/"',
     ),
     "sobre/index.html": ("realmat-page", "Uma biblioteca aberta de matemática"),
     "contribuir/index.html": (
         "realmat-page",
-        "Fluxo de colaboração",
-        'class="toc"',
-        'class="page__share"',
-        'class="page__meta realmat-page__meta"',
-        'class="realmat-button realmat-button--solid"',
-        "https://github.com/projetorealmat",
+        "Projetos disponíveis",
+        "realmat-contribution-links",
+        "https://github.com/projetorealmat/forallx/issues",
         "https://github.com/projetorealmat/forallx",
+        'target="_blank"',
+        'rel="noopener noreferrer"',
     ),
     "atualizacoes/index.html": (
         "realmat-page",
-        "Estrutura inicial do portal",
-        "realmat-page__container--with-sidebar",
-        'class="sidebar sticky"',
-        'class="page__meta realmat-page__meta"',
+        "Histórico de novas obras e versões.",
+        "forallx-disponivel",
+        'href="/livros/forallx/"',
     ),
 }
 
 FORBIDDEN_PAGE_MARKERS = {
+    "index.html": ("/#recursos", "/livros/#traducoes"),
     "livros/index.html": ("https://github.com/projetorealmat/forallx",),
     "livros/forallx/index.html": ("https://github.com/projetorealmat/forallx",),
+    "contribuir/index.html": ("Compartilhe", "Link direto"),
 }
 
 REQUIRED_ASSETS = (
@@ -57,6 +63,31 @@ REQUIRED_ASSETS = (
     "assets/js/realmat.js",
     "assets/books/forallx.pdf",
 )
+
+
+def _check_internal_links(errors):
+    for path in ROOT.rglob("*.html"):
+        content = path.read_text(encoding="utf-8")
+        for raw_href in re.findall(r'href="([^"]+)"', content):
+            if raw_href.startswith(("#", "http://", "https://", "mailto:", "tel:")):
+                continue
+
+            parsed = urlsplit(raw_href)
+            target = parsed.path
+            if not target.startswith("/"):
+                continue
+
+            if target == "/":
+                target_path = ROOT / "index.html"
+            elif target.endswith("/"):
+                target_path = ROOT / target.lstrip("/") / "index.html"
+            else:
+                target_path = ROOT / target.lstrip("/")
+
+            if not target_path.exists():
+                errors.append(
+                    f"{path.relative_to(ROOT)}: link interno sem destino: {raw_href}"
+                )
 
 
 def main() -> int:
@@ -78,9 +109,21 @@ def main() -> int:
         if "{{" in content or "{%" in content:
             errors.append(f"{relative_path}: expressão Liquid não processada")
 
+        if relative_path == "index.html":
+            nav_start = content.find('<nav id="site-nav"')
+            nav_end = content.find("</nav>", nav_start)
+            nav = content[nav_start:nav_end] if nav_start >= 0 and nav_end >= 0 else ""
+            for label in ("Traduções", "Recursos", "Atualizações"):
+                if label in nav:
+                    errors.append(f"index.html: item antigo ainda aparece no menu: {label}")
+            if nav.count('class="realmat-nav-link') != 3:
+                errors.append("index.html: menu principal não contém exatamente três itens")
+
     for relative_path in REQUIRED_ASSETS:
         if not (ROOT / relative_path).exists():
             errors.append(f"recurso gerado ausente: {relative_path}")
+
+    _check_internal_links(errors)
 
     if errors:
         print("Generated site checks failed:")
@@ -88,7 +131,10 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    print(f"Generated site checks passed: {len(EXPECTED_PAGES)} pages and {len(REQUIRED_ASSETS)} assets.")
+    print(
+        f"Generated site checks passed: {len(EXPECTED_PAGES)} pages and "
+        f"{len(REQUIRED_ASSETS)} assets."
+    )
     return 0
 
 
