@@ -36,7 +36,7 @@ CHECKS = {
     ),
     "_pages/livros.md": (
         "realmat-book-card",
-        "realmat-book-card__cover realmat-cover",
+        'class="realmat-book-card__cover realmat-cover realmat-cover--forallx"',
         "projetorealmat/forallx",
     ),
     "assets/css/main.scss": (
