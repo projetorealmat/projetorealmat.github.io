@@ -87,9 +87,9 @@ permalink: /
       </article>
       <article class="realmat-resource-card">
         <span class="realmat-resource-card__index">02</span>
-        <h3>Recursos para aprender</h3>
-        <p>Materiais que podem apoiar o estudo, o ensino e a adaptação em diferentes contextos.</p>
-        <a class="realmat-text-link" href="{{ '/sobre/' | relative_url }}">Saiba mais <span aria-hidden="true">↗</span></a>
+        <h3>Sobre o projeto</h3>
+        <p>Uma proposta para aproximar materiais matemáticos de quem estuda e ensina em português.</p>
+        <a class="realmat-text-link" href="{{ '/sobre/' | relative_url }}">Conhecer o projeto <span aria-hidden="true">↗</span></a>
       </article>
       <article class="realmat-resource-card">
         <span class="realmat-resource-card__index">03</span>

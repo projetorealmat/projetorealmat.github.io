@@ -15,13 +15,13 @@
       <div id="realmat-menu-panel" class="realmat-nav-links">
         <div class="realmat-nav-links__primary">
           {%- for link in site.data.navigation.main -%}
-            <a class="realmat-nav-link{% if page.url == link.url %} is-active{% endif %}" href="{{ link.url | relative_url }}"{% if link.description %} title="{{ link.description }}"{% endif %}>{{ link.title }}</a>
+            <a class="realmat-nav-link{% if page.url == link.url %} is-active{% endif %}" href="{{ link.url | relative_url }}"{% if page.url == link.url %} aria-current="page"{% endif %}{% if link.description %} title="{{ link.description }}"{% endif %}>{{ link.title }}</a>
           {%- endfor -%}
         </div>
 
         <div class="realmat-nav-actions">
           {% if site.search == true %}
-            <button class="realmat-icon-button search__toggle" type="button" aria-label="{{ site.data.ui-text[locale].search_label | default: 'Abrir busca' }}">
+            <button id="realmat-search-toggle" class="realmat-icon-button search__toggle" type="button" aria-label="{{ site.data.ui-text[locale].search_label | default: 'Abrir busca' }}" aria-expanded="false" aria-controls="search-content">
               <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.6"></circle><path d="m16 16 5 5"></path></svg>
             </button>
           {% endif %}

@@ -11,7 +11,7 @@
 
   <body class="realmat-layout layout--{{ page.layout | default: layout.layout }}{% if page.classes or layout.classes %}{{ page.classes | default: layout.classes | join: ' ' | prepend: ' ' }}{% endif %}">
     {% include_cached skip-links.html locale=locale %}
-    {% include_cached masthead.html locale=locale %}
+    {% include masthead.html locale=locale %}
 
     <main id="main" class="initial-content">
       {{ content }}
@@ -19,7 +19,7 @@
     </main>
 
     {% if site.search == true %}
-      <div class="search-content">
+      <div id="search-content" class="search-content">
         {% include_cached search/search_form.html locale=locale %}
       </div>
     {% endif %}
