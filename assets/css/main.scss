@@ -1,0 +1,130 @@
+---
+---
+
+@import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
+@import "minimal-mistakes";
+
+:root {
+  --realmat-ink: #17324d;
+  --realmat-teal: #0f766e;
+  --realmat-gold: #c7923e;
+  --realmat-surface: #f4f7f8;
+  --realmat-line: #d8e2e5;
+}
+
+.masthead {
+  border-bottom: 1px solid var(--realmat-line);
+}
+
+.site-title {
+  color: var(--realmat-ink);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.realmat-home {
+  max-width: 76rem;
+  margin-inline: auto;
+}
+
+.realmat-hero {
+  padding: clamp(2rem, 5vw, 5rem) clamp(1.25rem, 4vw, 3rem);
+  background: linear-gradient(135deg, rgba(23, 50, 77, 0.98), rgba(15, 118, 110, 0.92));
+  color: #fff;
+  border-radius: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.realmat-hero h1 {
+  color: #fff;
+  max-width: 12ch;
+  margin-bottom: 1rem;
+  font-size: clamp(2.25rem, 6vw, 4.75rem);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+}
+
+.realmat-hero p {
+  max-width: 48rem;
+  font-size: 1.18rem;
+  line-height: 1.65;
+  margin-bottom: 0;
+}
+
+.realmat-eyebrow {
+  color: #d7e9e8;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.realmat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.realmat-card {
+  height: 100%;
+  padding: 1.35rem;
+  border: 1px solid var(--realmat-line);
+  border-top: 4px solid var(--realmat-teal);
+  border-radius: 0.6rem;
+  background: var(--realmat-surface);
+}
+
+.realmat-card h2,
+.realmat-card h3 {
+  margin-top: 0;
+  color: var(--realmat-ink);
+}
+
+.realmat-card p:last-child {
+  margin-bottom: 0;
+}
+
+.realmat-card--gold {
+  border-top-color: var(--realmat-gold);
+}
+
+.realmat-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+.realmat-button {
+  display: inline-block;
+  padding: 0.72rem 1.05rem;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 0.35rem;
+  color: #fff !important;
+  font-weight: 700;
+  text-decoration: none !important;
+}
+
+.realmat-button:hover,
+.realmat-button:focus {
+  background: #fff;
+  color: var(--realmat-ink) !important;
+}
+
+.realmat-note {
+  margin: 2rem 0;
+  padding: 1rem 1.25rem;
+  border-left: 4px solid var(--realmat-gold);
+  background: #fffaf0;
+}
+
+@media (max-width: 800px) {
+  .realmat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .realmat-hero {
+    border-radius: 0.45rem;
+  }
+}
