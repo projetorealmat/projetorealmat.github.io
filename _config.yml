@@ -18,7 +18,7 @@ show_date: false
 future: false
 
 atom_feed:
-  hide: false
+  hide: true
 
 lunr:
   search_within_pages: true

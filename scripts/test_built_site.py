@@ -110,13 +110,14 @@ def main() -> int:
             errors.append(f"{relative_path}: expressão Liquid não processada")
 
         if relative_path == "index.html":
-            nav_start = content.find('<nav id="site-nav"')
-            nav_end = content.find("</nav>", nav_start)
+            nav_marker = content.find('id="site-nav"')
+            nav_start = content.rfind("<nav", 0, nav_marker + 1)
+            nav_end = content.find("</nav>", nav_marker)
             nav = content[nav_start:nav_end] if nav_start >= 0 and nav_end >= 0 else ""
             for label in ("Traduções", "Recursos", "Atualizações"):
                 if label in nav:
                     errors.append(f"index.html: item antigo ainda aparece no menu: {label}")
-            if nav.count('class="realmat-nav-link') != 3:
+            if nav.count("realmat-nav-link") != 3:
                 errors.append("index.html: menu principal não contém exatamente três itens")
 
     for relative_path in REQUIRED_ASSETS:

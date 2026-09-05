@@ -74,6 +74,10 @@ CHECKS = {
         "Histórico de novas obras e versões.",
         "forallx-disponivel",
     ),
+    "_config.yml": (
+        "atom_feed:",
+        "hide: true",
+    ),
     "assets/css/main.scss": (
         "--realmat-orange",
         "--realmat-orange-dark: #a94a05",
