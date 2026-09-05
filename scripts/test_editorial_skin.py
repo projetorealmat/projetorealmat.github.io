@@ -48,12 +48,20 @@ CHECKS = {
     "_pages/livros.md": (
         "realmat-book-card",
         'class="realmat-book-card__cover realmat-cover realmat-cover--forallx"',
-        "projetorealmat/forallx",
+        "livros/forallx",
     ),
+    "_pages/forallx.md": (
+        "realmat-book-reader",
+        "assets/books/forallx.pdf",
+        "/contribuir/",
+    ),
+
     "assets/css/main.scss": (
         "--realmat-orange",
         "--realmat-orange-dark: #a94a05",
         ".realmat-hero",
+        ".realmat-book-reader",
+        ".realmat-book-reader__frame",
         ".realmat-layout .page__footer footer",
         ".realmat-page__container--with-sidebar",
         ".realmat-page__body .page__content a:not(.realmat-button)",
