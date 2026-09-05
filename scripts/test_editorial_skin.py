@@ -34,6 +34,11 @@ CHECKS = {
         "realmat-page",
         "page__content",
     ),
+    "_pages/livros.md": (
+        "realmat-book-card",
+        "realmat-book-card__cover realmat-cover",
+        "projetorealmat/forallx",
+    ),
     "assets/css/main.scss": (
         "--realmat-orange",
         ".realmat-hero",
