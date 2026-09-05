@@ -67,7 +67,7 @@ CHECKS = {
     "_pages/contribuir.md": (
         "Projetos disponíveis",
         "realmat-contribution-links",
-        "issue no projeto forallx",
+        "https://github.com/projetorealmat/forallx/issues",
         'target="_blank"',
     ),
     "_pages/atualizacoes.md": (
