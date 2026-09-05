@@ -20,7 +20,7 @@ EXPECTED_PAGES = {
         'realmat-book-card__cover realmat-cover realmat-cover--forallx',
         'href="/livros/forallx/"',
     ),
-    "forallx/index.html": (
+    "livros/forallx/index.html": (
         "realmat-book-reader",
         "Leia a edição atual no portal.",
         "assets/books/forallx.pdf",
@@ -49,7 +49,7 @@ EXPECTED_PAGES = {
 
 FORBIDDEN_PAGE_MARKERS = {
     "livros/index.html": ("https://github.com/projetorealmat/forallx",),
-    "forallx/index.html": ("https://github.com/projetorealmat/forallx",),
+    "livros/forallx/index.html": ("https://github.com/projetorealmat/forallx",),
 }
 
 REQUIRED_ASSETS = (
