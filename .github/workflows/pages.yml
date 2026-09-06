@@ -61,8 +61,8 @@ jobs:
           cp .book/forallx/forallx.pdf assets/books/forallx.pdf
           rm -rf .book
 
-      - name: Verificar a skin editorial
-        run: python3 scripts/test_editorial_skin.py
+      - name: Verificar a integração original do Massively
+        run: python3 scripts/test_massively_theme.py
 
       - name: Configurar o Pages
         id: pages
