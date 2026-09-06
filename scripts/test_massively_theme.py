@@ -14,11 +14,12 @@ REQUIRED = {
     ),
     "_layouts/default.html": (
         'id="wrapper"',
-        'id="intro"',
-        'id="header"',
-        'id="nav"',
         'id="main"',
-        'id="footer"',
+        "include massively-intro.html",
+        "include massively-header.html",
+        "include massively-nav.html",
+        "include massively-footer.html",
+        "html5up.net/massively",
         "assets/css/main.css",
         "assets/css/realmat.css",
         "assets/js/jquery.min.js",
@@ -50,7 +51,7 @@ REQUIRED = {
     "_includes/massively-footer.html": (
         'id="footer"',
         "Como contribuir",
-        "html5up.net/massively",
+        "Organização do projeto",
     ),
     "index.md": (
         'class="post featured',
