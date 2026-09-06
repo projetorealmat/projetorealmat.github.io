@@ -24,6 +24,7 @@ permalink: /
 
   <ul class="actions special">
     <li><a href="{{ '/livros/' | relative_url }}" class="button primary large">Ver os livros</a></li>
+    <li><a href="{{ '/assets/books/forallx.pdf' | relative_url }}" class="button" target="_blank" rel="noopener noreferrer">Ler o PDF <span aria-hidden="true">↗</span></a></li>
   </ul>
 </article>
 
