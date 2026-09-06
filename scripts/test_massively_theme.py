@@ -53,7 +53,6 @@ REQUIRED = {
         "brand-real",
         "brand-l",
         "brand-mat",
-        "assets/images/realmat-logo.jpg",
     ),
     "_includes/massively-nav.html": (
         'id="nav"',
