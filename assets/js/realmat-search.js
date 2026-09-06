@@ -30,16 +30,27 @@
       .replace(/[\u0300-\u036f]/g, "");
   }
 
+  function tokenize(value) {
+    return normalize(value).trim().split(/\s+/).filter(Boolean);
+  }
+
   function render(query) {
-    var normalizedQuery = normalize(query).trim();
+    var tokens = tokenize(query);
     var matches = index.filter(function (item) {
       var haystack = normalize((item.title || "") + " " + (item.text || ""));
-      return !normalizedQuery || haystack.indexOf(normalizedQuery) !== -1;
+      return !tokens.length || tokens.every(function (token) {
+        return haystack.indexOf(token) !== -1;
+      });
     }).slice(0, 20);
 
-    status.textContent = normalizedQuery
+    status.textContent = tokens.length
       ? matches.length + " resultado(s) encontrado(s)."
       : "Mostrando páginas do portal.";
+
+    if (!matches.length && tokens.length) {
+      results.innerHTML = '<p class="realmat-search__empty">Nenhum resultado encontrado. Tente outro termo.</p>';
+      return;
+    }
 
     results.innerHTML = matches.map(function (item) {
       var excerpt = String(item.text || "").replace(/\s+/g, " ").trim();

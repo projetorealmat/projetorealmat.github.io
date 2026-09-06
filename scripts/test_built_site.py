@@ -20,6 +20,8 @@ EXPECTED_PAGES = {
         'href="/livros/"',
         'href="/contribuir/"',
         'src="/assets/js/main.js"',
+        "Recursos Educacionais Abertos na Licenciatura em Matemática",
+        "realmat-logo",
     ),
     "livros/index.html": (
         'class="realmat-library"',
@@ -38,7 +40,8 @@ EXPECTED_PAGES = {
     ),
     "sobre/index.html": (
         'class="post realmat-page"',
-        "Uma biblioteca aberta de matemática",
+        "Recursos Educacionais Abertos na Licenciatura em Matemática",
+        "O REALMat — Recursos Educacionais Abertos na Licenciatura em Matemática — é um projeto de extensão",
     ),
     "contribuir/index.html": (
         'class="post realmat-page"',
@@ -53,10 +56,15 @@ EXPECTED_PAGES = {
         "REALMAT_SEARCH_INDEX",
         'id="realmat-search-input"',
     ),
-    "atualizacoes/index.html": (
+    "arquivo/index.html": (
         'class="post realmat-page"',
         "realmat-updates",
         "forallx disponível para leitura",
+    ),
+    "topicos/index.html": (
+        'class="post realmat-page"',
+        "Lógica formal",
+        'href="/livros/forallx/"',
     ),
 }
 
@@ -84,8 +92,25 @@ REQUIRED_ASSETS = (
     "assets/webfonts/fa-brands-400.woff2",
     "images/bg.jpg",
     "images/overlay.png",
+    "images/realmat-bg.jpg",
+    "assets/images/realmat-logo.jpg",
     "assets/books/forallx.pdf",
 )
+
+def check_navigation_order(errors):
+    index = ROOT / "index.html"
+    if not index.exists():
+        return
+    content = index.read_text(encoding="utf-8", errors="replace")
+    nav_match = re.search(r'<ul class="links">(.*?)</ul>', content, flags=re.S)
+    if not nav_match:
+        errors.append("index.html: menu principal ausente")
+        return
+    titles = re.findall(r'<a[^>]*>([^<]+)</a>', nav_match.group(1))
+    expected = ["Livros", "Contribuir", "Arquivo", "Tópicos", "Sobre"]
+    if titles != expected:
+        errors.append(f"index.html: ordem do menu inesperada: {titles}")
+
 
 def check_internal_links(errors):
     for path in ROOT.rglob("*.html"):
@@ -155,6 +180,7 @@ def main() -> int:
         if not download_link:
             errors.append("forallx: download explícito do PDF ausente")
 
+    check_navigation_order(errors)
     check_internal_links(errors)
 
     if errors:

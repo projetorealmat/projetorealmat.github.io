@@ -1,11 +1,11 @@
 ---
-title: "Sobre o REALMAT"
+title: "Sobre o REALMat"
 kicker: "O projeto"
-description: "Uma biblioteca aberta para reunir, traduzir e compartilhar matemática."
+description: "Recursos Educacionais Abertos na Licenciatura em Matemática."
 permalink: /sobre/
 ---
 
-<p class="realmat-page-lead">O REALMAT — Recursos Educacionais Abertos de Matemática — aproxima materiais matemáticos de quem estuda e ensina em português.</p>
+<p class="realmat-page-lead realmat-project-definition">O REALMat — Recursos Educacionais Abertos na Licenciatura em Matemática — é um projeto de extensão voltado à seleção, tradução, adaptação e disseminação de obras educacionais abertas de interesse para a formação em Matemática. O projeto articula a prática docente universitária à participação de estudantes da licenciatura, incorporando ao processo de curadoria e tradução materiais utilizados ou potencialmente utilizáveis nas disciplinas do curso e disponibilizando os resultados à comunidade.</p>
 
 <section class="realmat-about" aria-labelledby="about-title">
   <header class="major">
@@ -13,8 +13,8 @@ permalink: /sobre/
     <h2 id="about-title">Traduzir também é construir acesso.</h2>
   </header>
   <div>
-    <p>O projeto reúne, traduz, organiza e disponibiliza livros e outros materiais para estudo e ensino.</p>
-    <p>Cada obra pode ter seu próprio repositório, mantendo o desenvolvimento, os arquivos-fonte e as versões organizados.</p>
+    <p>O portal reúne, organiza e disponibiliza livros e outros materiais para estudo e ensino em português.</p>
+    <p>Cada obra pode ter seu próprio repositório, mantendo o desenvolvimento, os arquivos-fonte, as discussões e as versões organizados.</p>
   </div>
 </section>
 

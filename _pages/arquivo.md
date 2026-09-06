@@ -1,13 +1,13 @@
 ---
-title: "Atualizações"
+title: "Arquivo"
 kicker: "Histórico"
 description: "Histórico de novas obras, edições e mudanças no portal."
-permalink: /atualizacoes/
+permalink: /arquivo/
 ---
 
 <p class="realmat-page-lead">Registro das principais etapas de publicação do portal.</p>
 
-<section class="realmat-updates" aria-label="Histórico de atualizações">
+<section class="realmat-updates" aria-label="Histórico de publicações">
   <article>
     <header>
       <span class="date">5 de setembro de 2026 · Livro</span>
@@ -20,7 +20,7 @@ permalink: /atualizacoes/
   <article>
     <header>
       <span class="date">5 de setembro de 2026 · Portal</span>
-      <h2>Estrutura inicial do REALMAT</h2>
+      <h2>Estrutura inicial do REALMat</h2>
     </header>
     <p>O portal foi organizado para separar a leitura pública dos livros do espaço de colaboração e desenvolvimento.</p>
   </article>
