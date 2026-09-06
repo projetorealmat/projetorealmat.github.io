@@ -57,7 +57,7 @@ CHECKS = {
         "assets/books/forallx.pdf",
     ),
     "_pages/contribuir.md": (
-        "Projetos de tradução",
+        "Projeto de tradução",
         "realmat-contribution-card",
         "https://github.com/projetorealmat/forallx/issues",
         "https://github.com/projetorealmat/forallx",
