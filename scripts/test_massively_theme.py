@@ -9,8 +9,16 @@ ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = {
     "_config.yml": (
         'title: "REALMAT"',
+        'subtitle: "Recursos Educacionais Abertos na Licenciatura em Matemática"',
         'url: "https://projetorealmat.github.io"',
         "include:",
+    ),
+    "_data/navigation.yml": (
+        '- title: "Livros"',
+        '- title: "Contribuir"',
+        '- title: "Arquivo"',
+        '- title: "Tópicos"',
+        '- title: "Sobre"',
     ),
     "_layouts/default.html": (
         'id="wrapper"',
@@ -35,12 +43,17 @@ REQUIRED = {
     ),
     "_includes/massively-intro.html": (
         'id="intro"',
-        "REALMAT",
+        "REALMat",
+        "Recursos Educacionais Abertos na Licenciatura em Matemática",
         "scrolly",
     ),
     "_includes/massively-header.html": (
         'id="header"',
-        "REALMAT",
+        "REALMat",
+        "brand-real",
+        "brand-l",
+        "brand-mat",
+        "assets/images/realmat-logo.png",
     ),
     "_includes/massively-nav.html": (
         'id="nav"',
@@ -76,6 +89,20 @@ REQUIRED = {
         "realmat-contribution",
         "github.com/projetorealmat/forallx",
     ),
+    "_pages/sobre.md": (
+        "Recursos Educacionais Abertos na Licenciatura em Matemática",
+        "O REALMat — Recursos Educacionais Abertos na Licenciatura em Matemática — é um projeto de extensão",
+    ),
+    "_pages/arquivo.md": (
+        "permalink: /arquivo/",
+        "realmat-updates",
+        "forallx disponível para leitura",
+    ),
+    "_pages/topicos.md": (
+        "permalink: /topicos/",
+        "Lógica formal",
+        "/livros/forallx/",
+    ),
     "_pages/buscar.md": (
         "realmat-search",
         "REALMAT_SEARCH_INDEX",
@@ -92,7 +119,12 @@ REQUIRED = {
         "#wrapper",
     ),
     "assets/css/realmat.css": (
-        "--realmat-orange",
+        "--realmat-blue",
+        "--realmat-gold",
+        "--realmat-cyan",
+        "realmat-bg",
+        "realmat-logo",
+        "brand-real",
         "realmat-book-poster",
         "@media",
     ),
@@ -104,6 +136,8 @@ REQUIRED = {
     "assets/js/realmat-search.js": (
         "REALMAT_SEARCH_INDEX",
         "realmat-search",
+        "URLSearchParams",
+        ".every",
     ),
     "MASSIVELY_LICENSE.txt": (
         "Creative Commons Attribution 3.0",
@@ -136,6 +170,8 @@ REQUIRED_ASSETS = (
     "assets/webfonts/fa-brands-400.woff2",
     "images/bg.jpg",
     "images/overlay.png",
+    "images/realmat-bg.png",
+    "assets/images/realmat-logo.png",
 )
 
 def main() -> int:
@@ -175,7 +211,13 @@ def main() -> int:
             for line in navigation.read_text(encoding="utf-8").splitlines()
             if line.strip().startswith("- title:")
         ]
-        expected = ['- title: "Livros"', '- title: "Sobre"', '- title: "Contribuir"']
+        expected = [
+            '- title: "Livros"',
+            '- title: "Contribuir"',
+            '- title: "Arquivo"',
+            '- title: "Tópicos"',
+            '- title: "Sobre"',
+        ]
         if titles != expected:
             errors.append("_data/navigation.yml: menu principal inesperado")
 
