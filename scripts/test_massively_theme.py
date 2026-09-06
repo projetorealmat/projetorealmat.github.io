@@ -214,21 +214,58 @@ def check_intro_subtitle_color(errors):
         )
 
 
-def check_first_paint_background(errors):
+def _last_css_block(content, selector):
+    pattern = r"(?m)^" + re.escape(selector) + r"\s*\{(.*?)\}"
+    matches = re.findall(pattern, content, flags=re.S)
+    return matches[-1] if matches else ""
+
+
+def check_background_layers(errors):
     layout = ROOT / "_layouts/default.html"
     css = ROOT / "assets/css/realmat.css"
     layout_content = layout.read_text(encoding="utf-8", errors="replace") if layout.exists() else ""
     css_content = css.read_text(encoding="utf-8", errors="replace") if css.exists() else ""
+
     if 'rel="preload"' not in layout_content or "images/realmat-bg.jpg" not in layout_content:
         errors.append("_layouts/default.html: preload do fundo da home ausente")
-    match = re.search(
-        r"#wrapper\.fade-in:before\s*\{(.*?)\}",
-        css_content,
-        flags=re.S,
-    )
-    if not match or "realmat-bg.jpg" not in match.group(1):
+
+    intro = _last_css_block(css_content, "#intro")
+    wrapper = _last_css_block(css_content, "#wrapper")
+    first_paint = _last_css_block(css_content, "#wrapper.fade-in:before")
+    parallax = _last_css_block(css_content, "#wrapper > .bg")
+
+    if not intro or "background: transparent;" not in intro or "realmat-bg.jpg" in intro:
         errors.append(
-            "assets/css/realmat.css: camada inicial ainda não usa o fundo REALMat"
+            "assets/css/realmat.css: #intro deve ser um plano transparente, sem duplicar a imagem do parallax"
+        )
+
+    if not wrapper or "background: var(--realmat-navy);" not in wrapper or "realmat-bg.jpg" in wrapper:
+        errors.append(
+            "assets/css/realmat.css: wrapper não deve manter uma segunda cópia fixa da imagem"
+        )
+
+    if (
+        not first_paint
+        or "background: var(--realmat-navy);" not in first_paint
+        or "realmat-bg.jpg" in first_paint
+    ):
+        errors.append(
+            "assets/css/realmat.css: primeiro paint deve ser somente o plano azul-marinho"
+        )
+
+    if not parallax or "realmat-bg.jpg" not in parallax:
+        errors.append(
+            "assets/css/realmat.css: camada .bg animada sem a imagem de fundo REALMat"
+        )
+
+    if not parallax or "100% auto" not in parallax or "top center" not in parallax:
+        errors.append(
+            "assets/css/realmat.css: camada .bg perdeu o dimensionamento/posicionamento do parallax do Massively"
+        )
+
+    if "auto 175%" not in css_content:
+        errors.append(
+            "assets/css/realmat.css: ajuste do parallax para orientação portrait ausente"
         )
 
 def main() -> int:
@@ -279,7 +316,7 @@ def main() -> int:
             errors.append("_data/navigation.yml: menu principal inesperado")
 
     check_intro_subtitle_color(errors)
-    check_first_paint_background(errors)
+    check_background_layers(errors)
 
     if errors:
         print("Massively source checks failed:")
