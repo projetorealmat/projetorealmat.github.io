@@ -39,7 +39,7 @@ EXPECTED_PAGES = {
     ),
     "contribuir/index.html": (
         "realmat-page",
-        "Projetos de tradução",
+        "Projeto de tradução",
         "realmat-contribution-card",
         "https://github.com/projetorealmat/forallx/issues",
         "https://github.com/projetorealmat/forallx",
@@ -53,7 +53,7 @@ EXPECTED_PAGES = {
     ),
     "atualizacoes/index.html": (
         "realmat-page",
-        "Histórico de novas obras e versões.",
+        "Registro das principais etapas de publicação do portal.",
         "forallx-disponivel",
     ),
 }
