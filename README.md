@@ -1,6 +1,6 @@
-# REALMAT
+# REALMat
 
-Portal do REALMAT — Recursos Educacionais Abertos de Matemática.
+Portal do REALMat — Recursos Educacionais Abertos na Licenciatura em Matemática.
 
 O site reúne livros e traduções para leitura pública. A colaboração, as discussões e os arquivos-fonte de cada obra ficam na página **Como contribuir**.
 

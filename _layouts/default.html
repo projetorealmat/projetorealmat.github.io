@@ -6,10 +6,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#1e252d">
+    <meta name="theme-color" content="#071a34">
     <meta name="description" content="{{ page_description | strip_html | strip_newlines | escape }}">
     <title>{% if page.url == '/' %}{{ site.title }}{% else %}{{ page.title }} · {{ site.title }}{% endif %}</title>
     <link rel="canonical" href="{{ page.url | absolute_url }}">
+    <link rel="preload" as="image" href="{{ '/images/realmat-bg.jpg' | relative_url }}">
     <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
     <noscript><link rel="stylesheet" href="{{ '/assets/css/noscript.css' | relative_url }}"></noscript>
     <link rel="stylesheet" href="{{ '/assets/css/realmat.css' | relative_url }}">
@@ -34,7 +35,7 @@
 
       <div id="copyright">
         <ul>
-          <li>© {{ site.time | date: '%Y' }} REALMAT</li>
+          <li>© {{ site.time | date: '%Y' }} REALMat</li>
           <li>Design adaptado de <a href="https://html5up.net/massively" target="_blank" rel="noopener noreferrer">Massively</a>, por HTML5 UP</li>
           <li><a href="https://html5up.net/license" target="_blank" rel="noopener noreferrer">Licença CCA 3.0</a></li>
         </ul>

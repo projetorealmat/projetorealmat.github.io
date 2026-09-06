@@ -1,7 +1,7 @@
 ---
 title: "Livros"
 kicker: "Biblioteca"
-description: "Obras e traduções reunidas pelo REALMAT para leitura e download."
+description: "Obras e traduções reunidas pelo REALMat para leitura e download."
 permalink: /livros/
 ---
 

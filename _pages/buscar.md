@@ -22,12 +22,17 @@ permalink: /buscar/
 
 <script>
 window.REALMAT_SEARCH_INDEX = [
+{% assign search_index_count = 0 %}
 {% for item in site.pages %}
-  {
-    "title": {{ item.title | default: "" | jsonify }},
-    "url": {{ item.url | relative_url | jsonify }},
-    "text": {{ item.content | strip_html | strip_newlines | jsonify }}
-  }{% unless forloop.last %},{% endunless %}
+  {% unless item.url == '/buscar/' or item.url == '/404.html' or item.url == '/atualizacoes/' %}
+    {% if search_index_count > 0 %},{% endif %}
+    {
+      "title": {{ item.title | default: "" | jsonify }},
+      "url": {{ item.url | relative_url | jsonify }},
+      "text": {{ item.content | strip_html | strip_newlines | jsonify }}
+    }
+    {% assign search_index_count = search_index_count | plus: 1 %}
+  {% endunless %}
 {% endfor %}
 ];
 </script>
