@@ -26,7 +26,6 @@ REQUIRED = {
     ),
     "_layouts/home.html": (
         "layout: default",
-        "realmat-home",
     ),
     "_layouts/single.html": (
         'class="post',

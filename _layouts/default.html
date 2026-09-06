@@ -1,47 +1,53 @@
 ---
 ---
 {%- assign page_description = page.description | default: site.description -%}
-<!doctype html>
+<!DOCTYPE HTML>
 <html lang="{{ page.locale | default: site.locale | default: 'pt-BR' }}" dir="ltr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#191918">
+    <meta name="theme-color" content="#1e252d">
     <meta name="description" content="{{ page_description | strip_html | strip_newlines | escape }}">
     <title>{% if page.url == '/' %}{{ site.title }}{% else %}{{ page.title }} · {{ site.title }}{% endif %}</title>
     <link rel="canonical" href="{{ page.url | absolute_url }}">
     <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+    <noscript><link rel="stylesheet" href="{{ '/assets/css/noscript.css' | relative_url }}"></noscript>
+    <link rel="stylesheet" href="{{ '/assets/css/realmat.css' | relative_url }}">
   </head>
 
-  <body class="realmat-layout layout--{{ page.layout | default: 'single' }}">
+  <body class="is-preload">
     <a class="realmat-skip-link" href="#main">Pular para o conteúdo</a>
 
-    {% include masthead.html %}
-
-    <div class="realmat-page-frame">
-      <main id="main">
-        {{ content }}
-      </main>
-
-      {% if site.search %}
-        <div id="search-content" class="realmat-search-panel" aria-hidden="true">
-          <div class="realmat-search-panel__inner">
-            <form class="realmat-search-form" action="{{ '/buscar/' | relative_url }}" method="get" role="search">
-              <label for="realmat-search-input">Buscar no portal</label>
-              <div class="realmat-search-form__controls">
-                <input id="realmat-search-input" type="search" name="q" placeholder="Buscar livros e páginas" autocomplete="off">
-                <button class="realmat-button realmat-button--inverse" type="submit">Pesquisar</button>
-              </div>
-            </form>
-          </div>
-        </div>
+    <div id="wrapper" class="fade-in">
+      {% if page.layout == 'home' %}
+        {% include massively-intro.html %}
       {% endif %}
+
+      {% include massively-header.html %}
+      {% include massively-nav.html %}
+
+      <div id="main">
+        {{ content }}
+      </div>
+
+      {% include massively-footer.html %}
+
+      <div id="copyright">
+        <ul>
+          <li>© {{ site.time | date: '%Y' }} REALMAT</li>
+          <li>Design adaptado de <a href="https://html5up.net/massively" target="_blank" rel="noopener noreferrer">Massively</a>, por HTML5 UP</li>
+          <li><a href="https://html5up.net/license" target="_blank" rel="noopener noreferrer">Licença CCA 3.0</a></li>
+        </ul>
+      </div>
     </div>
 
-    <footer id="footer" class="realmat-footer">
-      {% include footer.html %}
-    </footer>
-
-    <script defer src="{{ '/assets/js/realmat.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/jquery.min.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/jquery.scrollex.min.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/jquery.scrolly.min.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/browser.min.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/breakpoints.min.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/util.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+    <script defer src="{{ '/assets/js/realmat-search.js' | relative_url }}"></script>
   </body>
 </html>

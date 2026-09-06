@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke tests for the generated REALMAT Pages site."""
+"""Smoke tests for the generated REALMAT site using the Massively structure."""
 
 from pathlib import Path
 import re
@@ -10,23 +10,26 @@ ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("_site")
 
 EXPECTED_PAGES = {
     "index.html": (
-        'class="realmat-masthead"',
-        "realmat-editorial-intro",
-        "realmat-featured",
+        'id="intro"',
+        'id="header"',
+        'id="nav"',
+        'id="main"',
+        'class="post featured',
+        'class="posts',
         "Ler o PDF",
         'href="/livros/"',
         'href="/contribuir/"',
-        'src="/assets/js/realmat.js"',
+        'src="/assets/js/main.js"',
     ),
     "livros/index.html": (
-        "realmat-catalog-list",
-        "realmat-book-entry",
+        'class="realmat-library"',
+        "forallx: Lógica",
         'href="/livros/forallx/"',
         'href="/assets/books/forallx.pdf"',
     ),
     "livros/forallx/index.html": (
-        "realmat-page",
-        "realmat-book-overview",
+        'class="post realmat-page"',
+        'class="realmat-book-detail"',
         "Ler no navegador",
         'href="/assets/books/forallx.pdf"',
         'target="_blank"',
@@ -34,74 +37,72 @@ EXPECTED_PAGES = {
         'href="/contribuir/"',
     ),
     "sobre/index.html": (
-        "realmat-page",
+        'class="post realmat-page"',
         "Uma biblioteca aberta de matemática",
     ),
     "contribuir/index.html": (
-        "realmat-page",
-        "Projeto de tradução",
-        "realmat-contribution-card",
+        'class="post realmat-page"',
+        "realmat-contribution",
         "https://github.com/projetorealmat/forallx/issues",
         "https://github.com/projetorealmat/forallx",
         'target="_blank"',
         'rel="noopener noreferrer"',
     ),
     "buscar/index.html": (
-        "realmat-search-results",
+        'class="realmat-search"',
         "REALMAT_SEARCH_INDEX",
         'id="realmat-search-input"',
     ),
     "atualizacoes/index.html": (
-        "realmat-page",
-        "Registro das principais etapas de publicação do portal.",
-        "forallx-disponivel",
+        'class="post realmat-page"',
+        "realmat-updates",
+        "forallx disponível para leitura",
     ),
 }
 
-FORBIDDEN_PAGE_MARKERS = {
-    "index.html": (
-        "realmat-hero",
-        "realmat-statement",
-        "Escolha o caminho que você precisa",
-    ),
-    "livros/index.html": (
-        "https://github.com/projetorealmat/forallx",
-    ),
-    "livros/forallx/index.html": (
-        "<iframe",
-        "realmat-book-reader__frame",
-        'href="#forallx-reader-frame"',
-        "https://github.com/projetorealmat/forallx",
-    ),
-    "contribuir/index.html": (
-        "Compartilhe",
-        "Link direto",
-    ),
-}
+FORBIDDEN = (
+    "This is Massively",
+    "Lorem ipsum",
+    "minimal-mistakes",
+    '<iframe',
+    'href="#"',
+)
 
 REQUIRED_ASSETS = (
     "assets/css/main.css",
-    "assets/js/realmat.js",
+    "assets/css/noscript.css",
+    "assets/css/fontawesome-all.min.css",
+    "assets/js/jquery.min.js",
+    "assets/js/jquery.scrollex.min.js",
+    "assets/js/jquery.scrolly.min.js",
+    "assets/js/browser.min.js",
+    "assets/js/breakpoints.min.js",
+    "assets/js/util.js",
+    "assets/js/main.js",
+    "assets/js/realmat-search.js",
+    "assets/webfonts/fa-solid-900.woff2",
+    "assets/webfonts/fa-brands-400.woff2",
+    "images/bg.jpg",
+    "images/overlay.png",
     "assets/books/forallx.pdf",
 )
 
-
-def _check_internal_links(errors):
+def check_internal_links(errors):
     for path in ROOT.rglob("*.html"):
-        content = path.read_text(encoding="utf-8")
-        if "<iframe" in content:
-            errors.append(f"{path.relative_to(ROOT)}: leitor embutido não permitido")
+        content = path.read_text(encoding="utf-8", errors="replace")
+        for marker in FORBIDDEN:
+            if marker in content:
+                errors.append(f"{path.relative_to(ROOT)}: marcador proibido: {marker}")
 
         for raw_href in re.findall(r'href="([^"]+)"', content):
-            if raw_href.startswith(("#", "http://", "https://", "mailto:", "tel:")):
-                if raw_href == "#":
-                    errors.append(
-                        f"{path.relative_to(ROOT)}: link vazio sem destino"
-                    )
+            if raw_href.startswith(("http://", "https://", "mailto:", "tel:")):
                 continue
-
             parsed = urlsplit(raw_href)
             target = parsed.path
+            if target.startswith("#"):
+                if target == "#":
+                    errors.append(f"{path.relative_to(ROOT)}: link vazio sem destino")
+                continue
             if not target.startswith("/"):
                 continue
 
@@ -117,7 +118,6 @@ def _check_internal_links(errors):
                     f"{path.relative_to(ROOT)}: link interno sem destino: {raw_href}"
                 )
 
-
 def main() -> int:
     errors = []
 
@@ -127,15 +127,16 @@ def main() -> int:
             errors.append(f"página gerada ausente: {relative_path}")
             continue
 
-        content = path.read_text(encoding="utf-8")
+        content = path.read_text(encoding="utf-8", errors="replace")
         for marker in markers:
             if marker not in content:
                 errors.append(f"{relative_path}: marcador ausente: {marker}")
-        for marker in FORBIDDEN_PAGE_MARKERS.get(relative_path, ()):
-            if marker in content:
-                errors.append(f"{relative_path}: marcador proibido: {marker}")
         if "{{" in content or "{%" in content:
             errors.append(f"{relative_path}: expressão Liquid não processada")
+
+    for relative_path in REQUIRED_ASSETS:
+        if not (ROOT / relative_path).exists():
+            errors.append(f"recurso gerado ausente: {relative_path}")
 
     forallx = ROOT / "livros" / "forallx" / "index.html"
     if forallx.exists():
@@ -150,32 +151,23 @@ def main() -> int:
             content,
         )
         if not browser_link:
-            errors.append(
-                "livros/forallx/index.html: PDF não abre no visualizador do navegador"
-            )
+            errors.append("forallx: PDF não abre no visualizador do navegador")
         if not download_link:
-            errors.append(
-                "livros/forallx/index.html: download explícito do PDF ausente"
-            )
+            errors.append("forallx: download explícito do PDF ausente")
 
-    for relative_path in REQUIRED_ASSETS:
-        if not (ROOT / relative_path).exists():
-            errors.append(f"recurso gerado ausente: {relative_path}")
-
-    _check_internal_links(errors)
+    check_internal_links(errors)
 
     if errors:
-        print("Generated site checks failed:")
+        print("Generated Massively site checks failed:")
         for error in errors:
             print(f"- {error}")
         return 1
 
     print(
-        f"Generated site checks passed: {len(EXPECTED_PAGES)} pages and "
+        f"Generated Massively site checks passed: {len(EXPECTED_PAGES)} pages and "
         f"{len(REQUIRED_ASSETS)} assets."
     )
     return 0
-
 
 if __name__ == "__main__":
     sys.exit(main())

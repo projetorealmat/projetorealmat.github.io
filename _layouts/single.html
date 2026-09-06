@@ -2,22 +2,14 @@
 layout: default
 ---
 {%- assign page_description = page.description | default: page.excerpt -%}
-<article class="realmat-page" itemscope itemtype="https://schema.org/CreativeWork">
-  <header class="realmat-page__hero">
-    <div class="realmat-page__hero-inner">
-      <p class="realmat-kicker">{{ page.kicker | default: "REALMAT" }}</p>
-      {% if page.title %}
-        <h1 class="realmat-page__title" itemprop="headline">{{ page.title }}</h1>
-      {% endif %}
-      {% if page_description %}
-        <p class="realmat-page__description" itemprop="description">{{ page_description | strip_html }}</p>
-      {% endif %}
-    </div>
+<article class="post realmat-page" itemscope itemtype="https://schema.org/CreativeWork">
+  <header class="major">
+    {% if page.kicker %}<span class="date">{{ page.kicker }}</span>{% endif %}
+    {% if page.title %}<h1 itemprop="headline">{{ page.title }}</h1>{% endif %}
+    {% if page_description %}<p itemprop="description">{{ page_description | strip_html }}</p>{% endif %}
   </header>
 
-  <div class="realmat-page__body">
-    <div class="realmat-prose e-content" itemprop="text">
-      {{ content }}
-    </div>
+  <div class="realmat-page-content e-content" itemprop="text">
+    {{ content }}
   </div>
 </article>
