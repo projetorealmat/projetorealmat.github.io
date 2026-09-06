@@ -2,15 +2,15 @@ main:
   - title: "Livros"
     description: "Leia as obras e traduções disponíveis."
     url: /livros/
-  - title: "Contribuir"
-    description: "Veja como participar de cada projeto."
-    url: /contribuir/
   - title: "Arquivo"
     description: "Consulte o histórico de edições e publicações."
     url: /arquivo/
   - title: "Tópicos"
     description: "Explore os assuntos presentes no catálogo."
     url: /topicos/
+  - title: "Contribuir"
+    description: "Veja como participar de cada projeto."
+    url: /contribuir/
   - title: "Sobre"
     description: "Conheça o projeto REALMat."
     url: /sobre/

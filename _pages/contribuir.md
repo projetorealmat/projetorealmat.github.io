@@ -1,7 +1,7 @@
 ---
 title: "Como contribuir"
 kicker: "Participar"
-description: "Orientações gerais e caminhos de colaboração para os projetos do REALMAT."
+description: "Orientações gerais e caminhos de colaboração para os projetos do REALMat."
 permalink: /contribuir/
 ---
 

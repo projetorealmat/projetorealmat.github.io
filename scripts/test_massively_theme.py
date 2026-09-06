@@ -2,6 +2,7 @@
 """Source-level acceptance checks for the original Massively integration."""
 
 from pathlib import Path
+import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -30,6 +31,9 @@ REQUIRED = {
         "html5up.net/massively",
         "assets/css/main.css",
         "assets/css/realmat.css",
+        'rel="preload"',
+        "images/realmat-bg.jpg",
+        "REALMat</li>",
         "assets/js/jquery.min.js",
         "assets/js/main.js",
     ),
@@ -44,6 +48,7 @@ REQUIRED = {
     "_includes/massively-intro.html": (
         'id="intro"',
         "REALMat",
+        '<h1>REALMat</h1>',
         "Recursos Educacionais Abertos na Licenciatura em Matemática",
         "scrolly",
     ),
@@ -53,6 +58,8 @@ REQUIRED = {
         "brand-real",
         "brand-l",
         "brand-mat",
+        "realmat-wordmark__icon",
+        'viewBox="0 0 32 32"',
     ),
     "_includes/massively-nav.html": (
         'id="nav"',
@@ -64,6 +71,7 @@ REQUIRED = {
         'id="footer"',
         "Como contribuir",
         "Organização do projeto",
+        "forallx: Lógica",
     ),
     "index.md": (
         'class="post featured',
@@ -77,6 +85,7 @@ REQUIRED = {
         "realmat-library",
         "forallx: Lógica",
         "assets/books/forallx.pdf",
+        "REALMat para leitura",
     ),
     "_pages/forallx.md": (
         "realmat-book-detail",
@@ -87,6 +96,7 @@ REQUIRED = {
     "_pages/contribuir.md": (
         "realmat-contribution",
         "github.com/projetorealmat/forallx",
+        "REALMat.",
     ),
     "_pages/sobre.md": (
         "Recursos Educacionais Abertos na Licenciatura em Matemática",
@@ -105,6 +115,14 @@ REQUIRED = {
     "_pages/buscar.md": (
         "realmat-search",
         "REALMAT_SEARCH_INDEX",
+        "search_index_count",
+        "item.url == '/buscar/'",
+        "item.url == '/404.html'",
+    ),
+    "_pages/atualizacoes.md": (
+        "permalink: /atualizacoes/",
+        'http-equiv="refresh"',
+        "/arquivo/",
     ),
     "assets/css/main.css": (
         "Massively by HTML5 UP",
@@ -121,9 +139,12 @@ REQUIRED = {
         "--realmat-blue",
         "--realmat-gold",
         "--realmat-cyan",
+        "--realmat-orange",
         "realmat-bg",
         "realmat-logo",
         "brand-real",
+        "realmat-wordmark__icon",
+        "#wrapper.fade-in:before",
         "realmat-book-poster",
         "@media",
     ),
@@ -140,6 +161,10 @@ REQUIRED = {
     ),
     "MASSIVELY_LICENSE.txt": (
         "Creative Commons Attribution 3.0",
+    ),
+    "README.md": (
+        "# REALMat",
+        "Recursos Educacionais Abertos na Licenciatura em Matemática.",
     ),
 }
 
@@ -172,6 +197,39 @@ REQUIRED_ASSETS = (
     "images/realmat-bg.jpg",
     "assets/images/realmat-logo.jpg",
 )
+
+def check_intro_subtitle_color(errors):
+    path = ROOT / "assets/css/realmat.css"
+    if not path.exists():
+        return
+    content = path.read_text(encoding="utf-8", errors="replace")
+    matches = re.findall(
+        r"#intro \.realmat-intro-subtitle\s*\{(.*?)\}",
+        content,
+        flags=re.S,
+    )
+    if not matches or "color: var(--realmat-orange);" not in matches[-1]:
+        errors.append(
+            "assets/css/realmat.css: subtítulo da intro não usa a cor laranja da marca"
+        )
+
+
+def check_first_paint_background(errors):
+    layout = ROOT / "_layouts/default.html"
+    css = ROOT / "assets/css/realmat.css"
+    layout_content = layout.read_text(encoding="utf-8", errors="replace") if layout.exists() else ""
+    css_content = css.read_text(encoding="utf-8", errors="replace") if css.exists() else ""
+    if 'rel="preload"' not in layout_content or "images/realmat-bg.jpg" not in layout_content:
+        errors.append("_layouts/default.html: preload do fundo da home ausente")
+    match = re.search(
+        r"#wrapper\.fade-in:before\s*\{(.*?)\}",
+        css_content,
+        flags=re.S,
+    )
+    if not match or "realmat-bg.jpg" not in match.group(1):
+        errors.append(
+            "assets/css/realmat.css: camada inicial ainda não usa o fundo REALMat"
+        )
 
 def main() -> int:
     errors = []
@@ -212,13 +270,16 @@ def main() -> int:
         ]
         expected = [
             '- title: "Livros"',
-            '- title: "Contribuir"',
             '- title: "Arquivo"',
             '- title: "Tópicos"',
+            '- title: "Contribuir"',
             '- title: "Sobre"',
         ]
         if titles != expected:
             errors.append("_data/navigation.yml: menu principal inesperado")
+
+    check_intro_subtitle_color(errors)
+    check_first_paint_background(errors)
 
     if errors:
         print("Massively source checks failed:")
