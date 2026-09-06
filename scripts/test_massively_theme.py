@@ -116,8 +116,8 @@ REQUIRED = {
         "realmat-search",
         "REALMAT_SEARCH_INDEX",
         "search_index_count",
-        "item.url != '/buscar/'",
-        "item.url != '/404.html'",
+        "item.url == '/buscar/'",
+        "item.url == '/404.html'",
     ),
     "_pages/atualizacoes.md": (
         "permalink: /atualizacoes/",
@@ -203,12 +203,12 @@ def check_intro_subtitle_color(errors):
     if not path.exists():
         return
     content = path.read_text(encoding="utf-8", errors="replace")
-    match = re.search(
+    matches = re.findall(
         r"#intro \.realmat-intro-subtitle\s*\{(.*?)\}",
         content,
         flags=re.S,
     )
-    if not match or "color: var(--realmat-orange);" not in match.group(1):
+    if not matches or "color: var(--realmat-orange);" not in matches[-1]:
         errors.append(
             "assets/css/realmat.css: subtítulo da intro não usa a cor laranja da marca"
         )
