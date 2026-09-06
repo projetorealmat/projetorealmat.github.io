@@ -2,6 +2,7 @@
 """Smoke tests for the generated REALMAT site using the Massively structure."""
 
 from pathlib import Path
+import json
 import re
 import sys
 from urllib.parse import urlsplit
@@ -22,6 +23,12 @@ EXPECTED_PAGES = {
         'src="/assets/js/main.js"',
         "Recursos Educacionais Abertos na Licenciatura em Matemática",
         "realmat-logo",
+        "<h1>REALMat</h1>",
+        "realmat-wordmark__icon",
+        'href="/arquivo/"',
+        'href="/topicos/"',
+        'href="/images/realmat-bg.jpg"',
+        "REALMat</li>",
     ),
     "livros/index.html": (
         'class="realmat-library"',
@@ -66,6 +73,10 @@ EXPECTED_PAGES = {
         "Lógica formal",
         'href="/livros/forallx/"',
     ),
+    "atualizacoes/index.html": (
+        'http-equiv="refresh"',
+        'href="/arquivo/"',
+    ),
 }
 
 FORBIDDEN = (
@@ -107,7 +118,7 @@ def check_navigation_order(errors):
         errors.append("index.html: menu principal ausente")
         return
     titles = re.findall(r'<a[^>]*>([^<]+)</a>', nav_match.group(1))
-    expected = ["Livros", "Contribuir", "Arquivo", "Tópicos", "Sobre"]
+    expected = ["Livros", "Arquivo", "Tópicos", "Contribuir", "Sobre"]
     if titles != expected:
         errors.append(f"index.html: ordem do menu inesperada: {titles}")
 
@@ -142,6 +153,42 @@ def check_internal_links(errors):
                 errors.append(
                     f"{path.relative_to(ROOT)}: link interno sem destino: {raw_href}"
                 )
+
+def check_search_index(errors):
+    path = ROOT / "buscar" / "index.html"
+    if not path.exists():
+        return
+    content = path.read_text(encoding="utf-8", errors="replace")
+    match = re.search(
+        r"window\.REALMAT_SEARCH_INDEX\s*=\s*(\[.*?\]);",
+        content,
+        flags=re.S,
+    )
+    if not match:
+        errors.append("buscar/index.html: índice de busca não encontrado")
+        return
+    try:
+        items = json.loads(match.group(1))
+    except json.JSONDecodeError as exc:
+        errors.append(f"buscar/index.html: índice de busca inválido: {exc}")
+        return
+    urls = {item.get("url") for item in items}
+    for forbidden in ("/buscar/", "/404.html", "/atualizacoes/"):
+        if forbidden in urls:
+            errors.append(
+                f"buscar/index.html: página estrutural indevidamente indexada: {forbidden}"
+            )
+    if "/livros/" not in urls:
+        errors.append("buscar/index.html: páginas de conteúdo não foram indexadas")
+
+
+def check_branding(errors):
+    path = ROOT / "index.html"
+    if not path.exists():
+        return
+    content = path.read_text(encoding="utf-8", errors="replace")
+    if not re.search(r"<li>©\s+[^<]+\s+REALMat</li>", content):
+        errors.append("index.html: copyright ainda não usa a grafia REALMat")
 
 def main() -> int:
     errors = []
@@ -182,6 +229,8 @@ def main() -> int:
 
     check_navigation_order(errors)
     check_internal_links(errors)
+    check_search_index(errors)
+    check_branding(errors)
 
     if errors:
         print("Generated Massively site checks failed:")
