@@ -1,0 +1,373 @@
+:root {
+  --realmat-orange: #e87518;
+  --realmat-orange-dark: #b9530b;
+  --realmat-ink: #212931;
+  --realmat-paper: #ffffff;
+  --realmat-muted: #717981;
+}
+
+/* Small brand layer on top of the untouched Massively stylesheet. */
+.realmat-skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 10002;
+  padding: 0.65rem 0.9rem;
+  background: var(--realmat-orange);
+  color: #fff !important;
+  transform: translateY(-200%);
+}
+.realmat-skip-link:focus {
+  transform: translateY(0);
+  border-bottom: 0;
+}
+
+#intro .realmat-intro-kicker {
+  margin: 0 0 1.25rem;
+  color: var(--realmat-orange);
+  font-family: "Source Sans Pro", Helvetica, sans-serif;
+  font-size: 0.8rem;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+#intro h1 {
+  max-width: 12ch;
+  font-size: clamp(3.5rem, 8vw, 6rem);
+  text-wrap: balance;
+}
+#intro p:not(.realmat-intro-kicker) {
+  max-width: 36rem;
+}
+#intro .button:hover {
+  box-shadow: inset 0 0 0 2px var(--realmat-orange);
+  color: var(--realmat-orange) !important;
+}
+
+#header .logo {
+  border-color: var(--realmat-orange);
+}
+#header .logo:hover {
+  border-color: var(--realmat-orange) !important;
+  color: var(--realmat-orange) !important;
+}
+
+#nav ul.links li.active {
+  background: var(--realmat-orange);
+}
+#nav ul.links li.active a,
+#nav ul.links li.active a:hover {
+  color: #fff !important;
+}
+#nav a:hover,
+#nav ul.icons li a.icon:hover:before,
+#navPanel a:hover,
+#navPanel .icon:hover:before {
+  color: var(--realmat-orange) !important;
+}
+
+#main > .post header.major > h1,
+#main > .post header.major h2 {
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+}
+#main a:not(.button) {
+  color: var(--realmat-orange);
+}
+#main a:not(.button):hover {
+  color: var(--realmat-orange-dark) !important;
+}
+#main .button.primary,
+#main .button.primary:hover,
+#footer .button.primary,
+#footer .button.primary:hover {
+  background-color: var(--realmat-orange);
+  box-shadow: none;
+  color: #fff !important;
+}
+#main .button:hover,
+#footer .button:hover {
+  box-shadow: inset 0 0 0 2px var(--realmat-orange);
+  color: var(--realmat-orange) !important;
+}
+#main .button.primary:hover,
+#footer .button.primary:hover {
+  background-color: var(--realmat-orange-dark);
+  box-shadow: none;
+  color: #fff !important;
+}
+
+.realmat-home .realmat-book-poster {
+  margin: 3rem 0;
+}
+.realmat-book-poster {
+  display: flex;
+  min-height: 23rem;
+  align-items: stretch;
+  justify-content: center;
+  overflow: hidden;
+  border: 0 !important;
+  background:
+    linear-gradient(135deg, rgba(232, 117, 24, 0.98) 0 42%, transparent 42%),
+    linear-gradient(315deg, #212931 0 50%, #303a43 50% 100%);
+  color: #fff !important;
+  text-align: left;
+}
+.realmat-book-poster:hover {
+  color: #fff !important;
+  opacity: 0.94;
+}
+.realmat-book-poster__inner {
+  position: relative;
+  display: flex;
+  width: min(100%, 48rem);
+  min-height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.25rem;
+  border-left: 2px solid rgba(255,255,255,0.8);
+  color: #fff;
+}
+.realmat-book-poster__number,
+.realmat-book-poster__footer,
+.realmat-card-mark,
+.realmat-facts__number {
+  font-family: "Source Sans Pro", Helvetica, sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.realmat-book-poster__number {
+  font-size: 0.8rem;
+}
+.realmat-book-poster__name {
+  margin-top: auto;
+  font-family: "Merriweather", Georgia, serif;
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-weight: 900;
+  line-height: 0.9;
+}
+.realmat-book-poster__subject {
+  margin-top: 0.8rem;
+  color: #fff;
+  font-family: "Source Sans Pro", Helvetica, sans-serif;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.realmat-book-poster__formula {
+  align-self: flex-end;
+  color: var(--realmat-orange);
+  font-family: "Merriweather", Georgia, serif;
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-style: italic;
+  line-height: 1;
+}
+.realmat-book-poster__footer {
+  margin-top: 2rem;
+  font-size: 0.7rem;
+}
+.realmat-book-poster--small {
+  min-height: 19rem;
+}
+.realmat-book-poster--large {
+  min-height: 31rem;
+  margin: 0;
+}
+
+.realmat-card-mark {
+  margin: 0 0 1.5rem;
+  color: var(--realmat-orange);
+  font-size: 0.8rem;
+}
+.realmat-page-lead {
+  max-width: 48rem;
+  margin: 0 auto 3rem;
+  font-size: 1.15rem;
+}
+.realmat-meta,
+.realmat-note,
+.realmat-catalog-note {
+  color: var(--realmat-muted);
+  font-size: 0.85rem;
+}
+.realmat-catalog-note {
+  border-top: 2px solid #eee;
+  padding-top: 2rem;
+}
+
+.realmat-library {
+  display: grid;
+  gap: 3rem;
+}
+.realmat-library__entry {
+  display: grid;
+  grid-template-columns: minmax(15rem, 0.8fr) minmax(0, 1.2fr);
+  gap: 3rem;
+  align-items: center;
+  padding: 0 0 3rem;
+  border-bottom: 2px solid #eee;
+}
+.realmat-library__body h2 {
+  margin-top: 0.75rem;
+}
+.realmat-library__body .actions {
+  margin-top: 2rem;
+}
+
+.realmat-book-detail {
+  display: grid;
+  grid-template-columns: minmax(15rem, 0.8fr) minmax(0, 1.2fr);
+  gap: 4rem;
+  align-items: center;
+}
+.realmat-book-detail__copy .major {
+  margin-bottom: 2rem;
+}
+.realmat-book-detail__copy .major h2 {
+  font-size: 2.2rem;
+}
+.realmat-book-detail__copy .actions {
+  margin-top: 2rem;
+}
+.realmat-facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  padding-top: 2rem;
+}
+.realmat-facts > div {
+  border-top: 2px solid #eee;
+  padding-top: 1.25rem;
+}
+.realmat-facts h3 {
+  margin: 0.65rem 0;
+}
+.realmat-facts__number {
+  color: var(--realmat-orange);
+  font-size: 0.75rem;
+}
+.realmat-callout,
+.realmat-contribution,
+.realmat-about {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 3rem;
+  align-items: center;
+  margin-top: 3rem;
+  padding-top: 3rem;
+  border-top: 2px solid #eee;
+}
+.realmat-callout h2,
+.realmat-contribution h2,
+.realmat-about h2 {
+  margin-top: 0.75rem;
+}
+.realmat-contribution__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+.realmat-process,
+.realmat-guidelines,
+.realmat-updates {
+  margin-top: 3rem;
+}
+.realmat-process ol {
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+.realmat-updates {
+  display: grid;
+  gap: 2rem;
+}
+.realmat-updates article {
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #eee;
+}
+.realmat-updates article:last-child {
+  border-bottom: 0;
+}
+.realmat-search label {
+  display: block;
+}
+.realmat-search__controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.realmat-search__controls input {
+  flex: 1;
+}
+.realmat-search__status {
+  margin-top: 2rem;
+  color: var(--realmat-muted);
+}
+.realmat-search__results {
+  margin-top: 1.5rem;
+}
+.realmat-search__result {
+  padding: 1.5rem 0;
+  border-top: 2px solid #eee;
+}
+.realmat-search__result h3 {
+  margin-bottom: 0.5rem;
+}
+.realmat-search__result p {
+  margin-bottom: 0;
+  color: var(--realmat-muted);
+}
+
+#footer {
+  background-color: #f5f5f5;
+}
+#footer a:hover {
+  color: var(--realmat-orange) !important;
+}
+#copyright a:hover {
+  color: var(--realmat-orange) !important;
+}
+#copyright {
+  margin-bottom: 4rem;
+}
+
+@media screen and (max-width: 736px) {
+  #main > .post header.major > h1,
+  #main > .post header.major h2 {
+    font-size: 2.25rem;
+  }
+  .realmat-book-poster,
+  .realmat-book-poster--large,
+  .realmat-book-poster--small {
+    min-height: 18rem;
+  }
+  .realmat-book-poster__inner {
+    padding: 1.5rem;
+  }
+  .realmat-book-poster__name {
+    font-size: clamp(3rem, 19vw, 5.5rem);
+  }
+  .realmat-library__entry,
+  .realmat-book-detail,
+  .realmat-callout,
+  .realmat-contribution,
+  .realmat-about {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .realmat-contribution__links {
+    justify-content: flex-start;
+  }
+  .realmat-facts {
+    grid-template-columns: 1fr;
+  }
+  .realmat-search__controls {
+    display: block;
+  }
+  .realmat-search__controls .button {
+    margin-top: 1rem;
+  }
+}

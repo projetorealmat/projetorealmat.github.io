@@ -7,23 +7,25 @@ permalink: /contribuir/
 
 <p class="realmat-page-lead">O portal é o espaço de leitura. Esta página reúne as orientações gerais e encaminha cada projeto para suas discussões e arquivos-fonte.</p>
 
-<section class="realmat-contribution-card" id="projeto-forallx" aria-labelledby="contribute-forallx-title">
+<section class="realmat-contribution" id="projeto-forallx" aria-labelledby="contribute-forallx-title">
   <div>
-    <p class="realmat-kicker">Projeto de tradução</p>
+    <span class="date">Projeto de tradução</span>
     <h2 id="contribute-forallx-title">forallx: Lógica</h2>
     <p>Participe da revisão e da adaptação brasileira da introdução à lógica formal.</p>
   </div>
-  <div class="realmat-contribution-links">
-    <a class="realmat-button realmat-button--primary" href="https://github.com/projetorealmat/forallx/issues" target="_blank" rel="noopener noreferrer">Discussões e correções <span aria-hidden="true">↗</span></a>
-    <a class="realmat-button realmat-button--outline" href="https://github.com/projetorealmat/forallx" target="_blank" rel="noopener noreferrer">Arquivos-fonte <span aria-hidden="true">↗</span></a>
+  <div class="realmat-contribution__links">
+    <a href="https://github.com/projetorealmat/forallx/issues" class="button primary" target="_blank" rel="noopener noreferrer">Discussões e correções <span aria-hidden="true">↗</span></a>
+    <a href="https://github.com/projetorealmat/forallx" class="button" target="_blank" rel="noopener noreferrer">Arquivos-fonte <span aria-hidden="true">↗</span></a>
   </div>
 </section>
 
+<hr />
+
 <section class="realmat-process" aria-labelledby="contribute-process-title">
-  <div>
-    <p class="realmat-kicker">Fluxo de colaboração</p>
+  <header class="major">
+    <span class="date">Fluxo de colaboração</span>
     <h2 id="contribute-process-title">Como participar</h2>
-  </div>
+  </header>
   <ol>
     <li>Leia a edição disponível na <a href="{{ '/livros/forallx/' | relative_url }}">página do livro</a>.</li>
     <li>Para apontar uma dúvida, correção ou sugestão, abra uma discussão no projeto correspondente.</li>
@@ -32,15 +34,11 @@ permalink: /contribuir/
   </ol>
 </section>
 
-<section class="realmat-contribution-note">
-  <p class="realmat-kicker">Outros projetos</p>
-  <p>Novos livros terão uma página de leitura e um repositório próprio quando estiverem preparados para publicação.</p>
-  <a class="realmat-text-link" href="https://github.com/projetorealmat" target="_blank" rel="noopener noreferrer">Ver a organização do REALMAT <span aria-hidden="true">↗</span></a>
-</section>
-
 <section class="realmat-guidelines" aria-labelledby="guidelines-title">
-  <p class="realmat-kicker">Boas práticas</p>
-  <h2 id="guidelines-title">Colabore com clareza.</h2>
+  <header class="major">
+    <span class="date">Boas práticas</span>
+    <h2 id="guidelines-title">Colabore com clareza.</h2>
+  </header>
   <ul>
     <li>explique o motivo de cada alteração;</li>
     <li>preserve a formatação e a notação matemática;</li>
