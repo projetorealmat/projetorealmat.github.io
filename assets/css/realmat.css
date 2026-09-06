@@ -371,3 +371,256 @@
     margin-top: 1rem;
   }
 }
+
+
+/* REALMat identity layer: project palette, readable controls and branded imagery. */
+:root {
+  --realmat-blue: #123f8c;
+  --realmat-blue-dark: #0a2b63;
+  --realmat-gold: #e2a62a;
+  --realmat-cyan: #0e9fbd;
+  --realmat-navy: #071a34;
+  --realmat-surface: #f4f7fb;
+  --realmat-border: rgba(18, 63, 140, 0.18);
+}
+
+body {
+  background-color: var(--realmat-navy);
+}
+
+#intro {
+  background:
+    linear-gradient(135deg, rgba(5, 19, 42, 0.78), rgba(7, 35, 69, 0.48)),
+    url("../../images/realmat-bg.jpg") center / cover no-repeat;
+}
+
+#wrapper > .bg {
+  background-image:
+    url("../../images/overlay.png"),
+    linear-gradient(135deg, rgba(5, 19, 42, 0.62), rgba(7, 35, 69, 0.26)),
+    url("../../images/realmat-bg.jpg");
+  background-position: center;
+  background-size: cover;
+}
+
+#intro .realmat-intro-kicker {
+  color: var(--realmat-gold);
+}
+#intro .realmat-intro-subtitle {
+  max-width: 40rem;
+  color: #fff;
+  font-family: "Source Sans Pro", Helvetica, sans-serif;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.45;
+}
+#intro .realmat-intro-support {
+  color: rgba(255, 255, 255, 0.82);
+  font-style: normal;
+}
+#intro .button {
+  border-color: rgba(255, 255, 255, 0.8);
+  background: transparent;
+  color: #fff !important;
+}
+#intro .button:hover,
+#intro .button:focus-visible {
+  border-color: var(--realmat-gold);
+  background: var(--realmat-gold);
+  color: var(--realmat-navy) !important;
+  box-shadow: none;
+}
+
+#header .realmat-wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
+  border-color: rgba(255, 255, 255, 0.7);
+  font-family: "Source Sans Pro", Helvetica, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: none;
+}
+#header .realmat-wordmark .brand-real {
+  color: #f6f8ff;
+}
+#header .realmat-wordmark .brand-l {
+  color: var(--realmat-gold);
+}
+#header .realmat-wordmark .brand-mat {
+  color: var(--realmat-cyan);
+}
+#header .realmat-wordmark:hover,
+#header .realmat-wordmark:focus-visible {
+  border-color: var(--realmat-gold);
+}
+#header .realmat-wordmark:hover .brand-real,
+#header .realmat-wordmark:focus-visible .brand-real {
+  color: #fff;
+}
+
+#nav ul.links li.active {
+  background: var(--realmat-gold);
+}
+#nav ul.links li.active a,
+#nav ul.links li.active a:hover,
+#nav ul.links li.active a:focus-visible {
+  color: var(--realmat-navy) !important;
+}
+#nav a:hover,
+#nav a:focus-visible,
+#nav ul.icons li a.icon:hover:before,
+#nav ul.icons li a.icon:focus-visible:before,
+#navPanel a:hover,
+#navPanel a:focus-visible,
+#navPanel .icon:hover:before,
+#navPanel .icon:focus-visible:before {
+  color: var(--realmat-cyan) !important;
+}
+
+#main > .post header.major > h1,
+#main > .post header.major h2 {
+  font-size: clamp(2.15rem, 4vw, 3.25rem);
+}
+#main a:not(.button) {
+  color: var(--realmat-blue);
+}
+#main a:not(.button):hover,
+#main a:not(.button):focus-visible {
+  color: var(--realmat-cyan) !important;
+}
+
+#main .button,
+#footer .button {
+  border: 2px solid var(--realmat-blue);
+  background: #fff;
+  box-shadow: none;
+  color: var(--realmat-blue) !important;
+}
+#main .button:hover,
+#main .button:focus-visible,
+#footer .button:hover,
+#footer .button:focus-visible {
+  border-color: var(--realmat-blue);
+  background: var(--realmat-blue);
+  color: #fff !important;
+  box-shadow: none;
+}
+#main .button.primary,
+#footer .button.primary {
+  border-color: var(--realmat-blue);
+  background: var(--realmat-blue);
+  color: #fff !important;
+}
+#main .button.primary:hover,
+#main .button.primary:focus-visible,
+#footer .button.primary:hover,
+#footer .button.primary:focus-visible {
+  border-color: var(--realmat-blue-dark);
+  background: var(--realmat-blue-dark);
+  color: #fff !important;
+}
+
+.realmat-logo-hero {
+  max-width: 62rem;
+  margin: 0 auto 3.5rem;
+  overflow: hidden;
+  border: 1px solid var(--realmat-border);
+  background: #fff;
+  box-shadow: 0 1.5rem 3rem rgba(7, 26, 52, 0.12);
+}
+.realmat-logo-hero img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.realmat-project-definition {
+  border-left: 4px solid var(--realmat-gold);
+  padding-left: 1.5rem;
+}
+
+.realmat-topics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+}
+.realmat-topic {
+  min-height: 15rem;
+  padding: 2rem;
+  border-top: 4px solid var(--realmat-blue);
+  background: var(--realmat-surface);
+}
+.realmat-topic--soon {
+  border-top-color: var(--realmat-gold);
+}
+.realmat-topic h2 {
+  margin-top: 0.8rem;
+}
+.realmat-topic > a {
+  font-family: "Source Sans Pro", Helvetica, sans-serif;
+  font-weight: 700;
+}
+.realmat-search__help,
+.realmat-search__noscript,
+.realmat-search__empty {
+  color: var(--realmat-muted);
+  font-size: 0.9rem;
+}
+.realmat-search__empty {
+  padding: 1.25rem;
+  border-left: 4px solid var(--realmat-gold);
+  background: var(--realmat-surface);
+}
+
+#footer {
+  background: var(--realmat-surface);
+}
+#footer h3 {
+  color: var(--realmat-blue);
+}
+#footer a:hover,
+#footer a:focus-visible {
+  color: var(--realmat-cyan) !important;
+}
+#copyright {
+  margin-bottom: 0;
+  background: var(--realmat-navy);
+  color: rgba(255, 255, 255, 0.82);
+}
+#copyright a {
+  color: var(--realmat-gold);
+}
+#copyright a:hover,
+#copyright a:focus-visible {
+  color: var(--realmat-cyan) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #wrapper > .bg {
+    animation: none !important;
+    transform: none !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@media screen and (max-width: 736px) {
+  #header .realmat-wordmark {
+    font-size: 0.95rem;
+  }
+  .realmat-logo-hero {
+    margin-bottom: 2.25rem;
+  }
+  .realmat-topics {
+    grid-template-columns: 1fr;
+  }
+  .realmat-topic {
+    min-height: 0;
+    padding: 1.5rem;
+  }
+}

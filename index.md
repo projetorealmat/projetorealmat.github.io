@@ -1,16 +1,20 @@
 ---
 layout: home
-title: "REALMAT"
-description: "Recursos Educacionais Abertos de Matemática para ensino, estudo e tradução."
+title: "REALMat"
+description: "Recursos Educacionais Abertos na Licenciatura em Matemática"
 permalink: /
 ---
 
 <article class="post featured realmat-home" aria-labelledby="realmat-featured-title">
   <header class="major">
-    <span class="date">Biblioteca aberta · REALMAT</span>
+    <span class="date">Biblioteca aberta · REALMat</span>
     <h2 id="realmat-featured-title"><a href="{{ '/livros/forallx/' | relative_url }}">Matemática em português<br />para ler e ensinar</a></h2>
     <p>Livros e traduções de matemática em acesso aberto, com edições preparadas para leitura e colaboração.</p>
   </header>
+
+  <figure class="realmat-logo-hero">
+    <img src="{{ '/assets/images/realmat-logo.jpg' | relative_url }}" alt="Logomarca REALMat com um livro aberto e elementos matemáticos" loading="lazy">
+  </figure>
 
   <a href="{{ '/livros/forallx/' | relative_url }}" class="image main realmat-book-poster" aria-label="Conheça forallx: Lógica">
     <span class="realmat-book-poster__inner">
@@ -59,9 +63,9 @@ permalink: /
       <h2><a href="{{ '/sobre/' | relative_url }}">Acesso aberto<br />à matemática</a></h2>
     </header>
     <div class="realmat-card-mark" aria-hidden="true">03</div>
-    <p>Conheça os princípios do REALMAT e a forma como cada tradução é organizada, revisada e publicada.</p>
+    <p>Conheça os princípios do REALMat e a forma como cada tradução é organizada, revisada e publicada.</p>
     <ul class="actions special">
-      <li><a href="{{ '/sobre/' | relative_url }}" class="button">Conhecer o REALMAT</a></li>
+      <li><a href="{{ '/sobre/' | relative_url }}" class="button">Conhecer o REALMat</a></li>
     </ul>
   </article>
 

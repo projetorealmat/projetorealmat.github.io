@@ -64,6 +64,9 @@ jobs:
       - name: Verificar a integração original do Massively
         run: python3 scripts/test_massively_theme.py
 
+      - name: Verificar JavaScript da busca
+        run: node --check assets/js/realmat-search.js
+
       - name: Configurar o Pages
         id: pages
         uses: actions/configure-pages@v5

@@ -92,8 +92,8 @@ REQUIRED_ASSETS = (
     "assets/webfonts/fa-brands-400.woff2",
     "images/bg.jpg",
     "images/overlay.png",
-    "images/realmat-bg.png",
-    "assets/images/realmat-logo.png",
+    "images/realmat-bg.jpg",
+    "assets/images/realmat-logo.jpg",
     "assets/books/forallx.pdf",
 )
 

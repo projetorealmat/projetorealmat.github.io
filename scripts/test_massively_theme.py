@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 REQUIRED = {
     "_config.yml": (
-        'title: "REALMAT"',
+        'title: "REALMat"',
         'subtitle: "Recursos Educacionais Abertos na Licenciatura em Matemática"',
         'url: "https://projetorealmat.github.io"',
         "include:",
@@ -53,7 +53,7 @@ REQUIRED = {
         "brand-real",
         "brand-l",
         "brand-mat",
-        "assets/images/realmat-logo.png",
+        "assets/images/realmat-logo.jpg",
     ),
     "_includes/massively-nav.html": (
         'id="nav"',
@@ -69,7 +69,7 @@ REQUIRED = {
     "index.md": (
         'class="post featured',
         'class="posts',
-        "REALMAT",
+        "REALMat",
         "forallx",
         "/livros/",
         "/contribuir/",
@@ -170,8 +170,8 @@ REQUIRED_ASSETS = (
     "assets/webfonts/fa-brands-400.woff2",
     "images/bg.jpg",
     "images/overlay.png",
-    "images/realmat-bg.png",
-    "assets/images/realmat-logo.png",
+    "images/realmat-bg.jpg",
+    "assets/images/realmat-logo.jpg",
 )
 
 def main() -> int:

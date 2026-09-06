@@ -1,7 +1,7 @@
 ---
 title: "Buscar"
 kicker: "Pesquisa"
-description: "Encontre livros e páginas no portal REALMAT."
+description: "Encontre livros e páginas no portal REALMat."
 permalink: /buscar/
 ---
 
@@ -9,13 +9,15 @@ permalink: /buscar/
   <form action="{{ '/buscar/' | relative_url }}" method="get" role="search">
     <label for="realmat-search-input">O que você procura?</label>
     <div class="realmat-search__controls">
-      <input id="realmat-search-input" type="search" name="q" placeholder="Digite um título ou assunto" autocomplete="off">
+      <input id="realmat-search-input" type="search" name="q" placeholder="Digite um título ou assunto" autocomplete="off" aria-describedby="realmat-search-help">
       <button class="button primary" type="submit">Buscar</button>
     </div>
+    <p id="realmat-search-help" class="realmat-search__help">A busca considera títulos e textos das páginas do portal.</p>
   </form>
 
   <p id="realmat-search-status" class="realmat-search__status" aria-live="polite"></p>
   <div id="realmat-search-results" class="realmat-search__results"></div>
+  <noscript><p class="realmat-search__noscript">Ative JavaScript para pesquisar no conteúdo do portal.</p></noscript>
 </div>
 
 <script>
