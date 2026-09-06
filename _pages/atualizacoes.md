@@ -5,7 +5,7 @@ description: "Histórico de novas obras, edições e mudanças no portal."
 permalink: /atualizacoes/
 ---
 
-<p class="realmat-page-intro">Histórico de novas obras e versões.</p>
+<p class="realmat-page-lead">Registro das principais etapas de publicação do portal.</p>
 
 <section class="realmat-update-list" aria-label="Histórico de atualizações">
   <article id="forallx-disponivel" class="realmat-update">
@@ -15,7 +15,7 @@ permalink: /atualizacoes/
     </div>
     <div class="realmat-update__body">
       <p>O portal passou a oferecer a edição atual de <em>forallx: Lógica</em> para leitura e download, enquanto a tradução permanece em revisão editorial.</p>
-      <a class="realmat-text-link" href="{{ '/livros/forallx/' | relative_url }}">Ler o livro <span aria-hidden="true">↗</span></a>
+      <a class="realmat-text-link" href="{{ '/livros/forallx/' | relative_url }}">Ver a edição <span aria-hidden="true">↗</span></a>
     </div>
   </article>
 

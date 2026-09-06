@@ -11,51 +11,72 @@ ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("_site")
 EXPECTED_PAGES = {
     "index.html": (
         'class="realmat-masthead"',
-        "realmat-hero",
+        "realmat-editorial-intro",
         "realmat-featured",
-        "Como usar o portal",
+        "Ler o PDF",
         'href="/livros/"',
         'href="/contribuir/"',
         'src="/assets/js/realmat.js"',
     ),
     "livros/index.html": (
-        "realmat-book-card",
-        'realmat-book-card__cover realmat-cover realmat-cover--forallx',
+        "realmat-catalog-list",
+        "realmat-book-entry",
         'href="/livros/forallx/"',
-        "Cada obra pode ser lida diretamente no portal.",
+        'href="/assets/books/forallx.pdf"',
     ),
     "livros/forallx/index.html": (
-        "realmat-book-reader",
-        'id="forallx-reader"',
-        "Ir para o leitor",
-        'href="#forallx-reader-frame"',
-        'src="/assets/books/forallx.pdf"',
-        "assets/books/forallx.pdf",
+        "realmat-page",
+        "realmat-book-overview",
+        "Ler no navegador",
+        'href="/assets/books/forallx.pdf"',
+        'target="_blank"',
+        'download="forallx.pdf"',
         'href="/contribuir/"',
     ),
-    "sobre/index.html": ("realmat-page", "Uma biblioteca aberta de matemática"),
+    "sobre/index.html": (
+        "realmat-page",
+        "Uma biblioteca aberta de matemática",
+    ),
     "contribuir/index.html": (
         "realmat-page",
-        "Projetos disponíveis",
-        "realmat-contribution-links",
+        "Projeto de tradução",
+        "realmat-contribution-card",
         "https://github.com/projetorealmat/forallx/issues",
         "https://github.com/projetorealmat/forallx",
         'target="_blank"',
         'rel="noopener noreferrer"',
     ),
+    "buscar/index.html": (
+        "realmat-search-results",
+        "REALMAT_SEARCH_INDEX",
+        'id="realmat-search-input"',
+    ),
     "atualizacoes/index.html": (
         "realmat-page",
-        "Histórico de novas obras e versões.",
+        "Registro das principais etapas de publicação do portal.",
         "forallx-disponivel",
-        'href="/livros/forallx/"',
     ),
 }
 
 FORBIDDEN_PAGE_MARKERS = {
-    "index.html": ("/#recursos", "/livros/#traducoes"),
-    "livros/index.html": ("https://github.com/projetorealmat/forallx",),
-    "livros/forallx/index.html": ("https://github.com/projetorealmat/forallx",),
-    "contribuir/index.html": ("Compartilhe", "Link direto"),
+    "index.html": (
+        "realmat-hero",
+        "realmat-statement",
+        "Escolha o caminho que você precisa",
+    ),
+    "livros/index.html": (
+        "https://github.com/projetorealmat/forallx",
+    ),
+    "livros/forallx/index.html": (
+        "<iframe",
+        "realmat-book-reader__frame",
+        'href="#forallx-reader-frame"',
+        "https://github.com/projetorealmat/forallx",
+    ),
+    "contribuir/index.html": (
+        "Compartilhe",
+        "Link direto",
+    ),
 }
 
 REQUIRED_ASSETS = (
@@ -68,8 +89,15 @@ REQUIRED_ASSETS = (
 def _check_internal_links(errors):
     for path in ROOT.rglob("*.html"):
         content = path.read_text(encoding="utf-8")
+        if "<iframe" in content:
+            errors.append(f"{path.relative_to(ROOT)}: leitor embutido não permitido")
+
         for raw_href in re.findall(r'href="([^"]+)"', content):
             if raw_href.startswith(("#", "http://", "https://", "mailto:", "tel:")):
+                if raw_href == "#":
+                    errors.append(
+                        f"{path.relative_to(ROOT)}: link vazio sem destino"
+                    )
                 continue
 
             parsed = urlsplit(raw_href)
@@ -109,17 +137,26 @@ def main() -> int:
         if "{{" in content or "{%" in content:
             errors.append(f"{relative_path}: expressão Liquid não processada")
 
-        if relative_path == "index.html":
-            nav_marker = content.find('id="site-nav"')
-            nav_start = content.rfind("<nav", 0, nav_marker + 1)
-            nav_end = content.find("</nav>", nav_marker)
-            nav = content[nav_start:nav_end] if nav_start >= 0 and nav_end >= 0 else ""
-            for label in ("Traduções", "Recursos", "Atualizações"):
-                if label in nav:
-                    errors.append(f"index.html: item antigo ainda aparece no menu: {label}")
-            nav_link_count = len(re.findall(r'class="realmat-nav-link(?:\s|")', nav))
-            if nav_link_count != 3:
-                errors.append("index.html: menu principal não contém exatamente três itens")
+    forallx = ROOT / "livros" / "forallx" / "index.html"
+    if forallx.exists():
+        content = forallx.read_text(encoding="utf-8")
+        browser_link = re.search(
+            r'<a[^>]+href="/assets/books/forallx\.pdf"[^>]+target="_blank"'
+            r'[^>]*>Ler no navegador',
+            content,
+        )
+        download_link = re.search(
+            r'<a[^>]+href="/assets/books/forallx\.pdf"[^>]+download="forallx\.pdf"',
+            content,
+        )
+        if not browser_link:
+            errors.append(
+                "livros/forallx/index.html: PDF não abre no visualizador do navegador"
+            )
+        if not download_link:
+            errors.append(
+                "livros/forallx/index.html: download explícito do PDF ausente"
+            )
 
     for relative_path in REQUIRED_ASSETS:
         if not (ROOT / relative_path).exists():

@@ -5,15 +5,25 @@ description: "Uma biblioteca aberta para reunir, traduzir e compartilhar matemá
 permalink: /sobre/
 ---
 
-## Uma biblioteca aberta de matemática
+<p class="realmat-page-lead">O REALMAT — Recursos Educacionais Abertos de Matemática — aproxima materiais matemáticos de quem estuda e ensina em português.</p>
 
-O REALMAT — Recursos Educacionais Abertos de Matemática — é um projeto para reunir, traduzir, organizar e disponibilizar materiais de matemática para estudo e ensino.
+<section class="realmat-about-grid">
+  <div>
+    <h2>Uma biblioteca aberta de matemática</h2>
+  </div>
+  <div>
+    <p>O projeto reúne, traduz, organiza e disponibiliza livros e outros materiais para estudo e ensino.</p>
+    <p>Cada obra pode ter seu próprio repositório, mantendo o desenvolvimento, os arquivos-fonte e as versões organizados.</p>
+  </div>
+</section>
 
-O portal funciona como ponto de encontro. Cada livro ou coleção pode ter seu próprio repositório, mantendo seu desenvolvimento, seus arquivos-fonte e suas versões organizados.
-
-### Princípios
-
-- acesso aberto ao conhecimento;
-- cuidado com a qualidade matemática e editorial;
-- transparência sobre fontes, versões e créditos;
-- colaboração entre pessoas que estudam, ensinam e traduzem matemática.
+<section class="realmat-guidelines" aria-labelledby="principles-title">
+  <p class="realmat-kicker">Princípios</p>
+  <h2 id="principles-title">Acesso, cuidado e transparência.</h2>
+  <ul>
+    <li>acesso aberto ao conhecimento;</li>
+    <li>cuidado com a qualidade matemática e editorial;</li>
+    <li>transparência sobre fontes, versões e créditos;</li>
+    <li>colaboração entre pessoas que estudam, ensinam e traduzem matemática.</li>
+  </ul>
+</section>

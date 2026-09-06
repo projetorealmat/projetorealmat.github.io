@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static source checks for the REALMAT editorial skin."""
+"""Static checks for the Massively-adapted REALMAT site."""
 
 from pathlib import Path
 import sys
@@ -8,128 +8,113 @@ ROOT = Path(__file__).resolve().parents[1]
 
 CHECKS = {
     "index.md": (
-        "realmat-hero",
+        "realmat-editorial-intro",
         "realmat-featured",
-        "Como usar o portal",
+        "Biblioteca",
+        "Ler o PDF",
     ),
-    "_data/navigation.yml": (
-        'title: "Livros"',
-        'title: "Sobre"',
-        'title: "Contribuir"',
+    "_config.yml": (
+        'title: "REALMAT"',
+        'url: "https://projetorealmat.github.io"',
+        "include:",
     ),
     "_includes/masthead.html": (
         "realmat-masthead",
         "data-menu-toggle",
         "realmat-menu-panel",
-        "link_is_active",
-        'aria-controls="search-content"',
+        'id="realmat-search-toggle"',
     ),
     "_includes/footer.html": (
         "realmat-footer",
-        "Como contribuir",
-        "Histórico de atualizações",
+        "Livros",
+        "Contribuir",
     ),
     "_layouts/default.html": (
         "realmat-layout",
-        "head.html",
-        "scripts.html",
-        "include masthead.html",
-        'id="search-content"',
+        "realmat-skip-link",
+        "realmat-search-panel",
+        "assets/css/main.css",
+        "assets/js/realmat.js",
     ),
     "_layouts/home.html": (
         "realmat-home",
-        "realmat-featured",
+        "layout: default",
     ),
     "_layouts/single.html": (
         "realmat-page",
-        "page__content",
-        "realmat-page__container--with-sidebar",
-        'class="page__meta realmat-page__meta"',
-        "page_description",
-        "page__taxonomy.html",
-        "page__date.html",
-        "page__related.html",
-        "post_pagination.html",
+        "realmat-page__hero",
+        "realmat-prose",
     ),
     "_pages/livros.md": (
-        "realmat-book-card",
-        'class="realmat-book-card__cover realmat-cover realmat-cover--forallx"',
-        "Cada obra pode ser lida diretamente no portal.",
+        "realmat-catalog-list",
+        "realmat-book-entry",
+        "assets/books/forallx.pdf",
     ),
     "_pages/forallx.md": (
-        "realmat-book-reader",
-        'id="forallx-reader"',
-        'id="forallx-reader-frame"',
-        "Ir para o leitor",
+        "realmat-book-overview",
+        "Ler no navegador",
+        'download="forallx.pdf"',
         "assets/books/forallx.pdf",
-        "/contribuir/",
     ),
     "_pages/contribuir.md": (
-        "Projetos disponíveis",
-        "realmat-contribution-links",
+        "Projeto de tradução",
+        "realmat-contribution-card",
         "https://github.com/projetorealmat/forallx/issues",
-        'target="_blank"',
+        "https://github.com/projetorealmat/forallx",
     ),
-    "_pages/atualizacoes.md": (
-        "Histórico de novas obras e versões.",
-        "forallx-disponivel",
-    ),
-    "_config.yml": (
-        "atom_feed:",
-        "hide: true",
+    "_pages/buscar.md": (
+        "realmat-search-results",
+        "REALMAT_SEARCH_INDEX",
     ),
     "assets/css/main.scss": (
         "--realmat-orange",
-        "--realmat-orange-dark: #a94a05",
-        ".realmat-hero",
-        ".realmat-book-reader",
-        ".realmat-book-reader__frame",
-        ".realmat-wayfinding",
-        ".realmat-update-list",
-        ".realmat-contribution-links",
-        ".realmat-layout .page__footer footer",
-        ".realmat-page__container--with-sidebar",
-        ".realmat-page__body .page__content a:not(.realmat-button)",
-        ".realmat-menu-js .realmat-nav-links",
-        "scroll-margin-top",
+        "realmat-button--primary",
+        "realmat-footer",
+        "realmat-book-overview",
         "@media (max-width: 760px)",
     ),
     "assets/js/realmat.js": (
         "data-menu-toggle",
         "aria-expanded",
-        "is-open",
-        "MutationObserver",
-        "is--visible",
-        "panel.contains(document.activeElement)",
-        "toggle.focus()",
-    ),
-    ".github/workflows/pages.yml": (
-        "url: $" "{{ steps.deployment.outputs.page_url }}",
-        "scripts/test_built_site.py ./_site",
-        "Verificar o site gerado",
+        "search-content",
+        "Escape",
+        "REALMAT_SEARCH_INDEX",
     ),
 }
 
 FORBIDDEN = {
-    "index.md": ("https://github.com/projetorealmat", "repositório"),
-    "_data/navigation.yml": (
-        'title: "Traduções"',
-        'title: "Recursos"',
-        'title: "Atualizações"',
+    "_config.yml": (
+        "remote_theme:",
+        "minimal_mistakes",
+        "jekyll-include-cache",
     ),
-    "_includes/masthead.html": ("https://github.com/projetorealmat",),
+    "index.md": (
+        "realmat-hero",
+        "realmat-statement",
+        "Escolha o caminho que você precisa",
+    ),
     "_includes/footer.html": (
-        "https://github.com/projetorealmat",
+        "Histórico de atualizações",
         "/feed.xml",
     ),
-    "_pages/livros.md": (
-        "https://github.com/projetorealmat",
-        "repositório",
+    "_layouts/default.html": (
+        "minimal-mistakes",
     ),
-    "_pages/forallx.md": ("https://github.com/projetorealmat/forallx",),
-    "_pages/contribuir.md": (
-        'share: true',
-        'link: "https://github.com/projetorealmat"',
+    "_layouts/single.html": (
+        "sidebar__right",
+        "page__meta",
+        "post_pagination",
+    ),
+    "_pages/forallx.md": (
+        "<iframe",
+        "realmat-book-reader__frame",
+        "Ir para o leitor",
+    ),
+    "assets/css/main.scss": (
+        '@import "minimal-mistakes',
+        "--realmat-blue",
+        "min-height: 600px",
+        "realmat-book-reader__frame",
     ),
 }
 
@@ -147,6 +132,7 @@ def main() -> int:
         for marker in markers:
             if marker not in content:
                 errors.append(f"{relative_path}: marcador ausente: {marker}")
+
         for marker in FORBIDDEN.get(relative_path, ()):
             if marker in content:
                 errors.append(f"{relative_path}: marcador proibido: {marker}")
@@ -168,19 +154,13 @@ def main() -> int:
                 "_data/navigation.yml: menu principal diferente do percurso definido"
             )
 
-    workflow = ROOT / ".github/workflows/pages.yml"
-    if workflow.exists():
-        workflow_content = workflow.read_text(encoding="utf-8")
-        if r"url: \${{" in workflow_content:
-            errors.append(".github/workflows/pages.yml: URL do ambiente contém uma barra invertida")
-
     if errors:
-        print("Editorial skin checks failed:")
+        print("Massively adaptation checks failed:")
         for error in errors:
             print(f"- {error}")
         return 1
 
-    print(f"Editorial skin checks passed: {len(CHECKS)} files.")
+    print(f"Massively adaptation checks passed: {len(CHECKS)} files.")
     return 0
 
 

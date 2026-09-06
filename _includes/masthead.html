@@ -1,4 +1,3 @@
-{% assign locale = include.locale | default: site.locale %}
 <header class="realmat-masthead">
   <div class="realmat-masthead__inner">
     <a class="realmat-brand" href="{{ '/' | relative_url }}" aria-label="REALMAT — início">
@@ -8,7 +7,7 @@
 
     <nav id="site-nav" class="realmat-nav" aria-label="Navegação principal">
       <button class="realmat-nav-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="realmat-menu-panel">
-        <span class="sr-only">Menu principal</span>
+        <span class="sr-only">Abrir menu principal</span>
         <span class="realmat-nav-toggle__lines" aria-hidden="true"><i></i><i></i><i></i></span>
       </button>
 
@@ -21,13 +20,13 @@
             {% elsif link.url == '/livros/' and page.url contains '/livros/' %}
               {% assign link_is_active = true %}
             {% endif %}
-            <a class="realmat-nav-link{% if link_is_active %} is-active{% endif %}" href="{{ link.url | relative_url }}"{% if link_is_active %} aria-current="page"{% endif %}{% if link.description %} title="{{ link.description }}"{% endif %}>{{ link.title }}</a>
+            <a class="realmat-nav-link{% if link_is_active %} is-active{% endif %}" href="{{ link.url | relative_url }}"{% if link_is_active %} aria-current="page"{% endif %}>{{ link.title }}</a>
           {%- endfor -%}
         </div>
 
         <div class="realmat-nav-actions">
-          {% if site.search == true %}
-            <button id="realmat-search-toggle" class="realmat-icon-button search__toggle" type="button" aria-label="Buscar no portal" aria-expanded="false" aria-controls="search-content">
+          {% if site.search %}
+            <button id="realmat-search-toggle" class="realmat-icon-button" type="button" aria-label="Buscar no portal" aria-expanded="false" aria-controls="search-content">
               <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.6"></circle><path d="m16 16 5 5"></path></svg>
             </button>
           {% endif %}
