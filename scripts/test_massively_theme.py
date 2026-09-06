@@ -215,11 +215,8 @@ def check_intro_subtitle_color(errors):
 
 
 def _last_css_block(content, selector):
-    matches = re.findall(
-        rf"(?m)^{re.escape(selector)}\\s*\\{{(.*?)\\}}",
-        content,
-        flags=re.S,
-    )
+    pattern = r"(?m)^" + re.escape(selector) + r"\s*\{(.*?)\}"
+    matches = re.findall(pattern, content, flags=re.S)
     return matches[-1] if matches else ""
 
 
