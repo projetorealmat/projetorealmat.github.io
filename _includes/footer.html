@@ -1,32 +1,21 @@
-<div class="realmat-footer">
-  <div class="realmat-footer__grid">
-    <div class="realmat-footer__brand">
-      <a class="realmat-brand realmat-brand--footer" href="{{ '/' | relative_url }}" aria-label="REALMAT — início">
-        <span class="realmat-brand__mark" aria-hidden="true"><span></span></span>
-        <span class="realmat-brand__name">REALMAT</span>
-      </a>
-      <p>Recursos educacionais abertos de matemática para ler, ensinar e compartilhar.</p>
-    </div>
-
-    <div class="realmat-footer__column">
-      <p class="realmat-footer__label">Explorar</p>
-      <a href="{{ '/livros/' | relative_url }}">Livros</a>
-      <a href="{{ '/sobre/' | relative_url }}">Sobre o REALMAT</a>
-    </div>
-
-    <div class="realmat-footer__column">
-      <p class="realmat-footer__label">Acompanhar</p>
-      <a href="{{ '/atualizacoes/' | relative_url }}">Histórico de atualizações</a>
-    </div>
-
-    <div class="realmat-footer__column">
-      <p class="realmat-footer__label">Participar</p>
-      <a href="{{ '/contribuir/' | relative_url }}">Como contribuir</a>
-    </div>
+<div class="realmat-footer__inner">
+  <div class="realmat-footer__brand">
+    <a class="realmat-brand realmat-brand--footer" href="{{ '/' | relative_url }}" aria-label="REALMAT — início">
+      <span class="realmat-brand__mark" aria-hidden="true"><span></span></span>
+      <span class="realmat-brand__name">REALMAT</span>
+    </a>
+    <p>Livros e traduções de matemática em acesso aberto.</p>
   </div>
 
-  <div class="realmat-footer__bottom">
-    <span>© {{ site.time | date: '%Y' }} REALMAT</span>
-    <span>Conteúdo e projetos com licenças indicadas em cada repositório.</span>
-  </div>
+  <nav class="realmat-footer__nav" aria-label="Navegação do rodapé">
+    <a href="{{ '/livros/' | relative_url }}">Livros</a>
+    <a href="{{ '/sobre/' | relative_url }}">Sobre</a>
+    <a href="{{ '/contribuir/' | relative_url }}">Contribuir</a>
+  </nav>
+</div>
+
+<div class="realmat-footer__bottom">
+  <span>© {{ site.time | date: '%Y' }} REALMAT</span>
+  <span>Licenças e créditos indicados em cada projeto.</span>
+  <span>Design adaptado de <a href="https://html5up.net/massively" target="_blank" rel="noopener noreferrer">Massively, HTML5 UP</a>.</span>
 </div>

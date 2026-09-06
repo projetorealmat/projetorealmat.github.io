@@ -7,45 +7,11 @@ baseurl: ""
 repository: "projetorealmat/projetorealmat.github.io"
 locale: "pt-BR"
 
-remote_theme: "mmistakes/minimal-mistakes@4.28.1"
-minimal_mistakes_skin: "air"
-
 search: true
-breadcrumbs: false
-read_time: false
-words_per_minute: 200
-show_date: false
 future: false
-
-atom_feed:
-  hide: true
-
-lunr:
-  search_within_pages: true
 
 include:
   - _pages
-
-plugins:
-  - jekyll-include-cache
-
-after_footer_scripts:
-  - assets/js/realmat.js
-
-author:
-  name: "REALMAT"
-  bio: "Recursos Educacionais Abertos de Matemática."
-  location: "Brasil"
-  links:
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/projetorealmat"
-
-footer:
-  links:
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/projetorealmat"
 
 defaults:
   - scope:
@@ -53,5 +19,3 @@ defaults:
       type: pages
     values:
       layout: single
-      author_profile: false
-      classes: wide

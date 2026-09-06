@@ -99,7 +99,6 @@ FORBIDDEN = {
     ),
     "_layouts/default.html": (
         "minimal-mistakes",
-        "include masthead.html",
     ),
     "_layouts/single.html": (
         "sidebar__right",
