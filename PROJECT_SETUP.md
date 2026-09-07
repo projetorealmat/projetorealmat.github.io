@@ -35,3 +35,12 @@ Esta configuração é feita uma única vez na organização `projetorealmat`.
 - mantenha decisões terminológicas e editoriais vinculadas à issue que as originou.
 
 Os labels e milestones básicos são mantidos nos próprios repositórios por workflows versionados. O Project deve cuidar do fluxo entre os repositórios, não substituir as issues nem o histórico das releases.
+
+## Permissões da sincronização automática
+
+Para que o workflow `catalog-sync.yml` consiga publicar a branch e abrir o pull request, no repositório do portal ajuste **Settings → Actions → General**:
+
+- em **Workflow permissions**, selecione **Read and write permissions**;
+- habilite **Allow GitHub Actions to create and approve pull requests**, se essa opção estiver disponível.
+
+No repositório `projetorealmat/forallx`, crie o secret `PORTAL_DISPATCH_TOKEN` com permissão de conteúdo no repositório do portal. Sem esse secret, releases continuam funcionando e a atualização do catálogo permanece manual.
