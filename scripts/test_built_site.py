@@ -89,7 +89,6 @@ REQUIRED_ASSETS = (
     "assets/js/browser.min.js",
     "assets/js/breakpoints.min.js",
     "assets/js/util.js",
-    "assets.js",
     "assets/js/main.js",
     "assets/js/realmat-search.js",
     "assets/webfonts/fa-solid-900.woff2",
