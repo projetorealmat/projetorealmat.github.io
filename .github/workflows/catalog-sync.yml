@@ -62,13 +62,13 @@ jobs:
               raise SystemExit(f"Payload da release incompleto: {', '.join(missing)}")
           if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", book["id"]):
               raise SystemExit("O id do livro contém caracteres não permitidos.")
-          if not re.fullmatch(r"v$d+$.$d+$.$d+", book["version"]):
+          if not re.fullmatch(r"v\\d+\\.\\d+\\.\\d+", book["version"]):
               raise SystemExit("A versão recebida não segue vMAJOR.MINOR.PATCH.")
           if book["ref"] != book["version"]:
               raise SystemExit("A release deve apontar para a mesma tag semver declarada na versão.")
-          if not re.fullmatch(r"[^/$s]+/[^/$s]+", book["repository"]):
+          if not re.fullmatch(r"[^/\\s]+/[^/\\s]+", book["repository"]):
               raise SystemExit("O repositório recebido é inválido.")
-          if book.get("release_date") and not re.fullmatch(r"$d{4}-$d{2}-$d{2}", book["release_date"]):
+          if book.get("release_date") and not re.fullmatch(r"\\d{4}-\\d{2}-\\d{2}", book["release_date"]):
               raise SystemExit("release_date deve usar YYYY-MM-DD.")
 
           release_fields = required_release
