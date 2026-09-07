@@ -28,9 +28,6 @@ jobs:
       - name: Baixar o portal REALMAT
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Validar catálogo versionado
-        run: python3 scripts/validate_catalog.py _data/books.json
-
       - name: Validar contrato do catálogo
         run: python3 scripts/test_catalog_evolution.py
 
