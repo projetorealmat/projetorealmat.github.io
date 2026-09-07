@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
-"""Smoke tests for the generated REALMAT site using the Massively structure."""
+"""Smoke tests for the generated REALMat site."""
 
 from pathlib import Path
+import html
 import json
 import re
 import sys
 from urllib.parse import urlsplit
 
-ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("_site")
 
-EXPECTED_PAGES = {
+ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("_site")
+SOURCE_ROOT = ROOT.parent
+CATALOG_PATH = SOURCE_ROOT / "_data" / "books.json"
+
+STATIC_PAGES = {
     "index.html": (
         'id="intro"',
         'id="header"',
@@ -25,8 +29,6 @@ EXPECTED_PAGES = {
         "realmat-logo",
         "<h1>REALMat</h1>",
         "realmat-wordmark__icon",
-        "v0.1.0",
-        "em revisão",
         'href="/arquivo/"',
         'href="/topicos/"',
         'href="/images/realmat-bg.jpg"',
@@ -34,22 +36,8 @@ EXPECTED_PAGES = {
     ),
     "livros/index.html": (
         'class="realmat-library"',
-        "forallx: Lógica",
-        'href="/livros/forallx/"',
-        'href="/assets/books/forallx.pdf"',
-        "v0.1.0",
-        "releases/tag/v0.1.0",
-    ),
-    "livros/forallx/index.html": (
-        'class="post realmat-page"',
-        'class="realmat-book-detail"',
-        "Ler no navegador",
-        'href="/assets/books/forallx.pdf"',
-        'target="_blank"',
-        'download="forallx.pdf"',
-        "v0.1.0",
-        "releases/tag/v0.1.0",
-        'href="/contribuir/"',
+        "Catálogo de livros",
+        "edição",
     ),
     "sobre/index.html": (
         'class="post realmat-page"',
@@ -59,10 +47,8 @@ EXPECTED_PAGES = {
     "contribuir/index.html": (
         'class="post realmat-page"',
         "realmat-contribution",
-        "https://github.com/projetorealmat/forallx/issues",
-        "https://github.com/projetorealmat/forallx",
-        'target="_blank"',
-        'rel="noopener noreferrer"',
+        "Discussões e correções",
+        "Arquivos-fonte",
     ),
     "buscar/index.html": (
         'class="realmat-search"',
@@ -72,12 +58,12 @@ EXPECTED_PAGES = {
     "arquivo/index.html": (
         'class="post realmat-page"',
         "realmat-updates",
-        "forallx disponível para leitura",
+        "Histórico editorial",
     ),
     "topicos/index.html": (
         'class="post realmat-page"',
-        "Lógica formal",
-        'href="/livros/forallx/"',
+        "realmat-topics",
+        "Tópicos",
     ),
     "atualizacoes/index.html": (
         'http-equiv="refresh"',
@@ -103,6 +89,7 @@ REQUIRED_ASSETS = (
     "assets/js/browser.min.js",
     "assets/js/breakpoints.min.js",
     "assets/js/util.js",
+    "assets.js",
     "assets/js/main.js",
     "assets/js/realmat-search.js",
     "assets/webfonts/fa-solid-900.woff2",
@@ -111,8 +98,12 @@ REQUIRED_ASSETS = (
     "images/overlay.png",
     "images/realmat-bg.jpg",
     "assets/images/realmat-logo.jpg",
-    "assets/books/forallx.pdf",
 )
+
+
+def load_catalog():
+    return json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
+
 
 def _without_search_index_script(content):
     start = content.find("window.REALMAT_SEARCH_INDEX")
@@ -133,7 +124,7 @@ def check_navigation_order(errors):
     if not nav_match:
         errors.append("index.html: menu principal ausente")
         return
-    titles = re.findall(r'<a[^>]*>([^<]+)</a>', nav_match.group(1))
+    titles = re.findall(r"<a[^>]*>([^<]+)</a>", nav_match.group(1))
     expected = ["Livros", "Arquivo", "Tópicos", "Contribuir", "Sobre"]
     if titles != expected:
         errors.append(f"index.html: ordem do menu inesperada: {titles}")
@@ -170,7 +161,8 @@ def check_internal_links(errors):
                     f"{path.relative_to(ROOT)}: link interno sem destino: {raw_href}"
                 )
 
-def check_search_index(errors):
+
+def check_search_index(errors, catalog):
     path = ROOT / "buscar" / "index.html"
     if not path.exists():
         return
@@ -188,28 +180,95 @@ def check_search_index(errors):
     except json.JSONDecodeError as exc:
         errors.append(f"buscar/index.html: índice de busca inválido: {exc}")
         return
+
     urls = {item.get("url") for item in items}
     for forbidden in ("/buscar/", "/404.html", "/atualizacoes/"):
         if forbidden in urls:
             errors.append(
                 f"buscar/index.html: página estrutural indevidamente indexada: {forbidden}"
             )
-    if "/livros/" not in urls:
-        errors.append("buscar/index.html: páginas de conteúdo não foram indexadas")
+    for book in catalog:
+        expected_url = f"/livros/{book['id']}/"
+        if expected_url not in urls:
+            errors.append(f"buscar/index.html: livro não indexado: {expected_url}")
+
+
+def check_catalog_pages(errors, catalog):
+    library = (ROOT / "livros" / "index.html").read_text(
+        encoding="utf-8", errors="replace"
+    )
+    archive = (ROOT / "arquivo" / "index.html").read_text(
+        encoding="utf-8", errors="replace"
+    )
+    topics = (ROOT / "topicos" / "index.html").read_text(
+        encoding="utf-8", errors="replace"
+    )
+
+    for index, book in enumerate(catalog, start=1):
+        current = next(
+            release
+            for release in book["releases"]
+            if release["version"] == book["current_version"]
+        )
+        detail_path = ROOT / "livros" / book["id"] / "index.html"
+        if not detail_path.exists():
+            errors.append(f"página do livro ausente: {detail_path.relative_to(ROOT)}")
+            continue
+
+        detail = detail_path.read_text(encoding="utf-8", errors="replace")
+        expected_markers = (
+            book["title"],
+            book["current_version"],
+            current["status"],
+            current["pdf_path"],
+            current["release_url"],
+            "Histórico editorial",
+            "Versões publicadas",
+            'target="_blank"',
+            f'download="{book["short_title"]}.pdf"',
+        )
+        for marker in expected_markers:
+            if marker not in detail:
+                errors.append(
+                    f"{detail_path.relative_to(ROOT)}: marcador ausente: {marker}"
+                )
+
+        if book["title"] not in library:
+            errors.append(f"livros/index.html: livro ausente: {book['title']}")
+        if book["title"] not in archive:
+            errors.append(f"arquivo/index.html: livro ausente: {book['title']}")
+        if book["subject"] not in topics:
+            errors.append(f"topicos/index.html: assunto ausente: {book['subject']}")
+
+        for release in book["releases"]:
+            if release["version"] not in detail:
+                errors.append(
+                    f"{detail_path.relative_to(ROOT)}: versão ausente: {release['version']}"
+                )
+            if release["release_url"] not in detail:
+                errors.append(
+                    f"{detail_path.relative_to(ROOT)}: release ausente: {release['release_url']}"
+                )
+
+        pdf_path = ROOT / current["pdf_path"].lstrip("/")
+        if not pdf_path.exists():
+            errors.append(f"PDF atual ausente: {current['pdf_path']}")
 
 
 def check_branding(errors):
-    path = ROOT / "index.html"
-    if not path.exists():
+    index = ROOT / "index.html"
+    if not index.exists():
         return
-    content = path.read_text(encoding="utf-8", errors="replace")
+    content = index.read_text(encoding="utf-8", errors="replace")
     if not re.search(r"<li>©\s+[^<]+\s+REALMat</li>", content):
         errors.append("index.html: copyright ainda não usa a grafia REALMat")
 
+
 def main() -> int:
     errors = []
+    catalog = load_catalog()
 
-    for relative_path, markers in EXPECTED_PAGES.items():
+    for relative_path, markers in STATIC_PAGES.items():
         path = ROOT / relative_path
         if not path.exists():
             errors.append(f"página gerada ausente: {relative_path}")
@@ -231,39 +290,24 @@ def main() -> int:
         if not (ROOT / relative_path).exists():
             errors.append(f"recurso gerado ausente: {relative_path}")
 
-    forallx = ROOT / "livros" / "forallx" / "index.html"
-    if forallx.exists():
-        content = forallx.read_text(encoding="utf-8")
-        browser_link = re.search(
-            r'<a[^>]+href="/assets/books/forallx\.pdf"[^>]+target="_blank"'
-            r'[^>]*>Ler no navegador',
-            content,
-        )
-        download_link = re.search(
-            r'<a[^>]+href="/assets/books/forallx\.pdf"[^>]+download="forallx\.pdf"',
-            content,
-        )
-        if not browser_link:
-            errors.append("forallx: PDF não abre no visualizador do navegador")
-        if not download_link:
-            errors.append("forallx: download explícito do PDF ausente")
-
+    check_catalog_pages(errors, catalog)
     check_navigation_order(errors)
     check_internal_links(errors)
-    check_search_index(errors)
+    check_search_index(errors, catalog)
     check_branding(errors)
 
     if errors:
-        print("Generated Massively site checks failed:")
+        print("Generated REALMat site checks failed:")
         for error in errors:
             print(f"- {error}")
         return 1
 
     print(
-        f"Generated Massively site checks passed: {len(EXPECTED_PAGES)} pages and "
-        f"{len(REQUIRED_ASSETS)} assets."
+        f"Generated REALMat site checks passed: {len(STATIC_PAGES)} static pages, "
+        f"{len(catalog)} book page(s), and {len(REQUIRED_ASSETS)} assets."
     )
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())
