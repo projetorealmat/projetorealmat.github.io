@@ -25,6 +25,8 @@ EXPECTED_PAGES = {
         "realmat-logo",
         "<h1>REALMat</h1>",
         "realmat-wordmark__icon",
+        "v0.1.0",
+        "em revisão",
         'href="/arquivo/"',
         'href="/topicos/"',
         'href="/images/realmat-bg.jpg"',
@@ -35,6 +37,8 @@ EXPECTED_PAGES = {
         "forallx: Lógica",
         'href="/livros/forallx/"',
         'href="/assets/books/forallx.pdf"',
+        "v0.1.0",
+        "releases/tag/v0.1.0",
     ),
     "livros/forallx/index.html": (
         'class="post realmat-page"',
@@ -43,6 +47,8 @@ EXPECTED_PAGES = {
         'href="/assets/books/forallx.pdf"',
         'target="_blank"',
         'download="forallx.pdf"',
+        "v0.1.0",
+        "releases/tag/v0.1.0",
         'href="/contribuir/"',
     ),
     "sobre/index.html": (
