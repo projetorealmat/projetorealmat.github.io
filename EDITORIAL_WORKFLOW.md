@@ -25,3 +25,5 @@ Uma release pode disparar uma proposta automática de atualização do catálogo
 ## Labels e milestones
 
 Labels recomendadas: `catálogo`, `portal`, `navegação`, `busca`, `acessibilidade`, `release`, `build` e `bloqueado`. Milestones devem corresponder às versões que o portal precisa publicar, como `v0.2.0` e `v1.0.0`.
+
+A configuração detalhada do quadro está em [PROJECT_SETUP.md](PROJECT_SETUP.md).
