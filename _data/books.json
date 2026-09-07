@@ -1,0 +1,15 @@
+[
+  {
+    "id": "forallx",
+    "title": "forallx: Lógica",
+    "short_title": "forallx",
+    "subject": "lógica formal",
+    "version": "v0.1.0",
+    "status": "em revisão",
+    "repository": "projetorealmat/forallx",
+    "ref": "v0.1.0",
+    "release_url": "https://github.com/projetorealmat/forallx/releases/tag/v0.1.0",
+    "pdf_url": "https://github.com/projetorealmat/forallx/releases/download/v0.1.0/forallx.pdf",
+    "pdf_path": "/assets/books/forallx.pdf"
+  }
+]
