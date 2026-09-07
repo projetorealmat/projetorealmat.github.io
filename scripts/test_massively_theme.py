@@ -8,6 +8,11 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 
 REQUIRED = {
+    "_data/books.json": (
+        '"v0.1.0"',
+        '"em revisão"',
+        '"releases/tag/v0.1.0"',
+    ),
     "_config.yml": (
         'title: "REALMat"',
         'subtitle: "Recursos Educacionais Abertos na Licenciatura em Matemática"',
@@ -78,6 +83,7 @@ REQUIRED = {
         'class="posts',
         "REALMat",
         "forallx",
+        "featured_book",
         "/livros/",
         "/contribuir/",
     ),
@@ -85,6 +91,8 @@ REQUIRED = {
         "realmat-library",
         "forallx: Lógica",
         "assets/books/forallx.pdf",
+        "v0.1.0",
+        "release_url",
         "REALMat para leitura",
     ),
     "_pages/forallx.md": (
@@ -92,6 +100,8 @@ REQUIRED = {
         "Ler no navegador",
         'download="forallx.pdf"',
         "assets/books/forallx.pdf",
+        "book.pdf_path",
+        "book.release_url",
     ),
     "_pages/contribuir.md": (
         "realmat-contribution",
