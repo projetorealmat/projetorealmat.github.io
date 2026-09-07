@@ -13,6 +13,7 @@ future: false
 
 include:
   - _pages
+  - generated
 
 defaults:
   - scope:

@@ -5,26 +5,25 @@ description: "Histórico de novas obras, edições e mudanças no portal."
 permalink: /arquivo/
 ---
 
-{% assign book = site.data.books | first %}
+<p class="realmat-page-lead">O arquivo preserva as versões publicadas e identifica qual edição está atualmente recomendada pelo catálogo.</p>
 
-<p class="realmat-page-lead">Registro das principais etapas de publicação do portal.</p>
+<h2>Histórico editorial</h2>
 
 <section class="realmat-updates" aria-label="Histórico de publicações">
+{% for book in site.data.books %}
+  {% assign book_url = '/livros/' | append: book.id | append: '/' %}
+  {% assign releases = book.releases | sort: "release_date" | reverse %}
+  {% for release in releases %}
   <article>
     <header>
-      <span class="date">5 de setembro de 2026 · Livro · {{ book.version }}</span>
-      <h2>forallx disponível para leitura</h2>
+      <span class="date">{% if release.version == book.current_version %}Atual{% else %}Histórica{% endif %} · {{ release.version }}{% if release.release_date %} · {{ release.release_date }}{% endif %}</span>
+      <h2>{{ book.title }} · {{ release.status }}</h2>
     </header>
-    <p>O portal oferece a edição {{ book.version }} de <em>forallx: Lógica</em> para leitura e download. O estado editorial atual é: {{ book.status }}.</p>
-    <a href="{{ '/livros/forallx/' | relative_url }}">Ver a edição <span aria-hidden="true">↗</span></a>
-    <a href="{{ book.release_url }}" target="_blank" rel="noopener noreferrer">Ver a release <span aria-hidden="true">↗</span></a>
+    <p>A versão {{ release.version }} de <em>{{ book.title }}</em> está registrada no catálogo como uma referência imutável.</p>
+    <a href="{{ book_url | relative_url }}">Ver a obra <span aria-hidden="true">↗</span></a>
+    <a href="{{ release.release_url }}" target="_blank" rel="noopener noreferrer">Ver a release <span aria-hidden="true">↗</span></a>
+    <a href="{{ release.pdf_url }}" target="_blank" rel="noopener noreferrer">Ver o PDF <span aria-hidden="true">↗</span></a>
   </article>
-
-  <article>
-    <header>
-      <span class="date">5 de setembro de 2026 · Portal</span>
-      <h2>Estrutura inicial do REALMat</h2>
-    </header>
-    <p>O portal foi organizado para separar a leitura pública dos livros do espaço de colaboração e desenvolvimento.</p>
-  </article>
+  {% endfor %}
+{% endfor %}
 </section>

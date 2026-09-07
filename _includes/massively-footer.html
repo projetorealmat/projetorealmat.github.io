@@ -18,10 +18,13 @@
       <h3>Arquivo</h3>
       <p><a href="{{ '/arquivo/' | relative_url }}">Histórico do portal</a></p>
     </section>
+    {% for book in site.data.books %}
+      {% assign book_url = '/livros/' | append: book.id | append: '/' %}
     <section>
-      <h3>Fonte</h3>
-      <p><a href="https://github.com/projetorealmat/forallx" target="_blank" rel="noopener noreferrer">forallx: Lógica</a></p>
+      <h3>{{ book.short_title }}</h3>
+      <p><a href="{{ book_url | relative_url }}">{{ book.title }}</a></p>
     </section>
+    {% endfor %}
     <section>
       <h3>GitHub</h3>
       <p><a href="https://github.com/projetorealmat" target="_blank" rel="noopener noreferrer">Organização do projeto</a></p>

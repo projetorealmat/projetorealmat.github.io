@@ -44,11 +44,20 @@ jobs:
           if not isinstance(book, dict):
               raise SystemExit("O payload deve conter o objeto book.")
 
-          required = (
-              "id", "title", "short_title", "subject", "version", "status",
-              "repository", "ref", "release_url", "pdf_url", "pdf_path", "sha256",
+          required_book = ("id", "title", "short_title", "subject")
+          required_release = (
+              "version", "status", "repository", "ref", "release_url",
+              "pdf_url", "pdf_path", "sha256",
           )
-          missing = [key for key in required if not isinstance(book.get(key), str) or not book[key].strip()]
+          missing_book = [
+              key for key in required_book
+              if not isinstance(book.get(key), str) or not book[key].strip()
+          ]
+          missing_release = [
+              key for key in required_release
+              if not isinstance(book.get(key), str) or not book[key].strip()
+          ]
+          missing = missing_book + missing_release
           if missing:
               raise SystemExit(f"Payload da release incompleto: {', '.join(missing)}")
           if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", book["id"]):
@@ -59,16 +68,62 @@ jobs:
               raise SystemExit("A release deve apontar para a mesma tag semver declarada na versão.")
           if not re.fullmatch(r"[^/\s]+/[^/\s]+", book["repository"]):
               raise SystemExit("O repositório recebido é inválido.")
+          if book.get("release_date") and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", book["release_date"]):
+              raise SystemExit("release_date deve usar YYYY-MM-DD.")
+
+          release_fields = required_release
+          release = {key: book[key] for key in release_fields}
+          if book.get("release_date"):
+              release["release_date"] = book["release_date"]
 
           catalog_path = Path("_data/books.json")
           catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
-          replacement = {key: book[key] for key in required}
+          book_record = {
+              key: book[key]
+              for key in required_book
+          }
+          book_record["current_version"] = book["version"]
+
+          def version_key(value):
+              return tuple(int(part) for part in value[1:].split("."))
+
           for index, item in enumerate(catalog):
-              if item.get("id") == book["id"]:
-                  catalog[index] = replacement
-                  break
+              if item.get("id") != book["id"]:
+                  continue
+
+              existing_releases = item.get("releases")
+              if not existing_releases and item.get("version"):
+                  existing_releases = [
+                      {
+                          key: item[key]
+                          for key in release_fields
+                          if key in item
+                      }
+                  ]
+              existing_releases = existing_releases or []
+
+              replaced = False
+              for release_index, existing in enumerate(existing_releases):
+                  if existing.get("version") == release["version"]:
+                      existing_releases[release_index] = release
+                      replaced = True
+                      break
+              if not replaced:
+                  existing_releases.append(release)
+
+              item.update(book_record)
+              item["releases"] = sorted(
+                  existing_releases,
+                  key=lambda candidate: version_key(candidate["version"]),
+                  reverse=True,
+              )
+              catalog[index] = item
+              break
           else:
-              catalog.append(replacement)
+              catalog.append({
+                  **book_record,
+                  "releases": [release],
+              })
 
           rendered = json.dumps(catalog, ensure_ascii=False, indent=2) + "\n"
           changed = catalog_path.read_text(encoding="utf-8") != rendered
@@ -110,8 +165,4 @@ jobs:
           RELEASE_URL: ${{ steps.catalog.outputs.release_url }}
         run: |
           set -euo pipefail
-          gh pr create \
-            --base main \
-            --head "${BRANCH}" \
-            --title "chore(catalog): atualizar ${BOOK_ID} para ${VERSION}" \
-            --body "Atualização proposta automaticamente a partir da release ${VERSION} de ${BOOK_ID}. Fonte: ${RELEASE_URL}. Revise os metadados e aguarde os checks do portal antes de fazer o merge."
+          gh pr create             --base main             --head "${BRANCH}"             --title "chore(catalog): atualizar ${BOOK_ID} para ${VERSION}"             --body "Atualização proposta automaticamente a partir da release ${VERSION} de ${BOOK_ID}. Fonte: ${RELEASE_URL}. Revise os metadados e aguarde os checks do portal antes de fazer o merge."

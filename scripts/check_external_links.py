@@ -29,6 +29,8 @@ def urls_from_files() -> list[str]:
             continue
         content = path.read_text(encoding="utf-8", errors="replace")
         for raw in URL_RE.findall(content):
+            if "{{" in raw or "{%" in raw:
+                continue
             found.add(raw.rstrip(TRAILING))
     return sorted(found)
 

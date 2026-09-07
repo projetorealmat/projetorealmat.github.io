@@ -28,47 +28,18 @@ jobs:
       - name: Baixar o portal REALMAT
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Validar contrato do catálogo
+        run: python3 scripts/test_catalog_evolution.py
+
       - name: Validar catálogo versionado
         run: python3 scripts/validate_catalog.py _data/books.json
 
-      - name: Ler catálogo versionado
-        id: book
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import json
-          import os
-          from pathlib import Path
+      - name: Baixar e verificar PDFs oficiais
+        run: python3 scripts/download_catalog_assets.py
 
-          catalog = json.loads(Path("_data/books.json").read_text(encoding="utf-8"))
-          book = next((item for item in catalog if item.get("id") == "forallx"), None)
-          if book is None:
-              raise SystemExit("O catálogo não contém o livro forallx.")
+      - name: Gerar páginas dos livros
+        run: python3 scripts/generate_book_pages.py
 
-          required = ("version", "status", "pdf_path", "release_url", "pdf_url", "sha256")
-          missing = [key for key in required if not book.get(key)]
-          if missing:
-              raise SystemExit(f"Campos ausentes no catálogo: {', '.join(missing)}")
-
-          output = Path(os.environ["GITHUB_OUTPUT"])
-          with output.open("a", encoding="utf-8") as stream:
-              for key in required:
-                  stream.write(f"{key}={book[key]}\n")
-          PY
-      - name: Baixar PDF oficial da release
-        env:
-          PDF_URL: ${{ steps.book.outputs.pdf_url }}
-          PDF_PATH: ${{ steps.book.outputs.pdf_path }}
-          PDF_SHA256: ${{ steps.book.outputs.sha256 }}
-          RELEASE_URL: ${{ steps.book.outputs.release_url }}
-        run: |
-          set -euo pipefail
-          relative_pdf_path="${PDF_PATH#/}"
-          mkdir -p "$(dirname "${relative_pdf_path}")"
-          curl --fail --location --retry 3 --silent --show-error \
-            --output "${relative_pdf_path}" "${PDF_URL}"
-          printf '%s  %s\n' "${PDF_SHA256}" "${relative_pdf_path}" | sha256sum --check -
-          printf 'Release oficial: %s\n' "${RELEASE_URL}" > assets/books/forallx-source.txt
       - name: Verificar a integração original do Massively
         run: python3 scripts/test_massively_theme.py
 
