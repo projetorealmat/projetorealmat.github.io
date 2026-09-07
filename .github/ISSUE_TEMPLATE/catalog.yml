@@ -1,0 +1,37 @@
+name: Atualização do catálogo
+description: Solicite a inclusão ou atualização de uma edição publicada.
+title: "[Catálogo]: "
+labels: []
+body:
+  - type: input
+    id: book
+    attributes:
+      label: Livro ou repositório
+      placeholder: "projetorealmat/forallx"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versão ou tag
+      placeholder: "v1.0.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: status
+    attributes:
+      label: Status editorial
+      options:
+        - em revisão
+        - tradução aprovada
+        - versão revisada
+        - nova versão
+    validations:
+      required: true
+  - type: textarea
+    id: release
+    attributes:
+      label: Link da release
+      description: Informe a URL pública da release e confirme que os assets estão disponíveis.
+    validations:
+      required: true
