@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the immutable book references used to build the REALMat portal."""
+"""Validate immutable book releases used by the REALMat portal."""
 
 from __future__ import annotations
 
@@ -9,12 +9,8 @@ import sys
 from pathlib import Path
 from urllib.parse import urlparse
 
-
-REQUIRED_FIELDS = (
-    "id",
-    "title",
-    "short_title",
-    "subject",
+BOOK_FIELDS = ("id", "title", "short_title", "subject", "current_version", "releases")
+RELEASE_FIELDS = (
     "version",
     "status",
     "repository",
@@ -30,21 +26,43 @@ ALLOWED_STATUSES = {
     "versão revisada",
     "nova versão",
 }
-VERSION_RE = re.compile(r"^v\d+\.\d+\.\d+$")
+VERSION_RE = re.compile(r"^v(\d+)\.(\d+)\.(\d+)$")
 COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
 REPOSITORY_RE = re.compile(r"^[^/\s]+/[^/\s]+$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
 def fail(message: str) -> None:
     raise ValueError(message)
 
 
-def validate_release_urls(entry: dict, index: int, repository: str, ref: str) -> None:
+def version_key(version: str) -> tuple[int, int, int]:
+    match = VERSION_RE.fullmatch(version)
+    if match is None:
+        fail(f"versão inválida: {version!r}")
+    return tuple(int(part) for part in match.groups())
+
+
+def expected_status(version: str) -> str:
+    major, minor, patch = version_key(version)
+    if major == 0:
+        return "em revisão"
+    if (major, minor, patch) == (1, 0, 0):
+        return "tradução aprovada"
+    if major == 1:
+        return "versão revisada"
+    return "nova versão"
+
+
+def validate_urls(release: dict, index: int) -> None:
+    repository = release["repository"]
+    ref = release["ref"]
     parsed_urls = {}
     repository_prefix = f"/{repository}/releases/"
+
     for field in ("release_url", "pdf_url"):
-        parsed = urlparse(entry[field])
+        parsed = urlparse(release[field])
         if (
             parsed.scheme != "https"
             or parsed.netloc != "github.com"
@@ -52,7 +70,7 @@ def validate_release_urls(entry: dict, index: int, repository: str, ref: str) ->
             or parsed.fragment
             or not parsed.path.startswith(repository_prefix)
         ):
-            fail(f"item {index}: {field} não corresponde ao repositório declarado")
+            fail(f"release {index}: {field} não corresponde ao repositório declarado")
         parsed_urls[field] = parsed
 
     if VERSION_RE.fullmatch(ref):
@@ -60,67 +78,101 @@ def validate_release_urls(entry: dict, index: int, repository: str, ref: str) ->
         pdf_name = parsed_urls["pdf_url"].path.rsplit("/", 1)[-1]
         pdf_path = f"/{repository}/releases/download/{ref}/{pdf_name}"
         if parsed_urls["release_url"].path != release_path:
-            fail(f"item {index}: release_url não corresponde à referência {ref}")
+            fail(f"release {index}: release_url não corresponde à tag {ref}")
         if parsed_urls["pdf_url"].path != pdf_path or not pdf_name.endswith(".pdf"):
-            fail(f"item {index}: pdf_url não corresponde à release {ref}")
+            fail(f"release {index}: pdf_url não corresponde à tag {ref}")
 
 
-def validate_entry(entry: object, index: int, paths: set[str]) -> None:
-    if not isinstance(entry, dict):
-        fail(f"item {index} não é um objeto JSON")
+def validate_release(release: object, index: int, paths: set[str]) -> None:
+    if not isinstance(release, dict):
+        fail(f"release {index} não é um objeto JSON")
 
-    missing = [field for field in REQUIRED_FIELDS if not entry.get(field)]
+    missing = [field for field in RELEASE_FIELDS if not release.get(field)]
     if missing:
-        fail(f"item {index}: campos ausentes: {', '.join(missing)}")
+        fail(f"release {index}: campos ausentes: {', '.join(missing)}")
 
-    identifier = entry["id"]
-    if not isinstance(identifier, str) or not re.fullmatch(r"[a-z0-9][a-z0-9-]*", identifier):
-        fail(f"item {index}: id inválido: {identifier!r}")
-
-    version = entry["version"]
+    version = release["version"]
     if not isinstance(version, str) or not VERSION_RE.fullmatch(version):
-        fail(f"item {index}: versão inválida: {version!r}")
+        fail(f"release {index}: versão inválida: {version!r}")
 
-    status = entry["status"]
+    status = release["status"]
     if status not in ALLOWED_STATUSES:
-        fail(f"item {index}: status editorial inválido: {status!r}")
-    major, minor, patch = (int(part) for part in version[1:].split("."))
-    if major == 0:
-        expected_status = "em revisão"
-    elif major == 1 and minor == 0 and patch == 0:
-        expected_status = "tradução aprovada"
-    elif major == 1:
-        expected_status = "versão revisada"
-    else:
-        expected_status = "nova versão"
-    if status != expected_status:
+        fail(f"release {index}: status editorial inválido: {status!r}")
+    if status != expected_status(version):
         fail(
-            f"item {index}: status {status!r} incompatível com {version}; "
-            f"esperado {expected_status!r}"
+            f"release {index}: status {status!r} incompatível com {version}; "
+            f"esperado {expected_status(version)!r}"
         )
 
-    repository = entry["repository"]
+    repository = release["repository"]
     if not isinstance(repository, str) or not REPOSITORY_RE.fullmatch(repository):
-        fail(f"item {index}: repositório inválido: {repository!r}")
+        fail(f"release {index}: repositório inválido: {repository!r}")
 
-    ref = entry["ref"]
+    ref = release["ref"]
     if ref in {"main", "master", "HEAD", "develop", "dev"}:
-        fail(f"item {index}: a referência deve ser imutável, não {ref!r}")
-    if not isinstance(ref, str) or not (VERSION_RE.fullmatch(ref) or COMMIT_RE.fullmatch(ref)):
-        fail(f"item {index}: ref deve ser uma tag semver ou um SHA completo: {ref!r}")
+        fail(f"release {index}: ref não é imutável: {ref!r}")
+    if not isinstance(ref, str) or not (
+        VERSION_RE.fullmatch(ref) or COMMIT_RE.fullmatch(ref)
+    ):
+        fail(f"release {index}: ref deve ser uma tag semver ou SHA completo: {ref!r}")
 
-    validate_release_urls(entry, index, repository, ref)
+    validate_urls(release, index)
 
-    pdf_path = entry["pdf_path"]
-    if not isinstance(pdf_path, str) or not pdf_path.startswith("/assets/books/") or not pdf_path.endswith(".pdf"):
-        fail(f"item {index}: pdf_path fora do diretório de livros: {pdf_path!r}")
+    pdf_path = release["pdf_path"]
+    if (
+        not isinstance(pdf_path, str)
+        or not pdf_path.startswith("/assets/books/")
+        or not pdf_path.endswith(".pdf")
+    ):
+        fail(f"release {index}: pdf_path inválido: {pdf_path!r}")
     if pdf_path in paths:
-        fail(f"item {index}: pdf_path duplicado: {pdf_path}")
+        fail(f"release {index}: pdf_path duplicado: {pdf_path}")
     paths.add(pdf_path)
 
-    digest = entry["sha256"]
+    digest = release["sha256"]
     if not isinstance(digest, str) or not SHA256_RE.fullmatch(digest):
-        fail(f"item {index}: sha256 inválido")
+        fail(f"release {index}: sha256 inválido")
+
+    release_date = release.get("release_date")
+    if release_date and (
+        not isinstance(release_date, str) or not DATE_RE.fullmatch(release_date)
+    ):
+        fail(f"release {index}: release_date deve usar YYYY-MM-DD")
+
+
+def validate_book(book: object, index: int, paths: set[str]) -> None:
+    if not isinstance(book, dict):
+        fail(f"livro {index} não é um objeto JSON")
+
+    missing = [field for field in BOOK_FIELDS if not book.get(field)]
+    if missing:
+        fail(f"livro {index}: campos ausentes: {', '.join(missing)}")
+
+    identifier = book["id"]
+    if not isinstance(identifier, str) or not re.fullmatch(r"[a-z0-9][a-z0-9-]*", identifier):
+        fail(f"livro {index}: id inválido: {identifier!r}")
+
+    for field in ("title", "short_title", "subject"):
+        if not isinstance(book[field], str) or not book[field].strip():
+            fail(f"livro {index}: {field} inválido")
+
+    releases = book["releases"]
+    if not isinstance(releases, list) or not releases:
+        fail(f"livro {index}: releases deve ser uma lista não vazia")
+
+    versions: set[str] = set()
+    for release_index, release in enumerate(releases, start=1):
+        validate_release(release, release_index, paths)
+        version = release["version"]
+        if version in versions:
+            fail(f"livro {index}: versão duplicada: {version}")
+        versions.add(version)
+
+    current_version = book["current_version"]
+    if not isinstance(current_version, str) or not VERSION_RE.fullmatch(current_version):
+        fail(f"livro {index}: current_version inválida: {current_version!r}")
+    if current_version not in versions:
+        fail(f"livro {index}: current_version não está em releases: {current_version}")
 
 
 def validate_catalog(path: Path) -> int:
@@ -140,20 +192,20 @@ def validate_catalog(path: Path) -> int:
     identifiers: set[str] = set()
     paths: set[str] = set()
     try:
-        for index, entry in enumerate(catalog, start=1):
-            validate_entry(entry, index, paths)
-            identifier = entry["id"]
+        for index, book in enumerate(catalog, start=1):
+            validate_book(book, index, paths)
+            identifier = book["id"]
             if identifier in identifiers:
-                fail(f"id duplicado: {identifier}")
+                fail(f"livro {index}: id duplicado: {identifier}")
             identifiers.add(identifier)
     except ValueError as exc:
-        print(f"Catálogo inválido: {exc}")
+        print(exc)
         return 1
 
-    print(f"Catálogo válido: {len(catalog)} livro(s), referências imutáveis e checksums presentes.")
+    total_releases = sum(len(book["releases"]) for book in catalog)
+    print(f"Catálogo válido: {len(catalog)} livro(s), {total_releases} release(s).")
     return 0
 
 
 if __name__ == "__main__":
-    catalog_path = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("_data/books.json")
-    raise SystemExit(validate_catalog(catalog_path))
+    sys.exit(validate_catalog(Path(sys.argv[1]) if len(sys.argv) > 1 else Path("_data/books.json")))
