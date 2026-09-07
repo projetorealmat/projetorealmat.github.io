@@ -1,7 +1,7 @@
 name: Problema no portal
 description: Relate um problema de navegação, busca, acessibilidade, layout ou publicação.
 title: "[Portal]: "
-labels: []
+labels: ["portal"]
 body:
   - type: dropdown
     id: area

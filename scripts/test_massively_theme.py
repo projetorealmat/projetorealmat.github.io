@@ -15,8 +15,9 @@ REQUIRED = {
     ),
     ".github/workflows/pages.yml": (
         "_data/books.json",
-        "steps.book.outputs.repository",
-        "steps.book.outputs.ref",
+        "scripts/validate_catalog.py",
+        "steps.book.outputs.pdf_url",
+        "sha256sum --check",
         "ubuntu-24.04",
     ),
     "_config.yml": (
@@ -316,8 +317,10 @@ def main() -> int:
     workflow = ROOT / ".github/workflows/pages.yml"
     if workflow.exists():
         workflow_content = workflow.read_text(encoding="utf-8", errors="replace")
-        if "ref: main" in workflow_content:
-            errors.append(".github/workflows/pages.yml: o portal ainda compila a main do livro")
+        if "Baixar a fonte do forallx" in workflow_content or "texlive-" in workflow_content or "latexmk" in workflow_content:
+            errors.append(".github/workflows/pages.yml: o portal ainda recompila a fonte do livro")
+        if "Baixar PDF oficial da release" not in workflow_content or "sha256sum --check" not in workflow_content:
+            errors.append(".github/workflows/pages.yml: download/verificação do PDF oficial ausente")
 
     navigation = ROOT / "_data/navigation.yml"
     if navigation.exists():

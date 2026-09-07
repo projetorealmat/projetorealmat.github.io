@@ -1,0 +1,42 @@
+[
+  {
+    "name": "catálogo",
+    "color": "1D4ED8",
+    "description": "Inclusão ou atualização de livro e release"
+  },
+  {
+    "name": "portal",
+    "color": "2563EB",
+    "description": "Conteúdo ou comportamento do portal"
+  },
+  {
+    "name": "navegação",
+    "color": "0891B2",
+    "description": "Menu, links e arquitetura de informação"
+  },
+  {
+    "name": "busca",
+    "color": "0F766E",
+    "description": "Índice ou comportamento da busca"
+  },
+  {
+    "name": "acessibilidade",
+    "color": "7C3AED",
+    "description": "Acessibilidade e experiência de uso"
+  },
+  {
+    "name": "release",
+    "color": "C2410C",
+    "description": "Versão, tag ou publicação"
+  },
+  {
+    "name": "build",
+    "color": "EA580C",
+    "description": "Compilação, workflow ou artefato"
+  },
+  {
+    "name": "bloqueado",
+    "color": "B91C1C",
+    "description": "Aguardando outra decisão ou tarefa"
+  }
+]

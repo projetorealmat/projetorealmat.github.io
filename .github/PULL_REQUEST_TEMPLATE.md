@@ -20,3 +20,9 @@ Descreva o problema e a alteração proposta.
 ## Observações
 
 Inclua impactos sobre livros, releases, busca, navegação ou publicação.
+
+## Integração com o fluxo editorial
+
+- [ ] vinculei a issue relacionada com `Fixes #n` ou `Relates to #n`;
+- [ ] indiquei o livro, a etapa e a release afetados;
+- [ ] mantive o PR como draft enquanto a alteração não estava pronta para revisão.

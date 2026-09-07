@@ -1,0 +1,117 @@
+name: Propor atualização do catálogo
+
+on:
+  repository_dispatch:
+    types:
+      - book-release
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: catalog-sync
+  cancel-in-progress: false
+
+jobs:
+  propose:
+    name: Abrir PR de atualização do catálogo
+    runs-on: ubuntu-24.04
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Baixar o portal
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Validar payload e preparar catálogo
+        id: catalog
+        shell: bash
+        env:
+          DISPATCH_PAYLOAD: ${{ toJSON(github.event.client_payload) }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          from pathlib import Path
+
+          payload = json.loads(os.environ.get("DISPATCH_PAYLOAD") or "{}")
+          book = payload.get("book")
+          if not isinstance(book, dict):
+              raise SystemExit("O payload deve conter o objeto book.")
+
+          required = (
+              "id", "title", "short_title", "subject", "version", "status",
+              "repository", "ref", "release_url", "pdf_url", "pdf_path", "sha256",
+          )
+          missing = [key for key in required if not isinstance(book.get(key), str) or not book[key].strip()]
+          if missing:
+              raise SystemExit(f"Payload da release incompleto: {', '.join(missing)}")
+          if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", book["id"]):
+              raise SystemExit("O id do livro contém caracteres não permitidos.")
+          if not re.fullmatch(r"v\d+\.\d+\.\d+", book["version"]):
+              raise SystemExit("A versão recebida não segue vMAJOR.MINOR.PATCH.")
+          if book["ref"] != book["version"]:
+              raise SystemExit("A release deve apontar para a mesma tag semver declarada na versão.")
+          if not re.fullmatch(r"[^/\s]+/[^/\s]+", book["repository"]):
+              raise SystemExit("O repositório recebido é inválido.")
+
+          catalog_path = Path("_data/books.json")
+          catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+          replacement = {key: book[key] for key in required}
+          for index, item in enumerate(catalog):
+              if item.get("id") == book["id"]:
+                  catalog[index] = replacement
+                  break
+          else:
+              catalog.append(replacement)
+
+          rendered = json.dumps(catalog, ensure_ascii=False, indent=2) + "\n"
+          changed = catalog_path.read_text(encoding="utf-8") != rendered
+          if changed:
+              catalog_path.write_text(rendered, encoding="utf-8")
+
+          branch = f"automation/catalog-{book['id']}-{book['version']}-{os.environ['GITHUB_RUN_ID']}"
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"changed={'true' if changed else 'false'}\n")
+              output.write(f"branch={branch}\n")
+              output.write(f"version={book['version']}\n")
+              output.write(f"book_id={book['id']}\n")
+              output.write(f"release_url={book['release_url']}\n")
+          PY
+
+          python3 scripts/validate_catalog.py _data/books.json
+
+      - name: Publicar branch de automação
+        if: steps.catalog.outputs.changed == 'true'
+        env:
+          BOOK_ID: ${{ steps.catalog.outputs.book_id }}
+          VERSION: ${{ steps.catalog.outputs.version }}
+          BRANCH: ${{ steps.catalog.outputs.branch }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "${BRANCH}"
+          git add _data/books.json
+          git commit -m "chore(catalog): sync ${BOOK_ID} ${VERSION}"
+          git push --set-upstream origin "${BRANCH}"
+
+      - name: Abrir pull request do catálogo
+        if: steps.catalog.outputs.changed == 'true'
+        env:
+          BOOK_ID: ${{ steps.catalog.outputs.book_id }}
+          VERSION: ${{ steps.catalog.outputs.version }}
+          BRANCH: ${{ steps.catalog.outputs.branch }}
+          RELEASE_URL: ${{ steps.catalog.outputs.release_url }}
+        run: |
+          set -euo pipefail
+          gh pr create \
+            --base main \
+            --head "${BRANCH}" \
+            --title "chore(catalog): atualizar ${BOOK_ID} para ${VERSION}" \
+            --body "Atualização proposta automaticamente a partir da release ${VERSION} de ${BOOK_ID}. Fonte: ${RELEASE_URL}. Revise os metadados e aguarde os checks do portal antes de fazer o merge."
