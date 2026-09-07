@@ -1,0 +1,36 @@
+name: Problema no portal
+description: Relate um problema de navegação, busca, acessibilidade, layout ou publicação.
+title: "[Portal]: "
+labels: []
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área afetada
+      options:
+        - navegação ou link
+        - busca
+        - acessibilidade
+        - layout ou imagem
+        - publicação ou PDF
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Página afetada
+      placeholder: "https://projetorealmat.github.io/..."
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema observado
+      description: Descreva o resultado observado e o resultado esperado.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Como reproduzir
+      description: Liste os passos e o navegador utilizado, se relevante.
