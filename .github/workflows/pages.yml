@@ -25,7 +25,7 @@ jobs:
       contents: read
     steps:
       - name: Baixar o portal REALMAT
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Ler catálogo versionado
         id: book
@@ -57,7 +57,7 @@ jobs:
           PY
 
       - name: Baixar a fonte do forallx
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           repository: ${{ steps.book.outputs.repository }}
           ref: ${{ steps.book.outputs.ref }}
@@ -99,11 +99,11 @@ jobs:
 
       - name: Configurar o Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
 
       - name: Construir o site Jekyll
         id: build
-        uses: actions/jekyll-build-pages@v1
+        uses: actions/jekyll-build-pages@44a6e6beabd48582f863aeeb6cb2151cc1716697 # v1.0.13
         with:
           source: ./
           destination: ./_site
@@ -112,7 +112,7 @@ jobs:
         run: python3 scripts/test_built_site.py ./_site
 
       - name: Enviar artefato do Pages
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
         with:
           path: ./_site
 
@@ -129,4 +129,4 @@ jobs:
     steps:
       - name: Publicar no GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
