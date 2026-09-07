@@ -19,7 +19,7 @@ FILES = (
 )
 URL_RE = re.compile(r"https?://[^\s)<>\"']+")
 TRAILING = ".,;:!?]}>'"
-USER_AGENT = "REALMat-portal-link-check/1.0"
+USER_AGENT = "Mozilla/5.0 (compatible; REALMat-portal-link-check/1.0)"
 
 
 def urls_from_files() -> list[str]:
@@ -39,9 +39,9 @@ def request_status(url: str) -> int:
         request = Request(url, headers=headers, method="HEAD")
         with urlopen(request, timeout=25) as response:
             return response.status
-    except HTTPError as error:
-        if error.code not in {403, 405, 501}:
-            return error.code
+    except HTTPError:
+        # Alguns servidores respondem incorretamente a HEAD; confirme por GET.
+        pass
     except (URLError, TimeoutError):
         pass
 
