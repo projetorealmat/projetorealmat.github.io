@@ -33,3 +33,9 @@ O workflow baixa o asset oficial da release e verifica o digest antes de constru
 ## Licenças
 
 O tema Massively mantém sua licença própria, indicada em [MASSIVELY_LICENSE.txt](MASSIVELY_LICENSE.txt). Cada livro conserva a licença declarada em seu próprio repositório.
+
+## Organização no GitHub Project
+
+Associe issues e pull requests ao Project do REALMat quando ele estiver criado. Para o portal, use labels como `catálogo`, `portal`, `navegação`, `busca`, `acessibilidade`, `release`, `build` e `bloqueado`. Milestones devem representar versões que precisam ser publicadas, como `v0.2.0` e `v1.0.0`.
+
+Alterações ainda incompletas devem ser draft PRs. Ao solicitar revisão, vincule a issue e indique se o catálogo, a release, a busca ou a navegação foram afetados. Consulte [EDITORIAL_WORKFLOW.md](EDITORIAL_WORKFLOW.md) para o fluxo completo.
