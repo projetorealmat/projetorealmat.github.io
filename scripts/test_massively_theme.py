@@ -101,7 +101,7 @@ REQUIRED = {
         "release.release_url",
     ),
     "_pages/topicos.md": (
-        "group_by: \\"subject\\"",
+        "group_by:",
         "site.data.books",
         "book.title",
     ),
