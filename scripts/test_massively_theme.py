@@ -11,7 +11,7 @@ REQUIRED = {
     "_data/books.json": (
         '"v0.1.0"',
         '"em revisão"',
-        '"releases/tag/v0.1.0"',
+        '"release_url": "https://github.com/projetorealmat/forallx/releases/tag/v0.1.0"',
     ),
     ".github/workflows/pages.yml": (
         "_data/books.json",
@@ -96,8 +96,8 @@ REQUIRED = {
     "_pages/livros.md": (
         "realmat-library",
         "forallx: Lógica",
-        "assets/books/forallx.pdf",
-        "v0.1.0",
+        "book.pdf_path",
+        "book.version",
         "release_url",
         "Obras e traduções reunidas pelo REALMat",
     ),
@@ -105,7 +105,6 @@ REQUIRED = {
         "realmat-book-detail",
         "Ler no navegador",
         'download="forallx.pdf"',
-        "assets/books/forallx.pdf",
         "book.pdf_path",
         "book.release_url",
     ),
