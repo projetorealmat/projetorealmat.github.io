@@ -1,0 +1,6 @@
+# Artefatos gerados localmente pelo build do portal
+/_site/
+/generated/
+/.jekyll-cache/
+/.sass-cache/
+/vendor/bundle/
