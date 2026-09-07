@@ -125,24 +125,18 @@ jobs:
                   "releases": [release],
               })
 
-          rendered = json.dumps(catalog, ensure_ascii=False, indent=2) + "
-"
+          rendered = json.dumps(catalog, ensure_ascii=False, indent=2) + "\n"
           changed = catalog_path.read_text(encoding="utf-8") != rendered
           if changed:
               catalog_path.write_text(rendered, encoding="utf-8")
 
           branch = f"automation/catalog-{book['id']}-{book['version']}-{os.environ['GITHUB_RUN_ID']}"
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-              output.write(f"changed={'true' if changed else 'false'}
-")
-              output.write(f"branch={branch}
-")
-              output.write(f"version={book['version']}
-")
-              output.write(f"book_id={book['id']}
-")
-              output.write(f"release_url={book['release_url']}
-")
+              output.write(f"changed={'true' if changed else 'false'}\n")
+              output.write(f"branch={branch}\n")
+              output.write(f"version={book['version']}\n")
+              output.write(f"book_id={book['id']}\n")
+              output.write(f"release_url={book['release_url']}\n")
           PY
 
           python3 scripts/validate_catalog.py _data/books.json
