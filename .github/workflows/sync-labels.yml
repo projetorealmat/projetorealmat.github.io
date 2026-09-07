@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - ".github/labels.json"
+      - ".github/milestones.json"
       - ".github/workflows/sync-labels.yml"
   workflow_dispatch:
 
@@ -36,9 +37,10 @@ jobs:
           repository = os.environ["GITHUB_REPOSITORY"]
           token = os.environ["GH_TOKEN"]
           labels = json.loads(Path(".github/labels.json").read_text(encoding="utf-8"))
+          milestones = json.loads(Path(".github/milestones.json").read_text(encoding="utf-8"))
 
-          def request(method, url, payload):
-              data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+          def request(method, url, payload=None):
+              data = None if payload is None else json.dumps(payload, ensure_ascii=False).encode("utf-8")
               request = urllib.request.Request(
                   url,
                   data=data,
@@ -51,7 +53,8 @@ jobs:
                   },
               )
               with urllib.request.urlopen(request) as response:
-                  return response.status
+                  body = response.read()
+                  return json.loads(body) if body else None
 
           for label in labels:
               name = label["name"]
@@ -70,4 +73,15 @@ jobs:
                   create_url = f"https://api.github.com/repos/{repository}/labels"
                   request("POST", create_url, {"name": name, "color": label["color"], "description": label["description"]})
               print(f"Sincronizado: {name}")
+
+          milestone_url = f"https://api.github.com/repos/{repository}/milestones?state=all&per_page=100"
+          existing_milestones = {item["title"]: item["number"] for item in request("GET", milestone_url)}
+          for milestone in milestones:
+              title = milestone["title"]
+              payload = {"title": title, "description": milestone["description"], "state": "open"}
+              if title in existing_milestones:
+                  request("PATCH", f"https://api.github.com/repos/{repository}/milestones/{existing_milestones[title]}", payload)
+              else:
+                  request("POST", f"https://api.github.com/repos/{repository}/milestones", payload)
+              print(f"Sincronizado: milestone {title}")
           PY
