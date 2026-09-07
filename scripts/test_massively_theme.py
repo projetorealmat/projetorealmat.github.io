@@ -13,6 +13,12 @@ REQUIRED = {
         '"em revisão"',
         '"releases/tag/v0.1.0"',
     ),
+    ".github/workflows/pages.yml": (
+        "_data/books.json",
+        "steps.book.outputs.repository",
+        "steps.book.outputs.ref",
+        "ubuntu-24.04",
+    ),
     "_config.yml": (
         'title: "REALMat"',
         'subtitle: "Recursos Educacionais Abertos na Licenciatura em Matemática"',
@@ -93,7 +99,7 @@ REQUIRED = {
         "assets/books/forallx.pdf",
         "v0.1.0",
         "release_url",
-        "REALMat para leitura",
+        "Obras e traduções reunidas pelo REALMat",
     ),
     "_pages/forallx.md": (
         "realmat-book-detail",
@@ -307,6 +313,12 @@ def main() -> int:
         errors.append("assets/css/main.scss: o CSS oficial deve ser servido como main.css")
     if (ROOT / "assets/js/realmat.js").exists():
         errors.append("assets/js/realmat.js: script antigo não deve permanecer")
+
+    workflow = ROOT / ".github/workflows/pages.yml"
+    if workflow.exists():
+        workflow_content = workflow.read_text(encoding="utf-8", errors="replace")
+        if "ref: main" in workflow_content:
+            errors.append(".github/workflows/pages.yml: o portal ainda compila a main do livro")
 
     navigation = ROOT / "_data/navigation.yml"
     if navigation.exists():
