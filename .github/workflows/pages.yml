@@ -20,18 +20,47 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:
       - name: Baixar o portal REALMAT
         uses: actions/checkout@v4
 
+      - name: Ler catálogo versionado
+        id: book
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          catalog = json.loads(Path("_data/books.json").read_text(encoding="utf-8"))
+          book = next((item for item in catalog if item.get("id") == "forallx"), None)
+          if book is None:
+              raise SystemExit("O catálogo não contém o livro forallx.")
+
+          required = ("repository", "ref", "version", "status", "pdf_path", "release_url")
+          missing = [key for key in required if not book.get(key)]
+          if missing:
+              raise SystemExit(f"Campos ausentes no catálogo: {', '.join(missing)}")
+          if book["ref"] in {"main", "master", "HEAD"}:
+              raise SystemExit("O portal não pode compilar diretamente uma branch de desenvolvimento.")
+
+          output = Path(os.environ["GITHUB_OUTPUT"])
+          with output.open("a", encoding="utf-8") as stream:
+              stream.write(f"repository={book['repository']}\n")
+              stream.write(f"ref={book['ref']}\n")
+              stream.write(f"version={book['version']}\n")
+              stream.write(f"status={book['status']}\n")
+          PY
+
       - name: Baixar a fonte do forallx
         uses: actions/checkout@v4
         with:
-          repository: projetorealmat/forallx
-          ref: main
+          repository: ${{ steps.book.outputs.repository }}
+          ref: ${{ steps.book.outputs.ref }}
           path: .book/forallx
           fetch-depth: 1
           persist-credentials: false
@@ -59,6 +88,7 @@ jobs:
         run: |
           mkdir -p assets/books
           cp .book/forallx/forallx.pdf assets/books/forallx.pdf
+          printf 'Fonte compilada: %s@%s\\n' "${{ steps.book.outputs.repository }}" "${{ steps.book.outputs.ref }}" > assets/books/forallx-source.txt
           rm -rf .book
 
       - name: Verificar a integração original do Massively
