@@ -24,7 +24,7 @@ permalink: /livros/forallx/
       <span class="date">Leitura da edição {{ book.version }} · {{ book.status }}</span>
       <h2 id="forallx-reading-title">Leia no navegador ou baixe o PDF.</h2>
     </header>
-    <p>A edição {{ book.version }} está {{ book.status }}. O portal compila a fonte da referência declarada no catálogo; o botão de leitura abre o PDF no visualizador nativo do navegador e o segundo botão salva uma cópia para consulta offline.</p>
+    <p>A edição {{ book.version }} está {{ book.status }}. O portal publica o PDF oficial da release declarada no catálogo; o botão de leitura abre esse arquivo no visualizador nativo do navegador e o segundo botão salva uma cópia para consulta offline.</p>
     <ul class="actions">
       <li><a href="{{ book.pdf_path | relative_url }}" class="button primary" target="_blank" rel="noopener noreferrer">Ler no navegador <span aria-hidden="true">↗</span></a></li>
       <li><a href="{{ book.pdf_path | relative_url }}" class="button" download="forallx.pdf">Baixar PDF <span aria-hidden="true">↓</span></a></li>
