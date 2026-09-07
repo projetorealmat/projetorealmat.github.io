@@ -59,6 +59,20 @@ def validate_entry(entry: object, index: int, paths: set[str]) -> None:
     status = entry["status"]
     if status not in ALLOWED_STATUSES:
         fail(f"item {index}: status editorial inválido: {status!r}")
+    major, minor, patch = (int(part) for part in version[1:].split("."))
+    if major == 0:
+        expected_status = "em revisão"
+    elif major == 1 and minor == 0 and patch == 0:
+        expected_status = "tradução aprovada"
+    elif major == 1:
+        expected_status = "versão revisada"
+    else:
+        expected_status = "nova versão"
+    if status != expected_status:
+        fail(
+            f"item {index}: status {status!r} incompatível com {version}; "
+            f"esperado {expected_status!r}"
+        )
 
     repository = entry["repository"]
     if not isinstance(repository, str) or not REPOSITORY_RE.fullmatch(repository):
