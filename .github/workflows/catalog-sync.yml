@@ -62,13 +62,13 @@ jobs:
               raise SystemExit(f"Payload da release incompleto: {', '.join(missing)}")
           if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", book["id"]):
               raise SystemExit("O id do livro contém caracteres não permitidos.")
-          if not re.fullmatch(r"v\\d+\\.\\d+\\.\\d+", book["version"]):
+          if not re.fullmatch(r"v\d+\.\d+\.\d+", book["version"]):
               raise SystemExit("A versão recebida não segue vMAJOR.MINOR.PATCH.")
           if book["ref"] != book["version"]:
               raise SystemExit("A release deve apontar para a mesma tag semver declarada na versão.")
-          if not re.fullmatch(r"[^/\\s]+/[^/\\s]+", book["repository"]):
+          if not re.fullmatch(r"[^/\s]+/[^/\s]+", book["repository"]):
               raise SystemExit("O repositório recebido é inválido.")
-          if book.get("release_date") and not re.fullmatch(r"\\d{4}-\\d{2}-\\d{2}", book["release_date"]):
+          if book.get("release_date") and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", book["release_date"]):
               raise SystemExit("release_date deve usar YYYY-MM-DD.")
 
           release_fields = required_release
@@ -125,18 +125,24 @@ jobs:
                   "releases": [release],
               })
 
-          rendered = json.dumps(catalog, ensure_ascii=False, indent=2) + "$n"
+          rendered = json.dumps(catalog, ensure_ascii=False, indent=2) + "
+"
           changed = catalog_path.read_text(encoding="utf-8") != rendered
           if changed:
               catalog_path.write_text(rendered, encoding="utf-8")
 
           branch = f"automation/catalog-{book['id']}-{book['version']}-{os.environ['GITHUB_RUN_ID']}"
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-              output.write(f"changed={'true' if changed else 'false'}$n")
-              output.write(f"branch={branch}$n")
-              output.write(f"version={book['version']}$n")
-              output.write(f"book_id={book['id']}$n")
-              output.write(f"release_url={book['release_url']}$n")
+              output.write(f"changed={'true' if changed else 'false'}
+")
+              output.write(f"branch={branch}
+")
+              output.write(f"version={book['version']}
+")
+              output.write(f"book_id={book['id']}
+")
+              output.write(f"release_url={book['release_url']}
+")
           PY
 
           python3 scripts/validate_catalog.py _data/books.json
