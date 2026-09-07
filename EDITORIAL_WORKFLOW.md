@@ -1,6 +1,6 @@
 # Fluxo editorial e de publicação do REALMat
 
-O portal organiza a descoberta e a leitura das obras. O conteúdo de cada livro é revisado no seu próprio repositório; o catálogo do portal registra qual release imutável deve ser publicada.
+O portal organiza a descoberta e a leitura das obras. O conteúdo de cada livro é revisado no seu próprio repositório; o catálogo do portal registra releases imutáveis e qual delas deve ser apresentada como atual.
 
 ## Organização no GitHub Project
 
@@ -14,13 +14,22 @@ Quando o Project do REALMat estiver criado, issues e pull requests dos dois repo
 
 Use a visão de quadro para o fluxo, a tabela para acompanhar capítulos e a visão agrupada por release para planejar publicações.
 
-## Atualização do catálogo
+## Catálogo versionado
 
-O arquivo `_data/books.json` é a fonte versionada da edição exibida no portal. Cada item deve apontar para uma tag semver ou para um SHA completo, nunca para `main`, `master` ou `HEAD`, e deve conter o SHA-256 do PDF publicado na release.
+O arquivo `_data/books.json` é a fonte versionada da edição exibida no portal. Cada item representa um livro e contém:
+
+- `current_version`: release recomendada para leitura no momento;
+- `releases`: histórico completo das versões publicadas no repositório do livro.
+
+Cada release deve apontar para uma tag semver ou para um SHA completo, nunca para `main`, `master` ou `HEAD`, e deve conter o SHA-256 do PDF publicado. Releases antigas não devem ser removidas quando uma versão nova é publicada: o catálogo mantém os links para permitir citação, comparação e bifurcação.
+
+As páginas em `generated/books/` são geradas a partir do catálogo durante o build. Não edite essas páginas diretamente; altere `_data/books.json` e regenere o site. A página de cada livro apresenta a release atual e o histórico correspondente; **Arquivo**, **Tópicos**, a busca e o rodapé também são derivados do mesmo catálogo.
+
+## Atualização do catálogo
 
 O workflow do portal baixa o asset oficial da release e verifica esse digest antes de construir o site. Assim, o PDF exibido no portal é o mesmo arquivo que pode ser citado e bifurcado no repositório do livro.
 
-Uma release pode disparar uma proposta automática de atualização do catálogo. Essa automação abre um pull request; a publicação continua dependendo da revisão humana e do merge desse PR.
+Uma release pode disparar uma proposta automática de atualização do catálogo. Essa automação faz upsert da nova versão, preserva as versões anteriores e abre um pull request; a publicação continua dependendo da revisão humana e do merge desse PR.
 
 ## Labels e milestones
 
