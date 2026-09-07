@@ -49,10 +49,10 @@ def render_book(index: int, book: dict) -> str:
         pdf_url = html.escape(release["pdf_url"], quote=True)
         history.append(
             "    <li>"
-            f"<span class="date">{html.escape(release_label(release, book['current_version']))}</span>"
-            f" <a href="{release_url}" target="_blank" rel="noopener noreferrer">Release</a>"
-            f" · <a href="{pdf_url}" target="_blank" rel="noopener noreferrer">PDF</a>"
-            f" · {html.escape(display_date(release.get('release_date')))}"
+            f'<span class="date">{html.escape(release_label(release, book["current_version"]))}</span>'
+            f' <a href="{release_url}" target="_blank" rel="noopener noreferrer">Release</a>'
+            f' · <a href="{pdf_url}" target="_blank" rel="noopener noreferrer">PDF</a>'
+            f' · {html.escape(display_date(release.get("release_date")))}'
             "</li>"
         )
 
