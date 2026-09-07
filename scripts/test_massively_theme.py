@@ -15,8 +15,9 @@ REQUIRED = {
     ),
     ".github/workflows/pages.yml": (
         "_data/books.json",
-        "steps.book.outputs.repository",
-        "steps.book.outputs.ref",
+        "scripts/validate_catalog.py",
+        "steps.book.outputs.pdf_url",
+        "sha256sum --check",
         "ubuntu-24.04",
     ),
     "_config.yml": (
