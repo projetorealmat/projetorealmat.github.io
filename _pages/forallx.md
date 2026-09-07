@@ -6,6 +6,8 @@ description: "Uma tradução e adaptação brasileira de forall x: An Introducti
 permalink: /livros/forallx/
 ---
 
+{% assign book = site.data.books | where: "id", "forallx" | first %}
+
 <section class="realmat-book-detail" aria-labelledby="forallx-reading-title">
   <div class="realmat-book-detail__cover realmat-book-poster realmat-book-poster--large" role="img" aria-label="Capa tipográfica de forallx: Lógica">
     <span class="realmat-book-poster__inner">
@@ -19,13 +21,14 @@ permalink: /livros/forallx/
 
   <div class="realmat-book-detail__copy">
     <header class="major">
-      <span class="date">Leitura da edição atual</span>
+      <span class="date">Leitura da edição {{ book.version }} · {{ book.status }}</span>
       <h2 id="forallx-reading-title">Leia no navegador ou baixe o PDF.</h2>
     </header>
-    <p>A edição disponível está em revisão editorial. O botão de leitura abre o PDF diretamente no visualizador nativo do navegador; o segundo botão salva uma cópia para consulta offline.</p>
+    <p>A edição {{ book.version }} está {{ book.status }}. O portal compila a fonte da referência declarada no catálogo; o botão de leitura abre o PDF no visualizador nativo do navegador e o segundo botão salva uma cópia para consulta offline.</p>
     <ul class="actions">
-      <li><a href="{{ '/assets/books/forallx.pdf' | relative_url }}" class="button primary" target="_blank" rel="noopener noreferrer">Ler no navegador <span aria-hidden="true">↗</span></a></li>
-      <li><a href="{{ '/assets/books/forallx.pdf' | relative_url }}" class="button" download="forallx.pdf">Baixar PDF <span aria-hidden="true">↓</span></a></li>
+      <li><a href="{{ book.pdf_path | relative_url }}" class="button primary" target="_blank" rel="noopener noreferrer">Ler no navegador <span aria-hidden="true">↗</span></a></li>
+      <li><a href="{{ book.pdf_path | relative_url }}" class="button" download="forallx.pdf">Baixar PDF <span aria-hidden="true">↓</span></a></li>
+      <li><a href="{{ book.release_url }}" class="button" target="_blank" rel="noopener noreferrer">Release e fontes <span aria-hidden="true">↗</span></a></li>
     </ul>
     <p class="realmat-note">O arquivo abre em uma nova aba e pode ser baixado pelo próprio navegador.</p>
   </div>
@@ -37,7 +40,7 @@ permalink: /livros/forallx/
   <div>
     <span class="realmat-facts__number">01</span>
     <h3>Estado</h3>
-    <p>Tradução e adaptação brasileira em revisão editorial.</p>
+    <p>Tradução e adaptação brasileira {{ book.status }}, versão {{ book.version }}.</p>
   </div>
   <div>
     <span class="realmat-facts__number">02</span>

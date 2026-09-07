@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Correções no livro forallx
+    url: https://github.com/projetorealmat/forallx/issues
+    about: Use o repositório do livro para problemas de tradução, conteúdo matemático ou LaTeX.
+  - name: Guia de contribuição
+    url: https://github.com/projetorealmat/projetorealmat.github.io/blob/main/CONTRIBUTING.md
+    about: Consulte o fluxo de contribuição antes de abrir uma tarefa.

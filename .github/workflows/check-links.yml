@@ -1,0 +1,27 @@
+name: Verificar links externos do portal
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "**/*.md"
+      - "_data/books.json"
+      - "scripts/check_external_links.py"
+      - ".github/workflows/check-links.yml"
+  schedule:
+    - cron: "37 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    name: Check external links
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Check external links
+        run: python3 scripts/check_external_links.py

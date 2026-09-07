@@ -5,16 +5,19 @@ description: "Histórico de novas obras, edições e mudanças no portal."
 permalink: /arquivo/
 ---
 
+{% assign book = site.data.books | first %}
+
 <p class="realmat-page-lead">Registro das principais etapas de publicação do portal.</p>
 
 <section class="realmat-updates" aria-label="Histórico de publicações">
   <article>
     <header>
-      <span class="date">5 de setembro de 2026 · Livro</span>
+      <span class="date">5 de setembro de 2026 · Livro · {{ book.version }}</span>
       <h2>forallx disponível para leitura</h2>
     </header>
-    <p>O portal passou a oferecer a edição atual de <em>forallx: Lógica</em> para leitura e download, enquanto a tradução permanece em revisão editorial.</p>
+    <p>O portal oferece a edição {{ book.version }} de <em>forallx: Lógica</em> para leitura e download. O estado editorial atual é: {{ book.status }}.</p>
     <a href="{{ '/livros/forallx/' | relative_url }}">Ver a edição <span aria-hidden="true">↗</span></a>
+    <a href="{{ book.release_url }}" target="_blank" rel="noopener noreferrer">Ver a release <span aria-hidden="true">↗</span></a>
   </article>
 
   <article>

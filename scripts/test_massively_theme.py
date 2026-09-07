@@ -8,6 +8,17 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 
 REQUIRED = {
+    "_data/books.json": (
+        '"v0.1.0"',
+        '"em revisão"',
+        '"release_url": "https://github.com/projetorealmat/forallx/releases/tag/v0.1.0"',
+    ),
+    ".github/workflows/pages.yml": (
+        "_data/books.json",
+        "steps.book.outputs.repository",
+        "steps.book.outputs.ref",
+        "ubuntu-24.04",
+    ),
     "_config.yml": (
         'title: "REALMat"',
         'subtitle: "Recursos Educacionais Abertos na Licenciatura em Matemática"',
@@ -78,20 +89,24 @@ REQUIRED = {
         'class="posts',
         "REALMat",
         "forallx",
+        "featured_book",
         "/livros/",
         "/contribuir/",
     ),
     "_pages/livros.md": (
         "realmat-library",
         "forallx: Lógica",
-        "assets/books/forallx.pdf",
-        "REALMat para leitura",
+        "book.pdf_path",
+        "book.version",
+        "release_url",
+        "Obras e traduções reunidas pelo REALMat",
     ),
     "_pages/forallx.md": (
         "realmat-book-detail",
         "Ler no navegador",
         'download="forallx.pdf"',
-        "assets/books/forallx.pdf",
+        "book.pdf_path",
+        "book.release_url",
     ),
     "_pages/contribuir.md": (
         "realmat-contribution",
@@ -297,6 +312,12 @@ def main() -> int:
         errors.append("assets/css/main.scss: o CSS oficial deve ser servido como main.css")
     if (ROOT / "assets/js/realmat.js").exists():
         errors.append("assets/js/realmat.js: script antigo não deve permanecer")
+
+    workflow = ROOT / ".github/workflows/pages.yml"
+    if workflow.exists():
+        workflow_content = workflow.read_text(encoding="utf-8", errors="replace")
+        if "ref: main" in workflow_content:
+            errors.append(".github/workflows/pages.yml: o portal ainda compila a main do livro")
 
     navigation = ROOT / "_data/navigation.yml"
     if navigation.exists():

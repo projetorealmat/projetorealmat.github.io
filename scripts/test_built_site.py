@@ -25,6 +25,8 @@ EXPECTED_PAGES = {
         "realmat-logo",
         "<h1>REALMat</h1>",
         "realmat-wordmark__icon",
+        "v0.1.0",
+        "em revisão",
         'href="/arquivo/"',
         'href="/topicos/"',
         'href="/images/realmat-bg.jpg"',
@@ -35,6 +37,8 @@ EXPECTED_PAGES = {
         "forallx: Lógica",
         'href="/livros/forallx/"',
         'href="/assets/books/forallx.pdf"',
+        "v0.1.0",
+        "releases/tag/v0.1.0",
     ),
     "livros/forallx/index.html": (
         'class="post realmat-page"',
@@ -43,6 +47,8 @@ EXPECTED_PAGES = {
         'href="/assets/books/forallx.pdf"',
         'target="_blank"',
         'download="forallx.pdf"',
+        "v0.1.0",
+        "releases/tag/v0.1.0",
         'href="/contribuir/"',
     ),
     "sobre/index.html": (
@@ -107,6 +113,16 @@ REQUIRED_ASSETS = (
     "assets/images/realmat-logo.jpg",
     "assets/books/forallx.pdf",
 )
+
+def _without_search_index_script(content):
+    start = content.find("window.REALMAT_SEARCH_INDEX")
+    if start < 0:
+        return content
+    end = content.find("</script>", start)
+    if end < 0:
+        return content[:start]
+    return content[:start] + content[end:]
+
 
 def check_navigation_order(errors):
     index = ROOT / "index.html"
@@ -203,7 +219,12 @@ def main() -> int:
         for marker in markers:
             if marker not in content:
                 errors.append(f"{relative_path}: marcador ausente: {marker}")
-        if "{{" in content or "{%" in content:
+        liquid_check_content = (
+            _without_search_index_script(content)
+            if relative_path == "buscar/index.html"
+            else content
+        )
+        if "{{" in liquid_check_content or "{%" in liquid_check_content:
             errors.append(f"{relative_path}: expressão Liquid não processada")
 
     for relative_path in REQUIRED_ASSETS:

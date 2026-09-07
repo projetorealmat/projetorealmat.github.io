@@ -20,18 +20,47 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:
       - name: Baixar o portal REALMAT
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Ler catálogo versionado
+        id: book
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          catalog = json.loads(Path("_data/books.json").read_text(encoding="utf-8"))
+          book = next((item for item in catalog if item.get("id") == "forallx"), None)
+          if book is None:
+              raise SystemExit("O catálogo não contém o livro forallx.")
+
+          required = ("repository", "ref", "version", "status", "pdf_path", "release_url")
+          missing = [key for key in required if not book.get(key)]
+          if missing:
+              raise SystemExit(f"Campos ausentes no catálogo: {', '.join(missing)}")
+          if book["ref"] in {"main", "master", "HEAD"}:
+              raise SystemExit("O portal não pode compilar diretamente uma branch de desenvolvimento.")
+
+          output = Path(os.environ["GITHUB_OUTPUT"])
+          with output.open("a", encoding="utf-8") as stream:
+              stream.write(f"repository={book['repository']}\n")
+              stream.write(f"ref={book['ref']}\n")
+              stream.write(f"version={book['version']}\n")
+              stream.write(f"status={book['status']}\n")
+          PY
 
       - name: Baixar a fonte do forallx
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          repository: projetorealmat/forallx
-          ref: main
+          repository: ${{ steps.book.outputs.repository }}
+          ref: ${{ steps.book.outputs.ref }}
           path: .book/forallx
           fetch-depth: 1
           persist-credentials: false
@@ -59,6 +88,7 @@ jobs:
         run: |
           mkdir -p assets/books
           cp .book/forallx/forallx.pdf assets/books/forallx.pdf
+          printf 'Fonte compilada: %s@%s\\n' "${{ steps.book.outputs.repository }}" "${{ steps.book.outputs.ref }}" > assets/books/forallx-source.txt
           rm -rf .book
 
       - name: Verificar a integração original do Massively
@@ -69,11 +99,11 @@ jobs:
 
       - name: Configurar o Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
 
       - name: Construir o site Jekyll
         id: build
-        uses: actions/jekyll-build-pages@v1
+        uses: actions/jekyll-build-pages@44a6e6beabd48582f863aeeb6cb2151cc1716697 # v1.0.13
         with:
           source: ./
           destination: ./_site
@@ -82,7 +112,7 @@ jobs:
         run: python3 scripts/test_built_site.py ./_site
 
       - name: Enviar artefato do Pages
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
         with:
           path: ./_site
 
@@ -91,7 +121,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: build
     permissions:
       pages: write
@@ -99,4 +129,4 @@ jobs:
     steps:
       - name: Publicar no GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5

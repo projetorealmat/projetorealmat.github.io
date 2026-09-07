@@ -5,11 +5,13 @@ description: "Recursos Educacionais Abertos na Licenciatura em Matemática"
 permalink: /
 ---
 
+{% assign featured_book = site.data.books | first %}
+
 <article class="post featured realmat-home" aria-labelledby="realmat-featured-title">
   <header class="major">
-    <span class="date">Biblioteca aberta · REALMat</span>
+    <span class="date">Biblioteca aberta · {{ featured_book.version }} · {{ featured_book.status }}</span>
     <h2 id="realmat-featured-title"><a href="{{ '/livros/forallx/' | relative_url }}">Matemática em português<br />para ler e ensinar</a></h2>
-    <p>Livros e traduções de matemática em acesso aberto, com edições preparadas para leitura e colaboração.</p>
+    <p>Livros e traduções de matemática em acesso aberto, com edições preparadas para leitura e colaboração. A obra em destaque é publicada a partir da versão declarada no catálogo.</p>
   </header>
 
   <figure class="realmat-logo-hero">
@@ -28,7 +30,7 @@ permalink: /
 
   <ul class="actions special">
     <li><a href="{{ '/livros/' | relative_url }}" class="button primary large">Ver os livros</a></li>
-    <li><a href="{{ '/assets/books/forallx.pdf' | relative_url }}" class="button" target="_blank" rel="noopener noreferrer">Ler o PDF <span aria-hidden="true">↗</span></a></li>
+    <li><a href="{{ featured_book.pdf_path | relative_url }}" class="button" target="_blank" rel="noopener noreferrer">Ler o PDF <span aria-hidden="true">↗</span></a></li>
   </ul>
 </article>
 
