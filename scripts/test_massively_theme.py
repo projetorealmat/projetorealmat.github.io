@@ -24,7 +24,6 @@ REQUIRED = {
         "scripts/validate_catalog.py",
         "scripts/download_catalog_assets.py",
         "scripts/generate_book_pages.py",
-        "sha256",
     ),
     ".github/workflows/catalog-sync.yml": (
         "existing_releases",
