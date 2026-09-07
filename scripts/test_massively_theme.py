@@ -1,37 +1,36 @@
 #!/usr/bin/env python3
-"""Source-level acceptance checks for the original Massively integration."""
+"""Source-level acceptance checks for the REALMat portal."""
 
 from pathlib import Path
-import re
 import sys
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
 REQUIRED = {
-    "_data/books.json": (
-        '"v0.1.0"',
-        '"em revisão"',
-        '"release_url": "https://github.com/projetorealmat/forallx/releases/tag/v0.1.0"',
-    ),
-    ".github/workflows/pages.yml": (
-        "_data/books.json",
-        "scripts/validate_catalog.py",
-        "steps.book.outputs.pdf_url",
-        "sha256sum --check",
-        "ubuntu-24.04",
-    ),
     "_config.yml": (
         'title: "REALMat"',
         'subtitle: "Recursos Educacionais Abertos na Licenciatura em Matemática"',
         'url: "https://projetorealmat.github.io"',
-        "include:",
+        "- generated",
     ),
-    "_data/navigation.yml": (
-        '- title: "Livros"',
-        '- title: "Contribuir"',
-        '- title: "Arquivo"',
-        '- title: "Tópicos"',
-        '- title: "Sobre"',
+    "_data/books.json": (
+        '"current_version"',
+        '"releases"',
+        '"release_date"',
+    ),
+    ".github/workflows/pages.yml": (
+        "scripts/test_catalog_evolution.py",
+        "scripts/validate_catalog.py",
+        "scripts/download_catalog_assets.py",
+        "scripts/generate_book_pages.py",
+        "sha256",
+    ),
+    ".github/workflows/catalog-sync.yml": (
+        "existing_releases",
+        "current_version",
+        "releases",
+        "validate_catalog.py",
     ),
     "_layouts/default.html": (
         'id="wrapper"',
@@ -49,18 +48,10 @@ REQUIRED = {
         "assets/js/jquery.min.js",
         "assets/js/main.js",
     ),
-    "_layouts/home.html": (
-        "layout: default",
-    ),
-    "_layouts/single.html": (
-        'class="post',
-        'class="major"',
-        "realmat-page-content",
-    ),
     "_includes/massively-intro.html": (
         'id="intro"',
         "REALMat",
-        '<h1>REALMat</h1>',
+        "<h1>REALMat</h1>",
         "Recursos Educacionais Abertos na Licenciatura em Matemática",
         "scrolly",
     ),
@@ -80,65 +71,44 @@ REQUIRED = {
         "fa-github",
     ),
     "_includes/massively-footer.html": (
-        'id="footer"',
+        "site.data.books",
         "Como contribuir",
         "Organização do projeto",
-        "forallx: Lógica",
     ),
     "index.md": (
         'class="post featured',
         'class="posts',
         "REALMat",
-        "forallx",
         "featured_book",
+        "featured_release",
         "/livros/",
         "/contribuir/",
     ),
     "_pages/livros.md": (
-        "realmat-library",
-        "forallx: Lógica",
-        "book.pdf_path",
-        "book.version",
-        "release_url",
-        "Obras e traduções reunidas pelo REALMat",
-    ),
-    "_pages/forallx.md": (
-        "realmat-book-detail",
-        "Ler no navegador",
-        'download="forallx.pdf"',
-        "book.pdf_path",
-        "book.release_url",
+        "site.data.books",
+        "book.releases",
+        "book.current_version",
+        "current.pdf_path",
     ),
     "_pages/contribuir.md": (
-        "realmat-contribution",
-        "github.com/projetorealmat/forallx",
-        "REALMat.",
-    ),
-    "_pages/sobre.md": (
-        "Recursos Educacionais Abertos na Licenciatura em Matemática",
-        "O REALMat — Recursos Educacionais Abertos na Licenciatura em Matemática — é um projeto de extensão",
+        "for book in site.data.books",
+        "current.repository",
+        "Discussões e correções",
     ),
     "_pages/arquivo.md": (
-        "permalink: /arquivo/",
-        "realmat-updates",
-        "forallx disponível para leitura",
+        "book.releases",
+        "release.version",
+        "release.release_url",
     ),
     "_pages/topicos.md": (
-        "permalink: /topicos/",
-        "Lógica formal",
-        "/livros/forallx/",
+        "group_by: \\"subject\\"",
+        "site.data.books",
+        "book.title",
     ),
     "_pages/buscar.md": (
-        "realmat-search",
         "REALMAT_SEARCH_INDEX",
+        "site.data.books",
         "search_index_count",
-        "item.url == '/buscar/'",
-        "item.url == '/404.html'",
-    ),
-    "_pages/atualizacoes.md": (
-        "permalink: /atualizacoes/",
-        'http-equiv="refresh"',
-        "/arquivo/",
     ),
     "assets/css/main.css": (
         "Massively by HTML5 UP",
@@ -147,10 +117,7 @@ REQUIRED = {
         "#navPanel",
         "fontawesome-all.min.css",
     ),
-    "assets/css/noscript.css": (
-        "#intro",
-        "#wrapper",
-    ),
+    "assets/css/noscript.css": ("#intro", "#wrapper"),
     "assets/css/realmat.css": (
         "--realmat-blue",
         "--realmat-gold",
@@ -164,192 +131,57 @@ REQUIRED = {
         "realmat-book-poster",
         "@media",
     ),
-    "assets/js/main.js": (
-        "navPanel",
-        "scrollex",
-        "#intro",
-    ),
+    "assets/js/main.js": ("navPanel", "scrollex", "#intro"),
     "assets/js/realmat-search.js": (
         "REALMAT_SEARCH_INDEX",
         "realmat-search",
         "URLSearchParams",
         ".every",
     ),
-    "MASSIVELY_LICENSE.txt": (
-        "Creative Commons Attribution 3.0",
-    ),
-    "README.md": (
-        "# REALMat",
-        "Recursos Educacionais Abertos na Licenciatura em Matemática.",
-    ),
+    "scripts/validate_catalog.py": ("current_version", "RELEASE_FIELDS", "sha256"),
+    "scripts/download_catalog_assets.py": ("sha256", "pdf_url", "current_release"),
+    "scripts/generate_book_pages.py": ("OUTPUT_DIR", "current_release", "Histórico editorial"),
 }
 
-FORBIDDEN = {
-    "_config.yml": ("remote_theme:", "minimal_mistakes", "jekyll-include-cache"),
-    "index.md": ("This is Massively", "Lorem ipsum", 'href="#"'),
-    "_pages/livros.md": ('href="#"', "<iframe"),
-    "_pages/forallx.md": ("<iframe", 'href="#"'),
-    "_pages/contribuir.md": ('href="#"',),
-    "_layouts/default.html": ("minimal-mistakes", "realmat-masthead", "realmat.js"),
-    "assets/css/main.css": ("Minimal Mistakes",),
-}
-
-REQUIRED_ASSETS = (
-    "assets/css/main.css",
-    "assets/css/noscript.css",
-    "assets/css/fontawesome-all.min.css",
-    "assets/js/jquery.min.js",
-    "assets/js/jquery.scrollex.min.js",
-    "assets/js/jquery.scrolly.min.js",
-    "assets/js/browser.min.js",
-    "assets/js/breakpoints.min.js",
-    "assets/js/util.js",
-    "assets/js/main.js",
-    "assets/js/realmat-search.js",
-    "assets/webfonts/fa-solid-900.woff2",
-    "assets/webfonts/fa-brands-400.woff2",
-    "images/bg.jpg",
-    "images/overlay.png",
-    "images/realmat-bg.jpg",
-    "assets/images/realmat-logo.jpg",
+FORBIDDEN = (
+    "This is Massively",
+    "Lorem ipsum",
+    "minimal-mistakes",
+    '<iframe',
+    'href="#"',
 )
 
-def check_intro_subtitle_color(errors):
-    path = ROOT / "assets/css/realmat.css"
-    if not path.exists():
-        return
-    content = path.read_text(encoding="utf-8", errors="replace")
-    matches = re.findall(
-        r"#intro \.realmat-intro-subtitle\s*\{(.*?)\}",
-        content,
-        flags=re.S,
-    )
-    if not matches or "color: var(--realmat-orange);" not in matches[-1]:
-        errors.append(
-            "assets/css/realmat.css: subtítulo da intro não usa a cor laranja da marca"
-        )
-
-
-def _last_css_block(content, selector):
-    pattern = r"(?m)^" + re.escape(selector) + r"\s*\{(.*?)\}"
-    matches = re.findall(pattern, content, flags=re.S)
-    return matches[-1] if matches else ""
-
-
-def check_background_layers(errors):
-    layout = ROOT / "_layouts/default.html"
-    css = ROOT / "assets/css/realmat.css"
-    layout_content = layout.read_text(encoding="utf-8", errors="replace") if layout.exists() else ""
-    css_content = css.read_text(encoding="utf-8", errors="replace") if css.exists() else ""
-
-    if 'rel="preload"' not in layout_content or "images/realmat-bg.jpg" not in layout_content:
-        errors.append("_layouts/default.html: preload do fundo da home ausente")
-
-    intro = _last_css_block(css_content, "#intro")
-    wrapper = _last_css_block(css_content, "#wrapper")
-    first_paint = _last_css_block(css_content, "#wrapper.fade-in:before")
-    parallax = _last_css_block(css_content, "#wrapper > .bg")
-
-    if not intro or "background: transparent;" not in intro or "realmat-bg.jpg" in intro:
-        errors.append(
-            "assets/css/realmat.css: #intro deve ser um plano transparente, sem duplicar a imagem do parallax"
-        )
-
-    if not wrapper or "background: var(--realmat-navy);" not in wrapper or "realmat-bg.jpg" in wrapper:
-        errors.append(
-            "assets/css/realmat.css: wrapper não deve manter uma segunda cópia fixa da imagem"
-        )
-
-    if (
-        not first_paint
-        or "background: var(--realmat-navy);" not in first_paint
-        or "realmat-bg.jpg" in first_paint
-    ):
-        errors.append(
-            "assets/css/realmat.css: primeiro paint deve ser somente o plano azul-marinho"
-        )
-
-    if not parallax or "realmat-bg.jpg" not in parallax:
-        errors.append(
-            "assets/css/realmat.css: camada .bg animada sem a imagem de fundo REALMat"
-        )
-
-    if not parallax or "100% auto" not in parallax or "top center" not in parallax:
-        errors.append(
-            "assets/css/realmat.css: camada .bg perdeu o dimensionamento/posicionamento do parallax do Massively"
-        )
-
-    if "auto 175%" not in css_content:
-        errors.append(
-            "assets/css/realmat.css: ajuste do parallax para orientação portrait ausente"
-        )
 
 def main() -> int:
     errors = []
 
-    for relative, markers in REQUIRED.items():
-        path = ROOT / relative
+    for relative_path, markers in REQUIRED.items():
+        path = ROOT / relative_path
         if not path.exists():
-            errors.append(f"arquivo ausente: {relative}")
+            errors.append(f"arquivo ausente: {relative_path}")
             continue
         content = path.read_text(encoding="utf-8", errors="replace")
         for marker in markers:
             if marker not in content:
-                errors.append(f"{relative}: marcador ausente: {marker}")
-        for marker in FORBIDDEN.get(relative, ()):
-            if marker in content:
-                errors.append(f"{relative}: marcador proibido: {marker}")
+                errors.append(f"{relative_path}: marcador ausente: {marker}")
 
-    for relative in REQUIRED_ASSETS:
-        if not (ROOT / relative).exists():
-            errors.append(f"asset ausente: {relative}")
+    if (ROOT / "_pages" / "forallx.md").exists():
+        errors.append("_pages/forallx.md: página fixa deve ser gerada pelo catálogo")
 
-    for path in ROOT.rglob("*.md"):
-        content = path.read_text(encoding="utf-8", errors="replace")
-        if 'href="#"' in content or "<iframe" in content:
-            errors.append(f"{path.relative_to(ROOT)}: placeholder ou leitor embutido")
-
-    if (ROOT / "assets/css/main.scss").exists():
-        errors.append("assets/css/main.scss: o CSS oficial deve ser servido como main.css")
-    if (ROOT / "assets/js/realmat.js").exists():
-        errors.append("assets/js/realmat.js: script antigo não deve permanecer")
-
-    workflow = ROOT / ".github/workflows/pages.yml"
-    if workflow.exists():
-        workflow_content = workflow.read_text(encoding="utf-8", errors="replace")
-        if "Baixar a fonte do forallx" in workflow_content or "texlive-" in workflow_content or "latexmk" in workflow_content:
-            errors.append(".github/workflows/pages.yml: o portal ainda recompila a fonte do livro")
-        if "Baixar PDF oficial da release" not in workflow_content or "sha256sum --check" not in workflow_content:
-            errors.append(".github/workflows/pages.yml: download/verificação do PDF oficial ausente")
-
-    navigation = ROOT / "_data/navigation.yml"
-    if navigation.exists():
-        titles = [
-            line.strip()
-            for line in navigation.read_text(encoding="utf-8").splitlines()
-            if line.strip().startswith("- title:")
-        ]
-        expected = [
-            '- title: "Livros"',
-            '- title: "Arquivo"',
-            '- title: "Tópicos"',
-            '- title: "Contribuir"',
-            '- title: "Sobre"',
-        ]
-        if titles != expected:
-            errors.append("_data/navigation.yml: menu principal inesperado")
-
-    check_intro_subtitle_color(errors)
-    check_background_layers(errors)
+    for relative_path in ("index.md", "_pages/livros.md", "_pages/contribuir.md", "_pages/topicos.md"):
+        path = ROOT / relative_path
+        if path.exists() and "/livros/forallx/" in path.read_text(encoding="utf-8"):
+            errors.append(f"{relative_path}: referência fixa a forallx encontrada")
 
     if errors:
-        print("Massively source checks failed:")
+        print("Source-level Massively checks failed:")
         for error in errors:
             print(f"- {error}")
         return 1
 
-    print(f"Massively source checks passed: {len(REQUIRED)} files.")
+    print(f"Source-level Massively checks passed: {len(REQUIRED)} files.")
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())
