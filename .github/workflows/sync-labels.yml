@@ -1,0 +1,73 @@
+name: Sincronizar labels do portal
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/labels.json"
+      - ".github/workflows/sync-labels.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync:
+    name: Criar ou atualizar labels
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Sincronizar manifesto
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+          from pathlib import Path
+
+          repository = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          labels = json.loads(Path(".github/labels.json").read_text(encoding="utf-8"))
+
+          def request(method, url, payload):
+              data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+              request = urllib.request.Request(
+                  url,
+                  data=data,
+                  method=method,
+                  headers={
+                      "Accept": "application/vnd.github+json",
+                      "Authorization": f"Bearer {token}",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                      "Content-Type": "application/json",
+                  },
+              )
+              with urllib.request.urlopen(request) as response:
+                  return response.status
+
+          for label in labels:
+              name = label["name"]
+              payload = {
+                  "new_name": name,
+                  "color": label["color"],
+                  "description": label["description"],
+              }
+              encoded_name = urllib.parse.quote(name, safe="")
+              update_url = f"https://api.github.com/repos/{repository}/labels/{encoded_name}"
+              try:
+                  request("PUT", update_url, payload)
+              except urllib.error.HTTPError as error:
+                  if error.code != 404:
+                      raise
+                  create_url = f"https://api.github.com/repos/{repository}/labels"
+                  request("POST", create_url, {"name": name, **payload})
+              print(f"Sincronizado: {name}")
+          PY
