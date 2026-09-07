@@ -40,6 +40,31 @@ def fail(message: str) -> None:
     raise ValueError(message)
 
 
+def validate_release_urls(entry: dict, index: int, repository: str, ref: str) -> None:
+    parsed_urls = {}
+    repository_prefix = f"/{repository}/releases/"
+    for field in ("release_url", "pdf_url"):
+        parsed = urlparse(entry[field])
+        if (
+            parsed.scheme != "https"
+            or parsed.netloc != "github.com"
+            or parsed.query
+            or parsed.fragment
+            or not parsed.path.startswith(repository_prefix)
+        ):
+            fail(f"item {index}: {field} não corresponde ao repositório declarado")
+        parsed_urls[field] = parsed
+
+    if VERSION_RE.fullmatch(ref):
+        release_path = f"/{repository}/releases/tag/{ref}"
+        pdf_name = parsed_urls["pdf_url"].path.rsplit("/", 1)[-1]
+        pdf_path = f"/{repository}/releases/download/{ref}/{pdf_name}"
+        if parsed_urls["release_url"].path != release_path:
+            fail(f"item {index}: release_url não corresponde à referência {ref}")
+        if parsed_urls["pdf_url"].path != pdf_path or not pdf_name.endswith(".pdf"):
+            fail(f"item {index}: pdf_url não corresponde à release {ref}")
+
+
 def validate_entry(entry: object, index: int, paths: set[str]) -> None:
     if not isinstance(entry, dict):
         fail(f"item {index} não é um objeto JSON")
@@ -84,10 +109,7 @@ def validate_entry(entry: object, index: int, paths: set[str]) -> None:
     if not isinstance(ref, str) or not (VERSION_RE.fullmatch(ref) or COMMIT_RE.fullmatch(ref)):
         fail(f"item {index}: ref deve ser uma tag semver ou um SHA completo: {ref!r}")
 
-    for field in ("release_url", "pdf_url"):
-        parsed = urlparse(entry[field])
-        if parsed.scheme != "https" or parsed.netloc != "github.com":
-            fail(f"item {index}: {field} deve ser uma URL HTTPS do GitHub")
+    validate_release_urls(entry, index, repository, ref)
 
     pdf_path = entry["pdf_path"]
     if not isinstance(pdf_path, str) or not pdf_path.startswith("/assets/books/") or not pdf_path.endswith(".pdf"):
