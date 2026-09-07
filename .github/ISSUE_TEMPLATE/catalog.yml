@@ -1,7 +1,7 @@
 name: Atualização do catálogo
 description: Solicite a inclusão ou atualização de uma edição publicada.
 title: "[Catálogo]: "
-labels: []
+labels: ["catálogo"]
 body:
   - type: input
     id: book
