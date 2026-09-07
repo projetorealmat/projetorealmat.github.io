@@ -10,6 +10,7 @@
     "ref": "v0.1.0",
     "release_url": "https://github.com/projetorealmat/forallx/releases/tag/v0.1.0",
     "pdf_url": "https://github.com/projetorealmat/forallx/releases/download/v0.1.0/forallx.pdf",
-    "pdf_path": "/assets/books/forallx.pdf"
+    "pdf_path": "/assets/books/forallx.pdf",
+    "sha256": "4d1372d01b96a1fc0af4b6e02c7665a35b7f86e279d4f86baf6c4952cbbc258f"
   }
 ]
