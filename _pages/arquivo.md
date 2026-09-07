@@ -7,6 +7,8 @@ permalink: /arquivo/
 
 <p class="realmat-page-lead">O arquivo preserva as versões publicadas e identifica qual edição está atualmente recomendada pelo catálogo.</p>
 
+<h2>Histórico editorial</h2>
+
 <section class="realmat-updates" aria-label="Histórico de publicações">
 {% for book in site.data.books %}
   {% assign book_url = '/livros/' | append: book.id | append: '/' %}
