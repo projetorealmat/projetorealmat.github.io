@@ -28,6 +28,9 @@ jobs:
       - name: Baixar o portal REALMAT
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Validar catálogo versionado
+        run: python3 scripts/validate_catalog.py _data/books.json
+
       - name: Ler catálogo versionado
         id: book
         run: |
@@ -42,56 +45,30 @@ jobs:
           if book is None:
               raise SystemExit("O catálogo não contém o livro forallx.")
 
-          required = ("repository", "ref", "version", "status", "pdf_path", "release_url")
+          required = ("version", "status", "pdf_path", "release_url", "pdf_url", "sha256")
           missing = [key for key in required if not book.get(key)]
           if missing:
               raise SystemExit(f"Campos ausentes no catálogo: {', '.join(missing)}")
-          if book["ref"] in {"main", "master", "HEAD"}:
-              raise SystemExit("O portal não pode compilar diretamente uma branch de desenvolvimento.")
 
           output = Path(os.environ["GITHUB_OUTPUT"])
           with output.open("a", encoding="utf-8") as stream:
-              stream.write(f"repository={book['repository']}\n")
-              stream.write(f"ref={book['ref']}\n")
-              stream.write(f"version={book['version']}\n")
-              stream.write(f"status={book['status']}\n")
+              for key in required:
+                  stream.write(f"{key}={book[key]}\n")
           PY
-
-      - name: Baixar a fonte do forallx
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: ${{ steps.book.outputs.repository }}
-          ref: ${{ steps.book.outputs.ref }}
-          path: .book/forallx
-          fetch-depth: 1
-          persist-credentials: false
-
-      - name: Instalar TeX Live com XeLaTeX
+      - name: Baixar PDF oficial da release
+        env:
+          PDF_URL: ${{ steps.book.outputs.pdf_url }}
+          PDF_PATH: ${{ steps.book.outputs.pdf_path }}
+          PDF_SHA256: ${{ steps.book.outputs.sha256 }}
+          RELEASE_URL: ${{ steps.book.outputs.release_url }}
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            texlive-latex-base \
-            texlive-latex-recommended \
-            texlive-latex-extra \
-            texlive-fonts-recommended \
-            texlive-fonts-extra \
-            texlive-lang-english \
-            texlive-lang-portuguese \
-            texlive-xetex \
-            latexmk
-
-      - name: Compilar o forallx
-        working-directory: .book/forallx
-        run: |
-          latexmk -xelatex -interaction=nonstopmode -halt-on-error -file-line-error forallx.tex
-
-      - name: Disponibilizar o PDF no portal
-        run: |
-          mkdir -p assets/books
-          cp .book/forallx/forallx.pdf assets/books/forallx.pdf
-          printf 'Fonte compilada: %s@%s\\n' "${{ steps.book.outputs.repository }}" "${{ steps.book.outputs.ref }}" > assets/books/forallx-source.txt
-          rm -rf .book
-
+          set -euo pipefail
+          relative_pdf_path="${PDF_PATH#/}"
+          mkdir -p "$(dirname "${relative_pdf_path}")"
+          curl --fail --location --retry 3 --silent --show-error \
+            --output "${relative_pdf_path}" "${PDF_URL}"
+          printf '%s  %s\n' "${PDF_SHA256}" "${relative_pdf_path}" | sha256sum --check -
+          printf 'Release oficial: %s\n' "${RELEASE_URL}" > assets/books/forallx-source.txt
       - name: Verificar a integração original do Massively
         run: python3 scripts/test_massively_theme.py
 
