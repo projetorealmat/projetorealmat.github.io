@@ -28,7 +28,7 @@ Correções de tradução, matemática ou LaTeX devem ser propostas no repositó
 
 O arquivo [_data/books.json](_data/books.json) é a fonte da versão publicada de cada livro. A referência deve ser uma tag semver ou commit imutável; não use `main`, `master` ou `HEAD`. Cada item também registra o SHA-256 do PDF da release.
 
-O workflow baixa o asset oficial da release e verifica o digest antes de construir o site. O PDF em `assets/books/forallx.pdf` é um artefato gerado pelo workflow e não deve ser editado manualmente. Para alterar o livro, faça a mudança no repositório da obra, publique uma nova release e depois atualize o catálogo por pull request.
+O workflow baixa o asset oficial da release e verifica o digest antes de construir o site. Os PDFs em `assets/books/` são artefatos gerados pelo workflow e não devem ser editados manualmente. Para alterar o livro, faça a mudança no repositório da obra, publique uma nova release e depois atualize o catálogo por pull request.
 
 ## Licenças
 

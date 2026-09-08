@@ -29,7 +29,7 @@ As páginas em `generated/books/` são geradas a partir do catálogo durante o b
 
 O workflow do portal baixa o asset oficial da release e verifica esse digest antes de construir o site. Assim, o PDF exibido no portal é o mesmo arquivo que pode ser citado e bifurcado no repositório do livro.
 
-Uma release pode disparar uma proposta automática de atualização do catálogo. Essa automação faz upsert da nova versão, preserva as versões anteriores e abre um pull request; a publicação continua dependendo da revisão humana e do merge desse PR.
+Uma release dispara uma proposta automática de atualização do catálogo. O wrapper local chama o workflow reutilizável mantido em [`projetorealmat/.github`](https://github.com/projetorealmat/.github), que faz upsert da nova versão, preserva as versões anteriores e abre um pull request com a identidade da GitHub App organizacional `REALMat Automation`. O auto-merge é solicitado nessa PR, mas só pode ocorrer depois dos checks obrigatórios do portal; não há PAT nem secret de dispatch específico por livro.
 
 ## Labels e milestones
 

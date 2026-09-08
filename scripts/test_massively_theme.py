@@ -26,9 +26,10 @@ REQUIRED = {
         "scripts/generate_book_pages.py",
     ),
     ".github/workflows/catalog-sync.yml": (
-        "existing_releases",
-        "current_version",
-        "releases",
+        "repository_dispatch",
+        "github.event.client_payload",
+        "projetorealmat/.github/.github/workflows/portal-catalog-sync.yml@v1",
+        "payload:",
         "validate_catalog.py",
     ),
     "_layouts/default.html": (
