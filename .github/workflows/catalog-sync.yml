@@ -18,7 +18,10 @@ jobs:
     name: Abrir PR de atualização do catálogo
     runs-on: ubuntu-24.04
     env:
-      GH_TOKEN: ${{ github.token }}
+      # PRs criadas com GITHUB_TOKEN ficam, por regra do GitHub, com os
+      # workflows de pull_request aguardando aprovação manual. Uma identidade
+      # de automação confiável elimina esse passo extra quando configurada.
+      GH_TOKEN: ${{ secrets.REALMAT_AUTOMATION_TOKEN || github.token }}
 
     steps:
       - name: Baixar o portal
@@ -165,4 +168,8 @@ jobs:
           RELEASE_URL: ${{ steps.catalog.outputs.release_url }}
         run: |
           set -euo pipefail
-          gh pr create             --base main             --head "${BRANCH}"             --title "chore(catalog): atualizar ${BOOK_ID} para ${VERSION}"             --body "Atualização proposta automaticamente a partir da release ${VERSION} de ${BOOK_ID}. Fonte: ${RELEASE_URL}. Revise os metadados e aguarde os checks do portal antes de fazer o merge."
+          gh pr create \
+            --base main \
+            --head "${BRANCH}" \
+            --title "chore(catalog): atualizar ${BOOK_ID} para ${VERSION}" \
+            --body "Atualização proposta automaticamente a partir da release ${VERSION} de ${BOOK_ID}. Fonte: ${RELEASE_URL}. Revise os metadados e aguarde os checks do portal antes de fazer o merge."
