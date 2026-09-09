@@ -42,6 +42,14 @@ def render_book(index: int, book: dict) -> str:
     description = (
         f"{book['title']}: edição {current['version']} para leitura e download."
     )
+    source_note = ""
+    if book.get("source_url"):
+        source_url = html.escape(book["source_url"], quote=True)
+        source_note = (
+            '<p class="realmat-note">Fonte, créditos e licença: '
+            f'<a href="{source_url}" target="_blank" rel="noopener noreferrer">'
+            "repositório de origem</a>.</p>"
+        )
     history = []
     for release in book["releases"]:
         version = html.escape(release["version"])
@@ -87,6 +95,7 @@ permalink: /livros/{book_id}/
       <li><a href="{html.escape(current['release_url'])}" class="button" target="_blank" rel="noopener noreferrer">Release e fontes <span aria-hidden="true">↗</span></a></li>
     </ul>
     <p class="realmat-note">O arquivo abre em uma nova aba e pode ser baixado pelo próprio navegador.</p>
+    {source_note}
   </div>
 </section>
 
