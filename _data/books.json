@@ -50,6 +50,8 @@
         "sha256": "4d1372d01b96a1fc0af4b6e02c7665a35b7f86e279d4f86baf6c4952cbbc258f",
         "release_date": "2026-09-06"
       }
-    ]
+    ],
+    "source_url": "https://github.com/OpenLogicProject/forallx",
+    "source_license": "CC BY 4.0"
   }
 ]
