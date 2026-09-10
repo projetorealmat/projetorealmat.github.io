@@ -11,7 +11,7 @@ catalog_workflow = (ROOT / ".github" / "workflows" / "catalog-sync.yml").read_te
 assert catalog, "catalog must not be empty"
 assert "REALMAT_AUTOMATION_TOKEN" not in catalog_workflow
 assert "PORTAL_DISPATCH_TOKEN" not in catalog_workflow
-assert "projetorealmat/.github/.github/workflows/portal-catalog-sync.yml@v1" in catalog_workflow
+assert "projetorealmat/.github/.github/workflows/portal-catalog-sync.yml@v2" in catalog_workflow
 assert "secrets: inherit" in catalog_workflow
 for book in catalog:
     assert isinstance(book.get("current_version"), str), f"{book.get('id')}: current_version missing"
