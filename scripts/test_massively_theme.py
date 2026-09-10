@@ -28,7 +28,7 @@ REQUIRED = {
     ".github/workflows/catalog-sync.yml": (
         "repository_dispatch",
         "github.event.client_payload",
-        "projetorealmat/.github/.github/workflows/portal-catalog-sync.yml@v1",
+        "projetorealmat/.github/.github/workflows/portal-catalog-sync.yml@v2",
         "payload:",
         "validate_catalog.py",
     ),
