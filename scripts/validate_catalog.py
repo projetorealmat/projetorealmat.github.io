@@ -31,6 +31,7 @@ COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
 REPOSITORY_RE = re.compile(r"^[^/\s]+/[^/\s]+$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+SOURCE_FIELDS = ("source_url", "source_license")
 
 
 def fail(message: str) -> None:
@@ -107,6 +108,8 @@ def validate_release(release: object, index: int, paths: set[str]) -> None:
     repository = release["repository"]
     if not isinstance(repository, str) or not REPOSITORY_RE.fullmatch(repository):
         fail(f"release {index}: repositório inválido: {repository!r}")
+    if not repository.startswith("projetorealmat/"):
+        fail(f"release {index}: repositório fora da organização REALMat: {repository!r}")
 
     ref = release["ref"]
     if ref in {"main", "master", "HEAD", "develop", "dev"}:
@@ -155,6 +158,16 @@ def validate_book(book: object, index: int, paths: set[str]) -> None:
     for field in ("title", "short_title", "subject"):
         if not isinstance(book[field], str) or not book[field].strip():
             fail(f"livro {index}: {field} inválido")
+
+    for field in SOURCE_FIELDS:
+        value = book.get(field)
+        if value is not None and (not isinstance(value, str) or not value.strip()):
+            fail(f"livro {index}: {field} inválido")
+    source_url = book.get("source_url")
+    if source_url is not None:
+        parsed_source = urlparse(source_url)
+        if parsed_source.scheme not in {"http", "https"} or not parsed_source.netloc:
+            fail(f"livro {index}: source_url deve ser uma URL HTTP(S)")
 
     releases = book["releases"]
     if not isinstance(releases, list) or not releases:
