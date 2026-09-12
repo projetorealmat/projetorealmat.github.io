@@ -248,7 +248,7 @@ def check_catalog_pages(errors, catalog):
                 )
 
         buttons = re.findall(
-            r'<a\b[^>]*class="[^"]*\bbutton\b[^"]*"[^>]*>,
+            r'<a\b[^>]*class="[^"]*\bbutton\b[^"]*"[^>]*>',
             detail,
         )
         if len(buttons) != 3:
