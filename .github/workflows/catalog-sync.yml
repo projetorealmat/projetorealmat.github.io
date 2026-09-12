@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   sync:
-    uses: projetorealmat/.github/.github/workflows/portal-catalog-sync.yml@v2
+    uses: projetorealmat/.github/.github/workflows/portal-catalog-sync.yml@v3
     with:
       payload: ${{ toJSON(github.event.client_payload) }}
       catalog_file: _data/books.json

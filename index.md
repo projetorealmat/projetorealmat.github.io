@@ -7,11 +7,12 @@ permalink: /
 
 {% assign featured_book = site.data.books | first %}
 {% assign featured_release = featured_book.releases | where: "version", featured_book.current_version | first %}
+{% assign featured_stage = site.data.translation_stages | where: "id", featured_release.translation_stage | first %}
 {% assign featured_url = '/livros/' | append: featured_book.id | append: '/' %}
 
 <article class="post featured realmat-home" aria-labelledby="realmat-featured-title">
   <header class="major">
-    <span class="date">Biblioteca aberta · {{ featured_release.version }} · {{ featured_release.status }}</span>
+    <span class="date">Biblioteca aberta · {{ featured_release.version }} · {{ featured_stage.label }}</span>
     <h2 id="realmat-featured-title"><a href="{{ featured_url | relative_url }}">{{ featured_book.title }}<br />para ler e ensinar</a></h2>
     <p>Livros e traduções de matemática em acesso aberto, com edições preparadas para leitura e colaboração. A obra em destaque é {{ featured_book.title }}.</p>
   </header>
@@ -32,7 +33,7 @@ permalink: /
 
   <ul class="actions special">
     <li><a href="{{ '/livros/' | relative_url }}" class="button primary large">Ver os livros</a></li>
-    <li><a href="{{ featured_release.pdf_path | relative_url }}" class="button" target="_blank" rel="noopener noreferrer">Ler o PDF <span aria-hidden="true">↗</span></a></li>
+    <li><a href="{{ featured_url | relative_url }}" class="button" >Abrir a edição <span aria-hidden="true">↗</span></a></li>
   </ul>
 </article>
 

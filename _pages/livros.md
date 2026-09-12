@@ -10,6 +10,7 @@ permalink: /livros/
 <section class="realmat-library" id="catalogo" aria-label="Catálogo de livros">
 {% for book in site.data.books %}
   {% assign current = book.releases | where: "version", book.current_version | first %}
+  {% assign stage = site.data.translation_stages | where: "id", current.translation_stage | first %}
   {% assign book_url = '/livros/' | append: book.id | append: '/' %}
   <article class="realmat-library__entry">
     <a href="{{ book_url | relative_url }}" class="image realmat-book-poster realmat-book-poster--small" aria-label="Ver {{ book.title }}">
@@ -24,15 +25,13 @@ permalink: /livros/
 
     <div class="realmat-library__body">
       <header>
-        <span class="date">{{ book.subject }} · {{ current.status }}</span>
+        <span class="date">{{ book.subject }} · {{ stage.label }}</span>
         <h2><a href="{{ book_url | relative_url }}">{{ book.title }}</a></h2>
       </header>
-      <p>A edição {{ current.version }} está {{ current.status }}. Consulte a página da obra para ler o PDF atual e acessar o histórico editorial completo.</p>
-      <p class="realmat-meta">PDF oficial · acesso aberto · {{ current.version }} · {{ book.releases.size }} versão(ões)</p>
+      <p>A edição {{ current.version }} corresponde a uma {{ stage.label | downcase }}. Consulte a página da obra para ler pelo formato principal, baixar o PDF oficial e ver o repositório da edição.</p>
+      <p class="realmat-meta">PDF oficial · acesso aberto · {{ current.version }} · {{ stage.label }} · {{ book.releases.size }} versão(ões)</p>
       <ul class="actions">
         <li><a href="{{ book_url | relative_url }}" class="button primary">Ver a edição</a></li>
-        <li><a href="{{ current.pdf_path | relative_url }}" target="_blank" rel="noopener noreferrer">Ler o PDF <span aria-hidden="true">↗</span></a></li>
-        <li><a href="{{ current.release_url }}" target="_blank" rel="noopener noreferrer">Ver release e fontes <span aria-hidden="true">↗</span></a></li>
       </ul>
     </div>
   </article>
