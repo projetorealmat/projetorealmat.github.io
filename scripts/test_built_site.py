@@ -13,6 +13,12 @@ ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("_site")
 SOURCE_ROOT = ROOT.parent
 CATALOG_PATH = SOURCE_ROOT / "_data" / "books.json"
 
+STAGE_LABELS = {
+    "unreviewed": "Tradução não revisada",
+    "reviewed": "Tradução revisada",
+    "adapted": "Tradução revisada e adaptada",
+}
+
 STATIC_PAGES = {
     "index.html": (
         'id="intro"',
@@ -21,7 +27,7 @@ STATIC_PAGES = {
         'id="main"',
         'class="post featured',
         'class="posts',
-        "Ler o PDF",
+        "Abrir a edição",
         'href="/livros/"',
         'href="/contribuir/"',
         'src="/assets/js/main.js"',
@@ -215,22 +221,41 @@ def check_catalog_pages(errors, catalog):
             continue
 
         detail = detail_path.read_text(encoding="utf-8", errors="replace")
+        stage_label = STAGE_LABELS[current["translation_stage"]]
+        entrypoint = current["entrypoint"]
+        pdf = next(publication for publication in current["publications"] if publication["id"] == "pdf")
+        repository_url = f"https://github.com/{current['repository']}"
         expected_markers = (
             book["title"],
             book["current_version"],
-            current["status"],
-            current["pdf_path"],
+            stage_label,
+            entrypoint["url"],
+            pdf["url"],
+            repository_url,
             current["release_url"],
             "Histórico editorial",
             "Versões publicadas",
+            "Ler o livro",
+            "Baixar PDF",
+            "Repositório",
             'target="_blank"',
-            f'download="{book["short_title"]}.pdf"',
+            f'download="{pdf["url"].rsplit("/", 1)[-1]}"',
         )
         for marker in expected_markers:
             if marker not in detail:
                 errors.append(
                     f"{detail_path.relative_to(ROOT)}: marcador ausente: {marker}"
                 )
+
+        buttons = re.findall(
+            r'<a\\b[^>]*class="[^"]*\\bbutton\\b[^"]*"[^>]*>',
+            detail,
+        )
+        if len(buttons) != 3:
+            errors.append(
+                f"{detail_path.relative_to(ROOT)}: esperado exatamente 3 botões, "
+                f"encontrados {len(buttons)}"
+            )
 
         if book["title"] not in library:
             errors.append(f"livros/index.html: livro ausente: {book['title']}")
@@ -248,10 +273,6 @@ def check_catalog_pages(errors, catalog):
                 errors.append(
                     f"{detail_path.relative_to(ROOT)}: release ausente: {release['release_url']}"
                 )
-
-        pdf_path = ROOT / current["pdf_path"].lstrip("/")
-        if not pdf_path.exists():
-            errors.append(f"PDF atual ausente: {current['pdf_path']}")
 
 
 def check_branding(errors):
