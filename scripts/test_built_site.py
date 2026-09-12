@@ -247,15 +247,23 @@ def check_catalog_pages(errors, catalog):
                     f"{detail_path.relative_to(ROOT)}: marcador ausente: {marker}"
                 )
 
-        buttons = re.findall(
-            r'<a\b[^>]*class="[^"]*\bbutton\b[^"]*"[^>]*>',
+        actions_match = re.search(
+            r'<ul class="actions">(.*?)</ul>',
             detail,
+            flags=re.S,
         )
-        if len(buttons) != 3:
-            errors.append(
-                f"{detail_path.relative_to(ROOT)}: esperado exatamente 3 botões, "
-                f"encontrados {len(buttons)}"
+        if not actions_match:
+            errors.append(f"{detail_path.relative_to(ROOT)}: ações do livro ausentes")
+        else:
+            buttons = re.findall(
+                r'<a\b[^>]*class="[^"]*\bbutton\b[^"]*"[^>]*>',
+                actions_match.group(1),
             )
+            if len(buttons) != 3:
+                errors.append(
+                    f"{detail_path.relative_to(ROOT)}: esperado exatamente 3 botões, "
+                    f"encontrados {len(buttons)}"
+                )
 
         if book["title"] not in library:
             errors.append(f"livros/index.html: livro ausente: {book['title']}")
