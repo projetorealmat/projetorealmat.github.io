@@ -16,8 +16,17 @@ REQUIRED = {
     ),
     "_data/books.json": (
         '"current_version"',
-        '"releases"',
+        '"translation_stage"',
+        '"publications"',
         '"release_date"',
+    ),
+    "_data/translation_stages.yml": (
+        "unreviewed",
+        "Tradução não revisada",
+        "reviewed",
+        "Tradução revisada",
+        "adapted",
+        "Tradução revisada e adaptada",
     ),
     ".github/workflows/pages.yml": (
         "scripts/test_catalog_evolution.py",
@@ -28,7 +37,7 @@ REQUIRED = {
     ".github/workflows/catalog-sync.yml": (
         "repository_dispatch",
         "github.event.client_payload",
-        "projetorealmat/.github/.github/workflows/portal-catalog-sync.yml@v2",
+        "projetorealmat/.github/.github/workflows/portal-catalog-sync.yml@v3",
         "payload:",
         "validate_catalog.py",
     ),
@@ -88,7 +97,7 @@ REQUIRED = {
         "site.data.books",
         "book.releases",
         "book.current_version",
-        "current.pdf_path",
+        "current.translation_stage",
     ),
     "_pages/contribuir.md": (
         "for book in site.data.books",
@@ -138,9 +147,9 @@ REQUIRED = {
         "URLSearchParams",
         ".every",
     ),
-    "scripts/validate_catalog.py": ("current_version", "RELEASE_FIELDS", "sha256"),
-    "scripts/download_catalog_assets.py": ("sha256", "pdf_url", "current_release"),
-    "scripts/generate_book_pages.py": ("OUTPUT_DIR", "current_release", "Histórico editorial"),
+    "scripts/validate_catalog.py": ("current_version", "RELEASE_FIELDS", "translation_stage", "publications"),
+    "scripts/download_catalog_assets.py": ("translation_stage", "publications", "canonical PDF"),
+    "scripts/generate_book_pages.py": ("OUTPUT_DIR", "current_release", "stage_label", "publications", "Histórico editorial"),
 }
 
 FORBIDDEN = (
