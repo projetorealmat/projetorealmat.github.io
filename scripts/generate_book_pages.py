@@ -6,11 +6,18 @@ from __future__ import annotations
 import html
 import json
 from pathlib import Path
+from urllib.parse import unquote, urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = ROOT / "_data" / "books.json"
 OUTPUT_DIR = ROOT / "generated" / "books"
+
+STAGE_LABELS = {
+    "unreviewed": "Tradução não revisada",
+    "reviewed": "Tradução revisada",
+    "adapted": "Tradução revisada e adaptada",
+}
 
 
 def current_release(book: dict) -> dict:
@@ -19,6 +26,16 @@ def current_release(book: dict) -> dict:
         for release in book["releases"]
         if release["version"] == book["current_version"]
     )
+
+
+def publication(release: dict, publication_id: str) -> dict:
+    return next(
+        item for item in release["publications"] if item["id"] == publication_id
+    )
+
+
+def stage_label(release: dict) -> str:
+    return STAGE_LABELS[release["translation_stage"]]
 
 
 def display_date(value: str | None) -> str:
@@ -30,17 +47,35 @@ def display_date(value: str | None) -> str:
 
 def release_label(release: dict, current_version: str) -> str:
     state = "Atual" if release["version"] == current_version else "Histórica"
-    return f"{state} · {release['version']} · {release['status']}"
+    return f"{state} · {release['version']} · {stage_label(release)}"
+
+
+def pdf_filename(url: str, fallback: str) -> str:
+    name = unquote(urlsplit(url).path.rsplit("/", 1)[-1])
+    return name if name.endswith(".pdf") else fallback
 
 
 def render_book(index: int, book: dict) -> str:
     current = current_release(book)
+    entrypoint = current["entrypoint"]
+    pdf = publication(current, "pdf")
     title = html.escape(book["title"])
     subject = html.escape(book["subject"])
     short_title = html.escape(book["short_title"])
     book_id = html.escape(book["id"])
+    stage = html.escape(stage_label(current))
+    entrypoint_url = html.escape(entrypoint["url"], quote=True)
+    pdf_url = html.escape(pdf["url"], quote=True)
+    repository_url = html.escape(
+        f"https://github.com/{current['repository']}",
+        quote=True,
+    )
+    download_name = html.escape(
+        pdf_filename(pdf["url"], f"{book['id']}.pdf"),
+        quote=True,
+    )
     description = (
-        f"{book['title']}: edição {current['version']} para leitura e download."
+        f"{book['title']}: edição {current['version']} — {stage_label(current)}."
     )
     source_note = ""
     if book.get("source_url"):
@@ -54,12 +89,13 @@ def render_book(index: int, book: dict) -> str:
     for release in book["releases"]:
         version = html.escape(release["version"])
         release_url = html.escape(release["release_url"], quote=True)
-        pdf_url = html.escape(release["pdf_url"], quote=True)
+        release_pdf = publication(release, "pdf")
+        release_pdf_url = html.escape(release_pdf["url"], quote=True)
         history.append(
             "    <li>"
             f'<span class="date">{html.escape(release_label(release, book["current_version"]))}</span>'
             f' <a href="{release_url}" target="_blank" rel="noopener noreferrer">Release</a>'
-            f' · <a href="{pdf_url}" target="_blank" rel="noopener noreferrer">PDF</a>'
+            f' · <a href="{release_pdf_url}" target="_blank" rel="noopener noreferrer">PDF</a>'
             f' · {html.escape(display_date(release.get("release_date")))}'
             "</li>"
         )
@@ -85,16 +121,16 @@ permalink: /livros/{book_id}/
 
   <div class="realmat-book-detail__copy">
     <header class="major">
-      <span class="date">Leitura da edição {html.escape(current['version'])} · {html.escape(current['status'])}</span>
-      <h2 id="{book_id}-reading-title">Leia no navegador ou baixe o PDF.</h2>
+      <span class="date">Leitura da edição {html.escape(current['version'])} · {stage}</span>
+      <h2 id="{book_id}-reading-title">Leia o livro ou baixe o PDF.</h2>
     </header>
-    <p>{title} é uma obra de {subject}. A edição {html.escape(current['version'])} está {html.escape(current['status'])}. O portal publica o PDF oficial associado à release declarada no catálogo.</p>
+    <p>{title} é uma obra de {subject}. A edição {html.escape(current['version'])} corresponde a uma {stage.lower()}. O portal mantém uma entrada principal de leitura, o PDF oficial para download e o repositório da edição.</p>
     <ul class="actions">
-      <li><a href="{html.escape(current['pdf_path'])}" class="button primary" target="_blank" rel="noopener noreferrer">Ler no navegador <span aria-hidden="true">↗</span></a></li>
-      <li><a href="{html.escape(current['pdf_path'])}" class="button" download="{short_title}.pdf">Baixar PDF <span aria-hidden="true">↓</span></a></li>
-      <li><a href="{html.escape(current['release_url'])}" class="button" target="_blank" rel="noopener noreferrer">Release e fontes <span aria-hidden="true">↗</span></a></li>
+      <li><a href="{entrypoint_url}" class="button primary" target="_blank" rel="noopener noreferrer">Ler o livro <span aria-hidden="true">↗</span></a></li>
+      <li><a href="{pdf_url}" class="button" download="{download_name}">Baixar PDF <span aria-hidden="true">↓</span></a></li>
+      <li><a href="{repository_url}" class="button" target="_blank" rel="noopener noreferrer">Repositório <span aria-hidden="true">↗</span></a></li>
     </ul>
-    <p class="realmat-note">O arquivo abre em uma nova aba e pode ser baixado pelo próprio navegador.</p>
+    <p class="realmat-note">A entrada principal pode ser uma versão web ou outro formato de leitura declarado pela edição. Os demais formatos são mantidos no README e no próprio formato de leitura.</p>
     {source_note}
   </div>
 </section>
@@ -104,8 +140,8 @@ permalink: /livros/{book_id}/
 <section class="realmat-facts" aria-label="Informações da edição">
   <div>
     <span class="realmat-facts__number">01</span>
-    <h3>Estado</h3>
-    <p>{html.escape(current['status'])}, versão {html.escape(current['version'])}.</p>
+    <h3>Nível da tradução</h3>
+    <p>{stage}, versão {html.escape(current['version'])}.</p>
   </div>
   <div>
     <span class="realmat-facts__number">02</span>
@@ -114,8 +150,8 @@ permalink: /livros/{book_id}/
   </div>
   <div>
     <span class="realmat-facts__number">03</span>
-    <h3>Formato</h3>
-    <p>PDF de acesso aberto para leitura no navegador e estudo offline.</p>
+    <h3>Publicação</h3>
+    <p>Entrada principal de leitura e PDF oficial para download.</p>
   </div>
 </section>
 
@@ -136,8 +172,7 @@ permalink: /livros/{book_id}/
     <h2 id="{book_id}-contribute-title">Encontrou uma correção ou quer colaborar?</h2>
   </div>
   <div>
-    <p>As discussões, orientações e fontes estão no repositório da obra.</p>
-    <a href="https://github.com/{html.escape(current['repository'])}/issues" class="button" target="_blank" rel="noopener noreferrer">Contribuir <span aria-hidden="true">↗</span></a>
+    <p>As discussões, orientações e fontes estão no repositório da obra. Use a página <a href="/contribuir/">Contribuir</a> para consultar o fluxo geral.</p>
   </div>
 </section>
 """
