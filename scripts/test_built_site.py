@@ -54,7 +54,7 @@ STATIC_PAGES = {
         'class="post realmat-page"',
         "realmat-contribution",
         "Discussões e correções",
-        "Arquivos-fonte",
+        "Repositório da edição",
     ),
     "buscar/index.html": (
         'class="realmat-search"',
