@@ -34,11 +34,14 @@ jobs:
       - name: Validar catálogo versionado
         run: python3 scripts/validate_catalog.py _data/books.json
 
-      - name: Baixar e verificar PDFs oficiais
+      - name: Verificar publicações PDF oficiais
         run: python3 scripts/download_catalog_assets.py
 
       - name: Gerar páginas dos livros
         run: python3 scripts/generate_book_pages.py
+
+      - name: Verificar contrato das páginas dos livros
+        run: python3 scripts/test_book_page_contract.py
 
       - name: Verificar a integração original do Massively
         run: python3 scripts/test_massively_theme.py
