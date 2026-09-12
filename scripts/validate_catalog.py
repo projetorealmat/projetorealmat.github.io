@@ -107,10 +107,15 @@ def validate_publication_manifest(release: dict, index: int) -> None:
         if not isinstance(publication.get("label"), str) or not publication["label"].strip():
             fail(f"{field}: label inválido")
         format_name = publication.get("format")
-        if not isinstance(format_name, str) or not FORMAT_RE.fullmatch(format_name):
+        if publication_id == "pdf":
+            if not isinstance(format_name, str) or not FORMAT_RE.fullmatch(format_name):
+                fail(f"{field}: a publicação PDF deve declarar format=pdf")
+            if format_name != "pdf":
+                fail(f"{field}: id=pdf deve ter format=pdf")
+        elif format_name is not None and (
+            not isinstance(format_name, str) or not FORMAT_RE.fullmatch(format_name)
+        ):
             fail(f"{field}: format inválido")
-        if publication_id == "pdf" and format_name != "pdf":
-            fail(f"{field}: id=pdf deve ter format=pdf")
         validate_http_url(publication.get("url"), f"{field}: url")
         by_id[publication_id] = publication
 
