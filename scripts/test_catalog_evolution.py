@@ -6,6 +6,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from validate_catalog import validate_publication_manifest
+
 
 ROOT = Path(__file__).resolve().parents[1]
 catalog = json.loads((ROOT / "_data" / "books.json").read_text(encoding="utf-8"))
@@ -17,6 +19,30 @@ assert "PORTAL_DISPATCH_TOKEN" not in catalog_workflow
 assert "projetorealmat/.github/.github/workflows/portal-catalog-sync.yml@v3" in catalog_workflow
 assert "secrets: inherit" in catalog_workflow
 assert (ROOT / "_data" / "translation_stages.yml").exists()
+
+validate_publication_manifest(
+    {
+        "entrypoint": {
+            "id": "html",
+            "label": "Ler no navegador",
+            "url": "https://books.example.org/book/",
+        },
+        "publications": [
+            {
+                "id": "html",
+                "label": "Ler no navegador",
+                "url": "https://books.example.org/book/",
+            },
+            {
+                "id": "pdf",
+                "label": "PDF",
+                "format": "pdf",
+                "url": "https://github.com/projetorealmat/example/releases/download/v1.0.0/example.pdf",
+            },
+        ],
+    },
+    0,
+)
 
 for book in catalog:
     assert isinstance(book.get("current_version"), str), f"{book.get('id')}: current_version missing"
