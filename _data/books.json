@@ -53,5 +53,25 @@
     ],
     "source_url": "https://github.com/OpenLogicProject/forallx",
     "source_license": "CC BY 4.0"
+  },
+  {
+    "id": "forallx-yyc",
+    "title": "forall x: Calgary — An Introduction to Formal Logic",
+    "short_title": "forall x: Calgary",
+    "subject": "Formal logic",
+    "current_version": "v0.1.0",
+    "releases": [
+      {
+        "version": "v0.1.0",
+        "status": "em revisão",
+        "repository": "projetorealmat/forallx-yyc",
+        "ref": "v0.1.0",
+        "release_url": "https://github.com/projetorealmat/forallx-yyc/releases/tag/v0.1.0",
+        "pdf_url": "https://github.com/projetorealmat/forallx-yyc/releases/download/v0.1.0/forallxyyc.pdf",
+        "pdf_path": "/assets/books/forallx-yyc/v0.1.0/forallxyyc.pdf",
+        "sha256": "c9281234b55218e89285546ab80a824f44caad85a3b63e4652eb3c829704ee3e",
+        "release_date": "2026-09-12"
+      }
+    ]
   }
 ]
