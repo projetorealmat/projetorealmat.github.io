@@ -148,7 +148,7 @@ REQUIRED = {
         ".every",
     ),
     "scripts/validate_catalog.py": ("current_version", "RELEASE_FIELDS", "translation_stage", "publications"),
-    "scripts/download_catalog_assets.py": ("translation_stage", "publications", "canonical PDF"),
+    "scripts/download_catalog_assets.py": ("current_release", "publications", "canonical PDF"),
     "scripts/generate_book_pages.py": ("OUTPUT_DIR", "current_release", "stage_label", "publications", "Histórico editorial"),
 }
 
