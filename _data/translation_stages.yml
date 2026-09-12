@@ -1,0 +1,11 @@
+- id: unreviewed
+  label: "Tradução não revisada"
+  description: "Tradução ainda não revisada pelo projeto."
+
+- id: reviewed
+  label: "Tradução revisada"
+  description: "Tradução revisada pelo projeto."
+
+- id: adapted
+  label: "Tradução revisada e adaptada"
+  description: "Tradução revisada e adaptada ao contexto do REALMat."
