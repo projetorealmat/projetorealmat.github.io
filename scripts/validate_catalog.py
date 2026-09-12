@@ -161,8 +161,8 @@ def validate_release(release: object, index: int) -> None:
         fail(f"release {index}: ref não é imutável: {ref!r}")
     if not (VERSION_RE.fullmatch(ref) or COMMIT_RE.fullmatch(ref)):
         fail(f"release {index}: ref deve ser uma tag semver ou SHA completo: {ref!r}")
-    if ref != version:
-        fail(f"release {index}: ref deve coincidir com version")
+    if VERSION_RE.fullmatch(ref) and ref != version:
+        fail(f"release {index}: ref deve coincidir com version quando for uma tag")
 
     release_url = validate_http_url(release["release_url"], f"release {index}: release_url")
     parsed_release = urlparse(release_url)
