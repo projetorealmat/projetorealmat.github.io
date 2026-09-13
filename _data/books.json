@@ -113,11 +113,17 @@
         "release_url": "https://github.com/projetorealmat/forallx-yyc/releases/tag/v0.1.0",
         "release_date": "2026-09-12",
         "entrypoint": {
-          "id": "pdf",
-          "label": "PDF",
-          "url": "https://github.com/projetorealmat/forallx-yyc/releases/download/v0.1.0/forallxyyc.pdf"
+          "id": "html",
+          "label": "Ler no navegador",
+          "url": "https://forallx.openlogicproject.org/html/index.html"
         },
         "publications": [
+          {
+            "id": "html",
+            "label": "Ler no navegador",
+            "format": "html",
+            "url": "https://forallx.openlogicproject.org/html/index.html"
+          },
           {
             "id": "pdf",
             "label": "PDF",
