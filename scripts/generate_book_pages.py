@@ -6,7 +6,7 @@ from __future__ import annotations
 import html
 import json
 from pathlib import Path
-from urllib.parse import unquote, urlsplit
+from urllib.parse import quote, unquote, urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -52,12 +52,26 @@ def release_label(release: dict, current_version: str) -> str:
 
 def pdf_filename(url: str, fallback: str) -> str:
     name = unquote(urlsplit(url).path.rsplit("/", 1)[-1])
-    return name if name.endswith(".pdf") else fallback
+    if (
+        not name.endswith(".pdf")
+        or name in {"", ".", ".."}
+        or "/" in name
+        or "\\" in name
+        or any(ord(character) < 32 or ord(character) == 127 for character in name)
+    ):
+        return fallback
+    return name
 
 
 def pdf_asset_path(book: dict, release: dict, pdf: dict) -> str:
     filename = pdf_filename(pdf["url"], f"{book['id']}.pdf")
-    return f"/assets/books/{book['id']}/{release['version']}/{filename}"
+    segments = (book["id"], release["version"], filename)
+    return "/assets/books/" + "/".join(quote(segment, safe="") for segment in segments)
+
+
+def pdf_asset_file_path(root: Path, book: dict, release: dict, pdf: dict) -> Path:
+    filename = pdf_filename(pdf["url"], f"{book['id']}.pdf")
+    return root / "assets" / "books" / book["id"] / release["version"] / filename
 
 
 def render_book(index: int, book: dict) -> str:

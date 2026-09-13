@@ -67,6 +67,18 @@ def pdf_only_book() -> dict:
     return book
 
 
+def encoded_pdf_book() -> dict:
+    book = pdf_only_book()
+    release = book["releases"][0]
+    pdf = release["publications"][0]
+    pdf["url"] = (
+        "https://github.com/projetorealmat/sample/releases/download/"
+        "v1.2.3/sample%20book.pdf"
+    )
+    release["entrypoint"]["url"] = pdf["url"]
+    return book
+
+
 def main() -> None:
     rendered = render_book(1, sample_book())
     buttons = re.findall(r'<a\b[^>]*class="[^"]*\bbutton\b[^"]*"[^>]*>', rendered)
@@ -104,6 +116,26 @@ def main() -> None:
     reading_button = re.search(r'<a href="/assets/books/[^>]+>', pdf_actions.group(1))
     assert reading_button is not None
     assert "download=" not in reading_button.group(0)
+
+    encoded_rendered = render_book(1, encoded_pdf_book())
+    assert (
+        '<a href="/assets/books/sample/v1.2.3/sample%20book.pdf" '
+        'class="button primary" target="_blank" rel="noopener noreferrer">'
+        "Ler o livro"
+    ) in encoded_rendered
+    assert 'download="sample book.pdf"' in encoded_rendered
+
+    unsafe_book = pdf_only_book()
+    unsafe_release = unsafe_book["releases"][0]
+    unsafe_pdf = unsafe_release["publications"][0]
+    unsafe_pdf["url"] = (
+        "https://github.com/projetorealmat/sample/releases/download/"
+        "v1.2.3/..%2Fevil.pdf"
+    )
+    unsafe_release["entrypoint"]["url"] = unsafe_pdf["url"]
+    unsafe_rendered = render_book(1, unsafe_book)
+    assert '/assets/books/sample/v1.2.3/sample.pdf"' in unsafe_rendered
+    assert "/assets/books/sample/v1.2.3/.." not in unsafe_rendered
 
 
 if __name__ == "__main__":

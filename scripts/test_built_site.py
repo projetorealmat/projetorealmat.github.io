@@ -8,7 +8,7 @@ import re
 import sys
 from urllib.parse import urlsplit
 
-from generate_book_pages import pdf_asset_path, publication
+from generate_book_pages import pdf_asset_file_path, pdf_asset_path, pdf_filename, publication
 
 
 ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("_site")
@@ -231,6 +231,7 @@ def check_catalog_pages(errors, catalog):
             if entrypoint["id"] == "pdf"
             else entrypoint["url"]
         )
+        download_name = pdf_filename(pdf["url"], f"{book['id']}.pdf")
         repository_url = f"https://github.com/{current['repository']}"
         expected_markers = (
             book["title"],
@@ -247,7 +248,7 @@ def check_catalog_pages(errors, catalog):
             "Baixar PDF",
             "Repositório",
             'target="_blank"',
-            f'download="{pdf["url"].rsplit("/", 1)[-1]}"',
+            f'download="{download_name}"',
         )
         for marker in expected_markers:
             if marker not in detail:
@@ -301,7 +302,7 @@ def check_readable_pdf_assets(errors, catalog):
         if current["entrypoint"]["id"] != "pdf":
             continue
         pdf = publication(current, "pdf")
-        asset = ROOT / pdf_asset_path(book, current, pdf).lstrip("/")
+        asset = pdf_asset_file_path(ROOT, book, current, pdf)
         if not asset.exists():
             errors.append(f"PDF de leitura ausente: {asset.relative_to(ROOT)}")
             continue
