@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Download the current PDF for every catalog entry for browser reading.
+"""Download the current canonical PDF publications for browser reading.
 
 The PDF remains published canonically as a GitHub Release asset. The portal
 also stages that already-built PDF under ``assets/books`` so that the reading
