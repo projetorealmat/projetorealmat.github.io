@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
-"""Check that every current release exposes a canonical PDF publication.
+"""Download the current PDF for every catalog entry for browser reading.
 
-The portal links directly to the immutable GitHub Release asset. It does not
-download or compile book formats while building the site.
+The PDF remains published canonically as a GitHub Release asset. The portal
+also stages that already-built PDF under ``assets/books`` so that the reading
+button can open it inline; GitHub Release download URLs are served as
+attachments by GitHub.
 """
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.request import Request, urlopen
+
+from generate_book_pages import current_release, pdf_asset_path, publication
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,27 +32,23 @@ def main() -> int:
     catalog = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
     for book in catalog:
         release = current_release(book)
-        pdf = next(
-            publication
-            for publication in release["publications"]
-            if publication["id"] == "pdf"
+        pdf = publication(release, "pdf")
+        target = ROOT / pdf_asset_path(book, release, pdf).lstrip("/")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        request = Request(
+            pdf["url"],
+            headers={"User-Agent": "REALMat-portal-build/2.0"},
         )
-        parsed = urlparse(pdf["url"])
-        expected_prefix = (
-            f"/{release['repository']}/releases/download/{release['version']}/"
-        )
-        if (
-            parsed.scheme != "https"
-            or parsed.netloc != "github.com"
-            or not parsed.path.startswith(expected_prefix)
-            or not parsed.path.endswith(".pdf")
-            or parsed.query
-            or parsed.fragment
-        ):
-            raise SystemExit(
-                f"{book['id']} {release['version']}: URL do PDF canônico inválida"
-            )
-        print(f"Verified {book['id']} {release['version']}: {pdf['url']}")
+        with urlopen(request, timeout=60) as response, target.open("wb") as output:
+            first_bytes = response.read(5)
+            if first_bytes != b"%PDF-":
+                raise SystemExit(
+                    f"{book['id']} {release['version']}: o asset publicado não é PDF"
+                )
+            output.write(first_bytes)
+            while chunk := response.read(1024 * 1024):
+                output.write(chunk)
+        print(f"Staged {book['id']} {release['version']}: {target}")
     return 0
 
 

@@ -8,6 +8,8 @@ import re
 import sys
 from urllib.parse import urlsplit
 
+from generate_book_pages import pdf_asset_path, publication
+
 
 ROOT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("_site")
 SOURCE_ROOT = ROOT.parent
@@ -223,13 +225,19 @@ def check_catalog_pages(errors, catalog):
         detail = detail_path.read_text(encoding="utf-8", errors="replace")
         stage_label = STAGE_LABELS[current["translation_stage"]]
         entrypoint = current["entrypoint"]
-        pdf = next(publication for publication in current["publications"] if publication["id"] == "pdf")
+        pdf = publication(current, "pdf")
+        reading_url = (
+            pdf_asset_path(book, current, pdf)
+            if entrypoint["id"] == "pdf"
+            else entrypoint["url"]
+        )
         repository_url = f"https://github.com/{current['repository']}"
         expected_markers = (
             book["title"],
             book["current_version"],
             stage_label,
             entrypoint["url"],
+            reading_url,
             pdf["url"],
             repository_url,
             current["release_url"],
@@ -283,6 +291,24 @@ def check_catalog_pages(errors, catalog):
                 )
 
 
+def check_readable_pdf_assets(errors, catalog):
+    for book in catalog:
+        current = next(
+            release
+            for release in book["releases"]
+            if release["version"] == book["current_version"]
+        )
+        if current["entrypoint"]["id"] != "pdf":
+            continue
+        pdf = publication(current, "pdf")
+        asset = ROOT / pdf_asset_path(book, current, pdf).lstrip("/")
+        if not asset.exists():
+            errors.append(f"PDF de leitura ausente: {asset.relative_to(ROOT)}")
+            continue
+        if asset.read_bytes()[:5] != b"%PDF-":
+            errors.append(f"arquivo de leitura não é PDF: {asset.relative_to(ROOT)}")
+
+
 def check_branding(errors):
     index = ROOT / "index.html"
     if not index.exists():
@@ -319,6 +345,7 @@ def main() -> int:
             errors.append(f"recurso gerado ausente: {relative_path}")
 
     check_catalog_pages(errors, catalog)
+    check_readable_pdf_assets(errors, catalog)
     check_navigation_order(errors)
     check_internal_links(errors)
     check_search_index(errors, catalog)

@@ -34,7 +34,7 @@ jobs:
       - name: Validar catálogo versionado
         run: python3 scripts/validate_catalog.py _data/books.json
 
-      - name: Verificar publicações PDF oficiais
+      - name: Baixar e verificar PDFs oficiais para leitura
         run: python3 scripts/download_catalog_assets.py
 
       - name: Gerar páginas dos livros
