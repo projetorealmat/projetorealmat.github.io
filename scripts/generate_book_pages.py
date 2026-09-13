@@ -6,7 +6,7 @@ from __future__ import annotations
 import html
 import json
 from pathlib import Path
-from urllib.parse import unquote, urlsplit
+from urllib.parse import quote, unquote, urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -52,7 +52,26 @@ def release_label(release: dict, current_version: str) -> str:
 
 def pdf_filename(url: str, fallback: str) -> str:
     name = unquote(urlsplit(url).path.rsplit("/", 1)[-1])
-    return name if name.endswith(".pdf") else fallback
+    if (
+        not name.endswith(".pdf")
+        or name in {"", ".", ".."}
+        or "/" in name
+        or "\\" in name
+        or any(ord(character) < 32 or ord(character) == 127 for character in name)
+    ):
+        return fallback
+    return name
+
+
+def pdf_asset_path(book: dict, release: dict, pdf: dict) -> str:
+    filename = pdf_filename(pdf["url"], f"{book['id']}.pdf")
+    segments = (book["id"], release["version"], filename)
+    return "/assets/books/" + "/".join(quote(segment, safe="") for segment in segments)
+
+
+def pdf_asset_file_path(root: Path, book: dict, release: dict, pdf: dict) -> Path:
+    filename = pdf_filename(pdf["url"], f"{book['id']}.pdf")
+    return root / "assets" / "books" / book["id"] / release["version"] / filename
 
 
 def render_book(index: int, book: dict) -> str:
@@ -64,7 +83,10 @@ def render_book(index: int, book: dict) -> str:
     short_title = html.escape(book["short_title"])
     book_id = html.escape(book["id"])
     stage = html.escape(stage_label(current))
-    entrypoint_url = html.escape(entrypoint["url"], quote=True)
+    reading_url = entrypoint["url"]
+    if entrypoint["id"] == "pdf":
+        reading_url = pdf_asset_path(book, current, pdf)
+    entrypoint_url = html.escape(reading_url, quote=True)
     pdf_url = html.escape(pdf["url"], quote=True)
     repository_url = html.escape(
         f"https://github.com/{current['repository']}",
@@ -130,7 +152,7 @@ permalink: /livros/{book_id}/
       <li><a href="{pdf_url}" class="button" download="{download_name}">Baixar PDF <span aria-hidden="true">↓</span></a></li>
       <li><a href="{repository_url}" class="button" target="_blank" rel="noopener noreferrer">Repositório <span aria-hidden="true">↗</span></a></li>
     </ul>
-    <p class="realmat-note">A entrada principal pode ser uma versão web ou outro formato de leitura declarado pela edição. Os demais formatos são mantidos no README e no próprio formato de leitura.</p>
+    <p class="realmat-note">A entrada principal pode ser uma versão web ou outro formato de leitura declarado pela edição. Quando a entrada é um PDF, o portal disponibiliza uma cópia de leitura no Pages; o botão de download continua ligado ao PDF oficial da release. Os demais formatos são mantidos no README e no próprio formato de leitura.</p>
     {source_note}
   </div>
 </section>

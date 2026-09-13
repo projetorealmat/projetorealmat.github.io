@@ -1,54 +1,66 @@
 #!/usr/bin/env python3
-"""Check that every current release exposes a canonical PDF publication.
+"""Download the current canonical PDF publications for browser reading.
 
-The portal links directly to the immutable GitHub Release asset. It does not
-download or compile book formats while building the site.
+The PDF remains published canonically as a GitHub Release asset. The portal
+also stages that already-built PDF under ``assets/books`` so that the reading
+button can open it inline; GitHub Release download URLs are served as
+attachments by GitHub.
 """
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.request import Request, urlopen
+
+from generate_book_pages import current_release, pdf_asset_file_path, publication
 
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = ROOT / "_data" / "books.json"
 
 
-def current_release(book: dict) -> dict:
-    return next(
-        release
-        for release in book["releases"]
-        if release["version"] == book["current_version"]
-    )
-
-
 def main() -> int:
     catalog = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
+    asset_root = ROOT / "assets" / "books"
+    expected_asset_root = ROOT.resolve() / "assets" / "books"
+    if asset_root.resolve() != expected_asset_root:
+        raise SystemExit("o diretório de assets para PDFs não pode ser um link simbólico")
+
     for book in catalog:
         release = current_release(book)
-        pdf = next(
-            publication
-            for publication in release["publications"]
-            if publication["id"] == "pdf"
-        )
-        parsed = urlparse(pdf["url"])
-        expected_prefix = (
-            f"/{release['repository']}/releases/download/{release['version']}/"
-        )
-        if (
-            parsed.scheme != "https"
-            or parsed.netloc != "github.com"
-            or not parsed.path.startswith(expected_prefix)
-            or not parsed.path.endswith(".pdf")
-            or parsed.query
-            or parsed.fragment
-        ):
+        pdf = publication(release, "pdf")
+        target = pdf_asset_file_path(ROOT, book, release, pdf)
+        try:
+            target.resolve().relative_to(expected_asset_root)
+        except ValueError as error:
             raise SystemExit(
-                f"{book['id']} {release['version']}: URL do PDF canônico inválida"
+                f"{book['id']} {release['version']}: caminho de PDF fora de assets/books"
+            ) from error
+        if target.is_symlink():
+            raise SystemExit(
+                f"{book['id']} {release['version']}: destino do PDF é um link simbólico"
             )
-        print(f"Verified {book['id']} {release['version']}: {pdf['url']}")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        temporary = target.with_name(f".{target.name}.part")
+        request = Request(
+            pdf["url"],
+            headers={"User-Agent": "REALMat-portal-build/2.0"},
+        )
+        try:
+            with urlopen(request, timeout=60) as response, temporary.open("wb") as output:
+                first_bytes = response.read(5)
+                if first_bytes != b"%PDF-":
+                    raise SystemExit(
+                        f"{book['id']} {release['version']}: o asset publicado não é PDF"
+                    )
+                output.write(first_bytes)
+                while chunk := response.read(1024 * 1024):
+                    output.write(chunk)
+            temporary.replace(target)
+        finally:
+            temporary.unlink(missing_ok=True)
+        print(f"Staged {book['id']} {release['version']}: {target}")
     return 0
 
 
