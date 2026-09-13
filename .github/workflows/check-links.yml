@@ -4,11 +4,6 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - "**/*.md"
-      - "_data/books.json"
-      - "scripts/check_external_links.py"
-      - ".github/workflows/check-links.yml"
   schedule:
     - cron: "37 5 * * 1"
   workflow_dispatch:
