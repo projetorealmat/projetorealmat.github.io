@@ -3,9 +3,14 @@
 
 from __future__ import annotations
 
+import json
 import re
+from pathlib import Path
 
 from generate_book_pages import render_book
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def sample_book() -> dict:
@@ -79,7 +84,31 @@ def encoded_pdf_book() -> dict:
     return book
 
 
+def check_calgary_html_entrypoint() -> None:
+    catalog = json.loads(
+        (ROOT / "_data" / "books.json").read_text(encoding="utf-8")
+    )
+    book = next(item for item in catalog if item["id"] == "forallx-yyc")
+    current = next(
+        release
+        for release in book["releases"]
+        if release["version"] == book["current_version"]
+    )
+    assert current["entrypoint"]["id"] == "html"
+    assert (
+        current["entrypoint"]["url"]
+        == "https://forallx.openlogicproject.org/html/index.html"
+    )
+    assert any(
+        publication["id"] == "html"
+        and publication["url"]
+        == "https://forallx.openlogicproject.org/html/index.html"
+        for publication in current["publications"]
+    )
+
+
 def main() -> None:
+    check_calgary_html_entrypoint()
     rendered = render_book(1, sample_book())
     buttons = re.findall(r'<a\b[^>]*class="[^"]*\bbutton\b[^"]*"[^>]*>', rendered)
     assert len(buttons) == 3, f"expected exactly three action buttons, got {len(buttons)}"
