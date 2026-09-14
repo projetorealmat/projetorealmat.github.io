@@ -102,6 +102,7 @@
 }
 .realmat-book-poster {
   display: flex;
+  min-width: 0;
   min-height: 23rem;
   align-items: stretch;
   justify-content: center;
@@ -121,6 +122,7 @@
   position: relative;
   display: flex;
   width: min(100%, 48rem);
+  min-width: 0;
   min-height: 100%;
   flex-direction: column;
   justify-content: space-between;
@@ -141,9 +143,13 @@
   font-size: 0.8rem;
 }
 .realmat-book-poster__name {
+  min-width: 0;
+  max-width: 100%;
   margin-top: auto;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
   font-family: "Merriweather", Georgia, serif;
-  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-size: clamp(2.5rem, 5.5vw, 6rem);
   font-weight: 900;
   line-height: 0.9;
 }
@@ -348,7 +354,7 @@
     padding: 1.5rem;
   }
   .realmat-book-poster__name {
-    font-size: clamp(3rem, 19vw, 5.5rem);
+    font-size: clamp(2.5rem, 14vw, 4.5rem);
   }
   .realmat-library__entry,
   .realmat-book-detail,
@@ -671,4 +677,38 @@ body {
 #header .realmat-wordmark:hover .realmat-wordmark__icon,
 #header .realmat-wordmark:focus-visible .realmat-wordmark__icon {
   color: var(--realmat-gold);
+}
+
+/* Keep decorative date rules beside their labels instead of through the text. */
+header.major > .date {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  height: auto;
+}
+
+header.major > .date::before,
+header.major > .date::after {
+  position: static;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  display: block;
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+  height: 0;
+}
+
+@media screen and (max-width: 736px) {
+  header.major > .date {
+    display: block;
+  }
+
+  header.major > .date::before,
+  header.major > .date::after {
+    display: none;
+  }
 }

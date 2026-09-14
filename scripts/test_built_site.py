@@ -292,6 +292,37 @@ def check_catalog_pages(errors, catalog):
                 )
 
 
+def check_archive_catalog(errors, catalog, archive):
+    articles = re.findall(r"<article>(.*?)</article>", archive, flags=re.S)
+    if len(articles) != len(catalog):
+        errors.append(
+            "arquivo/index.html: esperado um artigo por livro, "
+            f"encontrados {len(articles)} para {len(catalog)} livro(s)"
+        )
+        return
+
+    for book, article in zip(catalog, articles):
+        current = next(
+            release
+            for release in book["releases"]
+            if release["version"] == book["current_version"]
+        )
+        if book["title"] not in article:
+            errors.append(
+                f"arquivo/index.html: livro ausente ou fora da lista atual: {book['title']}"
+            )
+        if current["version"] not in article:
+            errors.append(
+                f"arquivo/index.html: versão atual ausente: {book['id']} {current['version']}"
+            )
+        for release in book["releases"]:
+            if release["version"] != current["version"] and release["version"] in article:
+                errors.append(
+                    f"arquivo/index.html: versão histórica repetida: "
+                    f"{book['id']} {release['version']}"
+                )
+
+
 def check_readable_pdf_assets(errors, catalog):
     for book in catalog:
         current = next(
@@ -346,6 +377,7 @@ def main() -> int:
             errors.append(f"recurso gerado ausente: {relative_path}")
 
     check_catalog_pages(errors, catalog)
+    check_archive_catalog(errors, catalog, archive=(ROOT / "arquivo" / "index.html").read_text(encoding="utf-8", errors="replace"))
     check_readable_pdf_assets(errors, catalog)
     check_navigation_order(errors)
     check_internal_links(errors)
