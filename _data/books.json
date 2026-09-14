@@ -115,14 +115,14 @@
         "entrypoint": {
           "id": "html",
           "label": "Ler no navegador",
-          "url": "https://forallx.openlogicproject.org/html/index.html"
+          "url": "https://projetorealmat.github.io/forallx-yyc/"
         },
         "publications": [
           {
             "id": "html",
             "label": "Ler no navegador",
             "format": "html",
-            "url": "https://forallx.openlogicproject.org/html/index.html"
+            "url": "https://projetorealmat.github.io/forallx-yyc/"
           },
           {
             "id": "pdf",
