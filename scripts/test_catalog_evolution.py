@@ -81,3 +81,7 @@ assert release_013["publications"][0]["url"].endswith("/v0.1.3/forallx.pdf")
 
 assert forallx["source_url"] == "https://github.com/OpenLogicProject/forallx"
 assert forallx["source_license"] == "CC BY 4.0"
+
+calgary = next(book for book in catalog if book["id"] == "forallx-yyc")
+assert calgary["title"] == "forall x: Calgary — Uma introdução à lógica formal"
+assert calgary["subject"] == "lógica formal"
