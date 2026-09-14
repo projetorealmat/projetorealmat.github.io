@@ -97,12 +97,12 @@ def check_calgary_html_entrypoint() -> None:
     assert current["entrypoint"]["id"] == "html"
     assert (
         current["entrypoint"]["url"]
-        == "https://forallx.openlogicproject.org/html/index.html"
+        == "https://projetorealmat.github.io/forallx-yyc/"
     )
     assert any(
         publication["id"] == "html"
         and publication["url"]
-        == "https://forallx.openlogicproject.org/html/index.html"
+        == "https://projetorealmat.github.io/forallx-yyc/"
         for publication in current["publications"]
     )
 
