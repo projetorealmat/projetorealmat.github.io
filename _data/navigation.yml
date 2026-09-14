@@ -3,7 +3,7 @@ main:
     description: "Leia as obras e traduções disponíveis."
     url: /livros/
   - title: "Arquivo"
-    description: "Consulte o histórico de edições e publicações."
+    description: "Veja a última versão disponível de cada obra."
     url: /arquivo/
   - title: "Tópicos"
     description: "Explore os assuntos presentes no catálogo."
