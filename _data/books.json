@@ -133,5 +133,43 @@
         ]
       }
     ]
+  },
+  {
+    "id": "aata",
+    "title": "Álgebra Abstrata: Teoria e Aplicações",
+    "short_title": "Álgebra Abstrata",
+    "subject": "Álgebra abstrata",
+    "repository": "projetorealmat/aata",
+    "translation_stage": "unreviewed",
+    "current_version": "v0.1.0",
+    "releases": [
+      {
+        "version": "v0.1.0",
+        "translation_stage": "unreviewed",
+        "repository": "projetorealmat/aata",
+        "ref": "v0.1.0",
+        "release_url": "https://github.com/projetorealmat/aata/releases/tag/v0.1.0",
+        "release_date": "2026-09-16",
+        "entrypoint": {
+          "id": "html",
+          "label": "Ler no navegador",
+          "url": "https://projetorealmat.github.io/aata/"
+        },
+        "publications": [
+          {
+            "format": "html",
+            "id": "html",
+            "label": "Ler no navegador",
+            "url": "https://projetorealmat.github.io/aata/"
+          },
+          {
+            "format": "pdf",
+            "id": "pdf",
+            "label": "PDF",
+            "url": "https://github.com/projetorealmat/aata/releases/download/v0.1.0/aata.pdf"
+          }
+        ]
+      }
+    ]
   }
 ]
