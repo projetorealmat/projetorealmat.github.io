@@ -141,8 +141,35 @@
     "subject": "Álgebra abstrata",
     "repository": "projetorealmat/aata",
     "translation_stage": "unreviewed",
-    "current_version": "v0.1.0",
+    "current_version": "v0.1.2",
     "releases": [
+      {
+        "version": "v0.1.2",
+        "translation_stage": "unreviewed",
+        "repository": "projetorealmat/aata",
+        "ref": "v0.1.2",
+        "release_url": "https://github.com/projetorealmat/aata/releases/tag/v0.1.2",
+        "release_date": "2026-09-17",
+        "entrypoint": {
+          "id": "html",
+          "label": "Ler no navegador",
+          "url": "https://projetorealmat.github.io/aata/"
+        },
+        "publications": [
+          {
+            "format": "html",
+            "id": "html",
+            "label": "Ler no navegador",
+            "url": "https://projetorealmat.github.io/aata/"
+          },
+          {
+            "format": "pdf",
+            "id": "pdf",
+            "label": "PDF",
+            "url": "https://github.com/projetorealmat/aata/releases/download/v0.1.2/aata.pdf"
+          }
+        ]
+      },
       {
         "version": "v0.1.0",
         "translation_stage": "unreviewed",
