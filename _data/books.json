@@ -225,5 +225,43 @@
         ]
       }
     ]
+  },
+  {
+    "id": "ra-volume-i",
+    "title": "Basic Analysis: Introduction to Real Analysis, Volume I",
+    "short_title": "Basic Analysis I",
+    "subject": "Real analysis",
+    "repository": "projetorealmat/ra",
+    "translation_stage": "unreviewed",
+    "current_version": "v0.1.0",
+    "releases": [
+      {
+        "version": "v0.1.0",
+        "translation_stage": "unreviewed",
+        "repository": "projetorealmat/ra",
+        "ref": "v0.1.0",
+        "release_url": "https://github.com/projetorealmat/ra/releases/tag/v0.1.0",
+        "release_date": "2026-09-26",
+        "entrypoint": {
+          "id": "html",
+          "label": "Ler o livro",
+          "url": "https://projetorealmat.github.io/ra/"
+        },
+        "publications": [
+          {
+            "format": "html",
+            "id": "html",
+            "label": "Ler o livro",
+            "url": "https://projetorealmat.github.io/ra/"
+          },
+          {
+            "format": "pdf",
+            "id": "pdf",
+            "label": "PDF",
+            "url": "https://github.com/projetorealmat/ra/releases/download/v0.1.0/realanal.pdf"
+          }
+        ]
+      }
+    ]
   }
 ]
