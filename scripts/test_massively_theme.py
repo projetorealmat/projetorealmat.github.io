@@ -194,6 +194,18 @@ def main() -> int:
             if marker not in content:
                 errors.append(f"{relative_path}: marcador ausente: {marker}")
 
+    contribute_path = ROOT / "_pages" / "contribuir.md"
+    if contribute_path.exists():
+        contribute = contribute_path.read_text(encoding="utf-8", errors="replace")
+        guidance = "Participe da revisão, adaptação e manutenção"
+        catalog_loop = "{% for book in site.data.books %}"
+        if contribute.count(guidance) != 1:
+            errors.append("_pages/contribuir.md: orientação deve aparecer uma única vez")
+        elif contribute.index(guidance) > contribute.index(catalog_loop):
+            errors.append(
+                "_pages/contribuir.md: orientação deve anteceder a lista de obras"
+            )
+
     if (ROOT / "_pages" / "forallx.md").exists():
         errors.append("_pages/forallx.md: página fixa deve ser gerada pelo catálogo")
 
