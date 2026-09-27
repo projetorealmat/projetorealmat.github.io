@@ -19,6 +19,11 @@ def sample_book() -> dict:
         "title": "Livro de teste",
         "short_title": "Livro",
         "subject": "análise",
+        "source_url": "https://source.example.org/book",
+        "source_title": "Original Book",
+        "source_authors": "A. Author",
+        "source_license": "CC BY 4.0",
+        "source_license_url": "https://creativecommons.org/licenses/by/4.0/",
         "current_version": "v1.2.3",
         "translation_stage": "reviewed",
         "releases": [
@@ -190,7 +195,9 @@ def check_book_detail_summarizes_versions_and_credits() -> None:
     assert "v1.2.2" not in rendered
     assert "releases/tag/v1.2.2" not in rendered
     assert 'href="/arquivo/#sample"' in rendered
-    assert "Licença da obra original: CC BY 4.0" in rendered
+    assert "Licença indicada na fonte:</strong> CC BY 4.0" in rendered
+    assert "Original Book" in rendered
+    assert "A. Author" in rendered
     assert "include book-poster-content.html" in rendered
 
 
