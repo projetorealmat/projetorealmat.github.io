@@ -41,7 +41,7 @@ REPOSITORY_RE = re.compile(r"^[^/\s]+/[^/\s]+$")
 PUBLICATION_ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 FORMAT_RE = re.compile(r"^[a-z0-9][a-z0-9+.-]*$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-SOURCE_FIELDS = ("source_url", "source_license")
+SOURCE_FIELDS = ("source_url", "source_title", "source_authors", "source_license", "source_license_url")
 
 
 def fail(message: str) -> None:
@@ -230,11 +230,10 @@ def validate_book(book: object, index: int) -> None:
 
     for field in SOURCE_FIELDS:
         value = book.get(field)
-        if value is not None and (not isinstance(value, str) or not value.strip()):
-            fail(f"livro {index}: {field} inválido")
-    source_url = book.get("source_url")
-    if source_url is not None:
-        validate_http_url(source_url, f"livro {index}: source_url")
+        if not isinstance(value, str) or not value.strip():
+            fail(f"livro {index}: {field} deve ser informado")
+    validate_http_url(book["source_url"], f"livro {index}: source_url")
+    validate_http_url(book["source_license_url"], f"livro {index}: source_license_url")
 
     releases = book["releases"]
     if not isinstance(releases, list) or not releases:
