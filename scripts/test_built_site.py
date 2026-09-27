@@ -458,6 +458,20 @@ def check_brand_contrast(errors):
     if "color: var(--realmat-blue-dark) !important;" not in css:
         errors.append("assets/css/realmat.css: links de interação devem manter contraste elevado")
 
+    footer_rules = re.findall(r"#footer\s*\{([^{}]*)\}", css)
+    footer_link_rules = re.findall(r"#footer a\s*\{([^{}]*)\}", css)
+    if not footer_rules or "color: var(--realmat-muted)" not in footer_rules[-1]:
+        errors.append("assets/css/realmat.css: texto do rodapé deve usar cinza acessível")
+    if not footer_link_rules or "color: var(--realmat-blue)" not in footer_link_rules[-1]:
+        errors.append("assets/css/realmat.css: links do rodapé devem usar azul acessível")
+    if "color: var(--realmat-muted) !important;" not in css:
+        errors.append("assets/css/realmat.css: textos de ajuda devem manter contraste")
+    if not re.search(
+        r"\.realmat-card-mark,\s*\.realmat-facts__number\s*\{\s*color: var\(--realmat-blue\)",
+        css,
+    ):
+        errors.append("assets/css/realmat.css: marcas numéricas devem usar azul acessível")
+
 
 
 def check_branding(errors):

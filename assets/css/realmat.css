@@ -607,11 +607,7 @@ body {
 @media screen and (max-width: 736px) {
   #header .realmat-wordmark {
     font-size: 0.95rem;
-  }
-  .realmat-logo-hero {
-    margin-bottom: 2.25rem;
-  }
-  .realmat-topics {
+  }  .realmat-topics {
     grid-template-columns: 1fr;
   }
   .realmat-topic {
