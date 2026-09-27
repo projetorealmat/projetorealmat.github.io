@@ -108,6 +108,7 @@ def check_calgary_html_entrypoint() -> None:
 
 
 def main() -> None:
+    check_book_detail_summarizes_versions_and_credits()
     check_calgary_html_entrypoint()
     rendered = render_book(1, sample_book())
     buttons = re.findall(r'<a\b[^>]*class="[^"]*\bbutton\b[^"]*"[^>]*>', rendered)
@@ -120,6 +121,7 @@ def main() -> None:
     assert "https://github.com/projetorealmat/sample\"" in rendered
     assert "Tradução revisada" in rendered
     assert "EPUB" not in rendered, "secondary formats must remain outside the portal actions"
+    assert "Versões publicadas" not in rendered
 
     pdf_rendered = render_book(1, pdf_only_book())
     pdf_actions = re.search(r'<ul class="actions">(.*?)</ul>', pdf_rendered, flags=re.S)
@@ -165,6 +167,31 @@ def main() -> None:
     unsafe_rendered = render_book(1, unsafe_book)
     assert '/assets/books/sample/v1.2.3/sample.pdf"' in unsafe_rendered
     assert "/assets/books/sample/v1.2.3/.." not in unsafe_rendered
+
+
+
+def check_book_detail_summarizes_versions_and_credits() -> None:
+    book = sample_book()
+    book["source_url"] = "https://source.example.org/book"
+    book["source_license"] = "CC BY 4.0"
+    old = dict(book["releases"][0])
+    old["version"] = "v1.2.2"
+    old["ref"] = "v1.2.2"
+    old["release_url"] = "https://github.com/projetorealmat/sample/releases/tag/v1.2.2"
+    old["release_date"] = "2026-09-01"
+    old_pdf = dict(old["publications"][1])
+    old_pdf["url"] = "https://github.com/projetorealmat/sample/releases/download/v1.2.2/sample.pdf"
+    old["publications"] = [dict(old["publications"][0]), old_pdf, dict(old["publications"][2])]
+    book["releases"].append(old)
+
+    rendered = render_book(1, book)
+    assert "Versões publicadas" not in rendered
+    assert "Histórico editorial" not in rendered
+    assert "v1.2.2" not in rendered
+    assert "releases/tag/v1.2.2" not in rendered
+    assert 'href="/arquivo/#sample"' in rendered
+    assert "Licença da obra original: CC BY 4.0" in rendered
+    assert "include book-poster-content.html" in rendered
 
 
 if __name__ == "__main__":

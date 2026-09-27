@@ -34,11 +34,11 @@ permalink: /contribuir/
   </header>
   <ol>
     <li>Escolha uma obra e leia a edição disponível na <a href="{{ first_book_url | relative_url }}">página do livro</a>.</li>
-    <li>Para apontar uma dúvida, correção ou sugestão, abra uma <em>issue</em> no repositório correspondente.</li>
-    <li>Para alterar os arquivos-fonte, faça um <em>fork</em> do repositório se necessário e crie uma branch própria; não trabalhe diretamente na branch principal.</li>
-    <li>Preserve o backend declarado, atualize os metadados da edição quando necessário e execute os checks locais disponíveis.</li>
-    <li>Abra um <em>pull request</em> descrevendo o motivo da alteração e aguarde os checks automáticos e a revisão editorial.</li>
-    <li>Depois da aprovação, a equipe do projeto decide o merge e a publicação de uma nova versão.</li>
+    <li>Para relatar uma dúvida, correção ou sugestão, abra uma discussão (<em>issue</em>) no repositório correspondente.</li>
+    <li>Para editar os arquivos-fonte, crie uma cópia do repositório (<em>fork</em>) se necessário e trabalhe em um ramo próprio (<em>branch</em>), sem alterar diretamente o ramo principal.</li>
+    <li>Mantenha o formato dos arquivos-fonte e o processo de compilação definidos para a obra; atualize os metadados da edição quando necessário e execute as verificações locais disponíveis.</li>
+    <li>Envie uma proposta de alteração (<em>pull request</em> ou PR) com a justificativa e aguarde as verificações automáticas e a revisão editorial.</li>
+    <li>Depois da aprovação, a equipe do projeto decide se incorpora a alteração e publica uma nova edição.</li>
   </ol>
 </section>
 

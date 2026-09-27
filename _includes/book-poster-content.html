@@ -1,0 +1,10 @@
+{% assign poster_book = include.book %}
+{% assign poster_book_id = poster_book.id %}
+{% assign poster_mark = site.data.book_visuals[poster_book_id] | default: "∑" %}
+<span class="realmat-book-poster__inner">
+  <span class="realmat-book-poster__number">{{ include.index | default: "01" }}</span>
+  <span class="realmat-book-poster__name">{{ poster_book.short_title | escape }}</span>
+  <span class="realmat-book-poster__subject">{{ poster_book.subject | escape }}</span>
+  <span class="realmat-book-poster__mark" aria-hidden="true">{{ poster_mark | escape }}</span>
+  <span class="realmat-book-poster__footer">edição {{ poster_book.current_version | escape }}</span>
+</span>

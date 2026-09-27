@@ -20,6 +20,18 @@ REQUIRED = {
         '"publications"',
         '"release_date"',
     ),
+    "_data/navigation.yml": ("Edições", "/arquivo/"),
+    "_data/book_visuals.yml": (
+        "forallx:",
+        "forallx-yyc:",
+        "aata:",
+        "ra-volume-i:",
+    ),
+    "_includes/book-poster-content.html": (
+        "site.data.book_visuals",
+        "realmat-book-poster__mark",
+        "poster_book.short_title",
+    ),
     "_data/translation_stages.yml": (
         "unreviewed",
         "Tradução não revisada",
@@ -88,9 +100,10 @@ REQUIRED = {
         'class="post featured',
         'class="posts',
         "REALMat",
-        "featured_book",
-        "featured_release",
+        "Livros para estudar e ensinar matemática",
+        "Explorar a biblioteca",
         "/livros/",
+        "/topicos/",
         "/contribuir/",
     ),
     "_pages/livros.md": (
@@ -133,7 +146,6 @@ REQUIRED = {
         "--realmat-cyan",
         "--realmat-orange",
         "realmat-bg",
-        "realmat-logo",
         "brand-real",
         "realmat-wordmark__icon",
         "#wrapper.fade-in:before",
@@ -152,7 +164,7 @@ REQUIRED = {
     ),
     "scripts/validate_catalog.py": ("current_version", "RELEASE_FIELDS", "translation_stage", "publications"),
     "scripts/download_catalog_assets.py": ("current_release", "publications", "canonical PDF"),
-    "scripts/generate_book_pages.py": ("OUTPUT_DIR", "current_release", "stage_label", "publications", "Histórico editorial"),
+    "scripts/generate_book_pages.py": ("OUTPUT_DIR", "current_release", "stage_label", "publications", "book-poster-content.html", "/arquivo/#"),
 }
 
 FORBIDDEN = (

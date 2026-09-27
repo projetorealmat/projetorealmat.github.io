@@ -38,18 +38,6 @@ def stage_label(release: dict) -> str:
     return STAGE_LABELS[release["translation_stage"]]
 
 
-def display_date(value: str | None) -> str:
-    if not value:
-        return "Data não informada"
-    year, month, day = value.split("-")
-    return f"{day}/{month}/{year}"
-
-
-def release_label(release: dict, current_version: str) -> str:
-    state = "Atual" if release["version"] == current_version else "Histórica"
-    return f"{state} · {release['version']} · {stage_label(release)}"
-
-
 def pdf_filename(url: str, fallback: str) -> str:
     name = unquote(urlsplit(url).path.rsplit("/", 1)[-1])
     if (
@@ -103,23 +91,24 @@ def render_book(index: int, book: dict) -> str:
     if book.get("source_url"):
         source_url = html.escape(book["source_url"], quote=True)
         source_note = (
-            '<p class="realmat-note">Fonte, créditos e licença: '
+            '<p class="realmat-note">Obra de origem: '
             f'<a href="{source_url}" target="_blank" rel="noopener noreferrer">'
-            "repositório de origem</a>.</p>"
+            "repositório original</a>"
         )
-    history = []
-    for release in book["releases"]:
-        version = html.escape(release["version"])
-        release_url = html.escape(release["release_url"], quote=True)
-        release_pdf = publication(release, "pdf")
-        release_pdf_url = html.escape(release_pdf["url"], quote=True)
-        history.append(
-            "    <li>"
-            f'<span class="date">{html.escape(release_label(release, book["current_version"]))}</span>'
-            f' <a href="{release_url}" target="_blank" rel="noopener noreferrer">Release</a>'
-            f' · <a href="{release_pdf_url}" target="_blank" rel="noopener noreferrer">PDF</a>'
-            f' · {html.escape(display_date(release.get("release_date")))}'
-            "</li>"
+        if book.get("source_license"):
+            source_license = html.escape(book["source_license"])
+            source_note += f" · Licença da obra original: {source_license}"
+        source_note += ".</p>"
+
+    previous_count = sum(
+        release["version"] != book["current_version"]
+        for release in book["releases"]
+    )
+    history_note = ""
+    if previous_count:
+        history_note = (
+            f'<p class="realmat-note"><a href="/arquivo/#{book_id}">'
+            "Consultar edições anteriores</a>.</p>"
         )
 
     return f"""---
@@ -132,13 +121,8 @@ permalink: /livros/{book_id}/
 
 <section class="realmat-book-detail" aria-labelledby="{book_id}-reading-title">
   <div class="realmat-book-detail__cover realmat-book-poster realmat-book-poster--large" role="img" aria-label="Capa tipográfica de {title}">
-    <span class="realmat-book-poster__inner">
-      <span class="realmat-book-poster__number">{index:02d}</span>
-      <span class="realmat-book-poster__name">{short_title}</span>
-      <span class="realmat-book-poster__subject">{subject}</span>
-      <span class="realmat-book-poster__formula" aria-hidden="true">p → q</span>
-      <span class="realmat-book-poster__footer">edição {html.escape(current['version'])}</span>
-    </span>
+    {{% assign poster_book = site.data.books | where: "id", "{book_id}" | first %}}
+    {{% include book-poster-content.html book=poster_book index="{index:02d}" %}}
   </div>
 
   <div class="realmat-book-detail__copy">
@@ -146,14 +130,14 @@ permalink: /livros/{book_id}/
       <span class="date">Leitura da edição {html.escape(current['version'])} · {stage}</span>
       <h2 id="{book_id}-reading-title">Leia o livro ou baixe o PDF.</h2>
     </header>
-    <p>{title} é uma obra de {subject}. A edição {html.escape(current['version'])} corresponde a uma {stage.lower()}. O portal mantém uma entrada principal de leitura, o PDF oficial para download e o repositório da edição.</p>
+    <p>{title} é uma obra de {subject}. A edição {html.escape(current['version'])} corresponde a uma {stage.lower()}. Leia no formato indicado ou baixe o PDF oficial.</p>
     <ul class="actions">
       <li><a href="{entrypoint_url}" class="button primary" target="_blank" rel="noopener noreferrer">Ler o livro <span aria-hidden="true">↗</span></a></li>
       <li><a href="{pdf_url}" class="button" download="{download_name}">Baixar PDF <span aria-hidden="true">↓</span></a></li>
       <li><a href="{repository_url}" class="button" target="_blank" rel="noopener noreferrer">Repositório <span aria-hidden="true">↗</span></a></li>
     </ul>
-    <p class="realmat-note">A entrada principal pode ser uma versão web ou outro formato de leitura declarado pela edição. Quando a entrada é um PDF, o portal disponibiliza uma cópia de leitura no Pages; o botão de download continua ligado ao PDF oficial da release. Os demais formatos são mantidos no README e no próprio formato de leitura.</p>
     {source_note}
+    {history_note}
   </div>
 </section>
 
@@ -162,7 +146,7 @@ permalink: /livros/{book_id}/
 <section class="realmat-facts" aria-label="Informações da edição">
   <div>
     <span class="realmat-facts__number">01</span>
-    <h3>Nível da tradução</h3>
+    <h3>Situação da tradução</h3>
     <p>{stage}, versão {html.escape(current['version'])}.</p>
   </div>
   <div>
@@ -173,19 +157,8 @@ permalink: /livros/{book_id}/
   <div>
     <span class="realmat-facts__number">03</span>
     <h3>Publicação</h3>
-    <p>Entrada principal de leitura e PDF oficial para download.</p>
+    <p>Formato principal de leitura e PDF oficial.</p>
   </div>
-</section>
-
-<section class="realmat-book-history" aria-labelledby="{book_id}-history-title">
-  <header class="major">
-    <span class="date">Histórico editorial</span>
-    <h2 id="{book_id}-history-title">Versões publicadas</h2>
-  </header>
-  <p>A versão atual é mantida em destaque; as anteriores permanecem disponíveis para consulta, citação e bifurcação.</p>
-  <ul>
-{chr(10).join(history)}
-  </ul>
 </section>
 
 <section class="realmat-callout" aria-labelledby="{book_id}-contribute-title">

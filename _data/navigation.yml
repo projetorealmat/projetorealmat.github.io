@@ -2,12 +2,12 @@ main:
   - title: "Livros"
     description: "Leia as obras e traduções disponíveis."
     url: /livros/
-  - title: "Arquivo"
-    description: "Veja a última versão disponível de cada obra."
-    url: /arquivo/
   - title: "Tópicos"
-    description: "Explore os assuntos presentes no catálogo."
+    description: "Explore as obras por assunto."
     url: /topicos/
+  - title: "Edições"
+    description: "Consulte versões anteriores das obras."
+    url: /arquivo/
   - title: "Contribuir"
     description: "Veja como participar de cada projeto."
     url: /contribuir/

@@ -1,30 +1,36 @@
 ---
-title: "Arquivo"
+title: "Edições anteriores"
 kicker: "Histórico"
-description: "Obras disponíveis e as edições atualmente recomendadas pelo catálogo."
+description: "Versões anteriores das obras do REALMat, reunidas para consulta e referência."
 permalink: /arquivo/
 ---
 
-<p class="realmat-page-lead">O arquivo lista cada obra uma única vez, sempre com a última versão disponível. O histórico completo de versões fica na página individual de cada livro.</p>
+<p class="realmat-page-lead">A edição atual está na página de cada livro. Aqui ficam as versões anteriores, preservadas para consulta e citação.</p>
+<p class="realmat-note">Obras sem versões anteriores publicadas não aparecem nesta lista. As datas seguem o formato dia/mês/ano.</p>
 
-<h2>Histórico editorial</h2>
-
-<section class="realmat-updates" aria-label="Obras e versões atuais">
+<section class="realmat-updates" aria-label="Edições anteriores por obra">
 {% for book in site.data.books %}
-  {% assign book_url = '/livros/' | append: book.id | append: '/' %}
-  {% assign release = book.releases | where: "version", book.current_version | first %}
-  {% assign stage = site.data.translation_stages | where: "id", release.translation_stage | first %}
-  {% assign pdf = release.publications | where: "id", "pdf" | first %}
-  <article>
+  {% assign previous_releases = book.releases | reject: "version", book.current_version %}
+  {% if previous_releases.size > 0 %}
+    {% assign book_url = '/livros/' | append: book.id | append: '/' %}
+  <article id="{{ book.id }}">
     <header>
-      <span class="date">Atual · {{ release.version }} · {{ stage.label }}{% if release.release_date %} · {{ release.release_date }}{% endif %}</span>
+      <span class="date">Histórico de edições</span>
       <h2>{{ book.title }}</h2>
     </header>
-    <p>A edição {{ release.version }} de <em>{{ book.title }}</em> é a última versão disponível no catálogo.</p>
-    <a href="{{ book_url | relative_url }}">Ver a obra <span aria-hidden="true">↗</span></a>
-    <a href="{{ release.entrypoint.url }}" target="_blank" rel="noopener noreferrer">Ler o livro <span aria-hidden="true">↗</span></a>
-    <a href="{{ pdf.url }}" target="_blank" rel="noopener noreferrer">Baixar PDF <span aria-hidden="true">↓</span></a>
-    <a href="{{ release.release_url }}" target="_blank" rel="noopener noreferrer">Ver a release <span aria-hidden="true">↗</span></a>
+    <p><a href="{{ book_url | relative_url }}">Acessar a página do livro e a edição atual</a></p>
+    <ul class="realmat-release-list">
+    {% for release in previous_releases %}
+      {% assign stage = site.data.translation_stages | where: "id", release.translation_stage | first %}
+      {% assign pdf = release.publications | where: "id", "pdf" | first %}
+      <li>
+        <span class="date">{{ release.version }} · {{ stage.label }}{% if release.release_date %} · <time datetime="{{ release.release_date }}">{{ release.release_date | date: "%d/%m/%Y" }}</time>{% endif %}</span>
+        <a href="{{ release.release_url }}" target="_blank" rel="noopener noreferrer">Registro da edição no GitHub <span aria-hidden="true">↗</span></a>
+        <a href="{{ pdf.url }}" target="_blank" rel="noopener noreferrer">Baixar PDF <span aria-hidden="true">↓</span></a>
+      </li>
+    {% endfor %}
+    </ul>
   </article>
+  {% endif %}
 {% endfor %}
 </section>

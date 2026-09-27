@@ -1,8 +1,8 @@
 ---
 layout: single
-title: "Arquivo"
+title: "Edições anteriores"
 kicker: "Endereço atualizado"
-description: "O histórico do portal agora está disponível na página Arquivo."
+description: "As edições anteriores estão reunidas na página correspondente."
 permalink: /atualizacoes/
 sitemap: false
 ---
@@ -12,4 +12,4 @@ sitemap: false
   window.location.replace("{{ '/arquivo/' | relative_url }}");
 </script>
 
-<p>O histórico do portal agora está em <a href="{{ '/arquivo/' | relative_url }}">Arquivo</a>.</p>
+<p>As edições anteriores estão em <a href="{{ '/arquivo/' | relative_url }}">Edições anteriores</a>.</p>

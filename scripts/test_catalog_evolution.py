@@ -85,3 +85,9 @@ assert forallx["source_license"] == "CC BY 4.0"
 calgary = next(book for book in catalog if book["id"] == "forallx-yyc")
 assert calgary["title"] == "forall x: Calgary — Uma introdução à lógica formal"
 assert calgary["subject"] == "lógica formal"
+
+abstract_algebra = next(book for book in catalog if book["id"] == "aata")
+assert abstract_algebra["subject"] == "álgebra abstrata"
+real_analysis = next(book for book in catalog if book["id"] == "ra-volume-i")
+assert real_analysis["subject"] == "análise real"
+assert all(book["subject"] != "Real analysis" for book in catalog)
