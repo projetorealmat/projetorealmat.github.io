@@ -36,18 +36,28 @@
 
   function render(query) {
     var tokens = tokenize(query);
-    var matches = index.filter(function (item) {
+    if (!tokens.length) {
+      status.textContent = "Digite um título ou assunto para pesquisar.";
+      results.innerHTML = "";
+      return;
+    }
+
+    var allMatches = index.filter(function (item) {
       var haystack = normalize((item.title || "") + " " + (item.text || ""));
-      return !tokens.length || tokens.every(function (token) {
+      return tokens.every(function (token) {
         return haystack.indexOf(token) !== -1;
       });
-    }).slice(0, 20);
+    });
+    var matches = allMatches.slice(0, 20);
 
-    status.textContent = tokens.length
-      ? matches.length + " resultado(s) encontrado(s)."
-      : "Mostrando páginas do portal.";
+    status.textContent = matches.length === 1
+      ? "1 resultado encontrado."
+      : matches.length + " resultados encontrados.";
+    if (allMatches.length > matches.length) {
+      status.textContent += " Exibindo os 20 primeiros.";
+    }
 
-    if (!matches.length && tokens.length) {
+    if (!matches.length) {
       results.innerHTML = '<p class="realmat-search__empty">Nenhum resultado encontrado. Tente outro termo.</p>';
       return;
     }

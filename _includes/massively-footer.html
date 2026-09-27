@@ -15,8 +15,8 @@
       <p><a href="{{ '/livros/' | relative_url }}">Catálogo e edições disponíveis</a></p>
     </section>
     <section>
-      <h3>Arquivo</h3>
-      <p><a href="{{ '/arquivo/' | relative_url }}">Histórico do portal</a></p>
+      <h3>Edições</h3>
+      <p><a href="{{ '/arquivo/' | relative_url }}">Consulte versões anteriores das obras</a></p>
     </section>
     {% for book in site.data.books %}
       {% assign book_url = '/livros/' | append: book.id | append: '/' %}

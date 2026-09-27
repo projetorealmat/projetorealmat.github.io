@@ -3,7 +3,7 @@
   --realmat-orange-dark: #b9530b;
   --realmat-ink: #212931;
   --realmat-paper: #ffffff;
-  --realmat-muted: #717981;
+  --realmat-muted: #5f6872;
 }
 
 /* Small brand layer on top of the untouched Massively stylesheet. */
@@ -13,7 +13,7 @@
   left: 0.75rem;
   z-index: 10002;
   padding: 0.65rem 0.9rem;
-  background: var(--realmat-orange);
+  background: var(--realmat-blue);
   color: #fff !important;
   transform: translateY(-200%);
 }
@@ -97,9 +97,6 @@
   color: #fff !important;
 }
 
-.realmat-home .realmat-book-poster {
-  margin: 3rem 0;
-}
 .realmat-book-poster {
   display: flex;
   min-width: 0;
@@ -162,7 +159,7 @@
   letter-spacing: 0.13em;
   text-transform: uppercase;
 }
-.realmat-book-poster__formula {
+.realmat-book-poster__mark {
   align-self: flex-end;
   color: var(--realmat-orange);
   font-family: "Merriweather", Georgia, serif;
@@ -490,7 +487,7 @@ body {
 #navPanel a:focus-visible,
 #navPanel .icon:hover:before,
 #navPanel .icon:focus-visible:before {
-  color: var(--realmat-cyan) !important;
+  color: var(--realmat-blue-dark) !important;
 }
 
 #main > .post header.major > h1,
@@ -502,7 +499,7 @@ body {
 }
 #main a:not(.button):hover,
 #main a:not(.button):focus-visible {
-  color: var(--realmat-cyan) !important;
+  color: var(--realmat-blue-dark) !important;
 }
 
 #main .button,
@@ -536,19 +533,6 @@ body {
   color: #fff !important;
 }
 
-.realmat-logo-hero {
-  max-width: 62rem;
-  margin: 0 auto 3.5rem;
-  overflow: hidden;
-  border: 1px solid var(--realmat-border);
-  background: #fff;
-  box-shadow: 0 1.5rem 3rem rgba(7, 26, 52, 0.12);
-}
-.realmat-logo-hero img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
 .realmat-project-definition {
   border-left: 4px solid var(--realmat-gold);
   padding-left: 1.5rem;
@@ -595,7 +579,7 @@ body {
 }
 #footer a:hover,
 #footer a:focus-visible {
-  color: var(--realmat-cyan) !important;
+  color: var(--realmat-blue-dark) !important;
 }
 #copyright {
   margin-bottom: 0;
@@ -623,11 +607,7 @@ body {
 @media screen and (max-width: 736px) {
   #header .realmat-wordmark {
     font-size: 0.95rem;
-  }
-  .realmat-logo-hero {
-    margin-bottom: 2.25rem;
-  }
-  .realmat-topics {
+  }  .realmat-topics {
     grid-template-columns: 1fr;
   }
   .realmat-topic {
@@ -711,4 +691,41 @@ header.major > .date::after {
   header.major > .date::after {
     display: none;
   }
+}
+
+/* Readable text on every light surface, including secondary labels and form hints. */
+.realmat-card-mark,
+.realmat-facts__number {
+  color: var(--realmat-blue);
+}
+
+#main ::-webkit-input-placeholder,
+#main :-moz-placeholder,
+#main ::-moz-placeholder,
+#main :-ms-input-placeholder,
+#main ::placeholder,
+#main .formerize-placeholder,
+#footer ::-webkit-input-placeholder,
+#footer :-moz-placeholder,
+#footer ::-moz-placeholder,
+#footer :-ms-input-placeholder,
+#footer ::placeholder,
+#footer .formerize-placeholder {
+  color: var(--realmat-muted) !important;
+  opacity: 1;
+}
+
+#footer {
+  color: var(--realmat-muted);
+}
+#footer a {
+  color: var(--realmat-blue);
+}
+#footer input,
+#footer select,
+#footer textarea {
+  color: var(--realmat-ink);
+}
+#footer label {
+  color: var(--realmat-ink);
 }

@@ -29,12 +29,13 @@ STATIC_PAGES = {
         'id="main"',
         'class="post featured',
         'class="posts',
-        "Abrir a edição",
+        "Explorar a biblioteca",
+        "Livros para estudar e ensinar matemática",
         'href="/livros/"',
+        'href="/topicos/"',
         'href="/contribuir/"',
         'src="/assets/js/main.js"',
         "Recursos Educacionais Abertos na Licenciatura em Matemática",
-        "realmat-logo",
         "<h1>REALMat</h1>",
         "realmat-wordmark__icon",
         'href="/arquivo/"',
@@ -62,11 +63,12 @@ STATIC_PAGES = {
         'class="realmat-search"',
         "REALMAT_SEARCH_INDEX",
         'id="realmat-search-input"',
+        "O texto integral dos livros não está indexado.",
     ),
     "arquivo/index.html": (
         'class="post realmat-page"',
         "realmat-updates",
-        "Histórico editorial",
+        "Edições anteriores",
     ),
     "topicos/index.html": (
         'class="post realmat-page"',
@@ -76,6 +78,7 @@ STATIC_PAGES = {
     "atualizacoes/index.html": (
         'http-equiv="refresh"',
         'href="/arquivo/"',
+        "Edições anteriores",
     ),
 }
 
@@ -132,7 +135,7 @@ def check_navigation_order(errors):
         errors.append("index.html: menu principal ausente")
         return
     titles = re.findall(r"<a[^>]*>([^<]+)</a>", nav_match.group(1))
-    expected = ["Livros", "Arquivo", "Tópicos", "Contribuir", "Sobre"]
+    expected = ["Livros", "Tópicos", "Edições", "Contribuir", "Sobre"]
     if titles != expected:
         errors.append(f"index.html: ordem do menu inesperada: {titles}")
 
@@ -200,6 +203,18 @@ def check_search_index(errors, catalog):
             errors.append(f"buscar/index.html: livro não indexado: {expected_url}")
 
 
+def load_poster_marks():
+    path = SOURCE_ROOT / "_data" / "book_visuals.yml"
+    marks = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        identifier, raw_mark = line.split(":", 1)
+        marks[identifier.strip()] = json.loads(raw_mark.strip())
+    return marks
+
+
 def check_catalog_pages(errors, catalog):
     library = (ROOT / "livros" / "index.html").read_text(
         encoding="utf-8", errors="replace"
@@ -210,8 +225,9 @@ def check_catalog_pages(errors, catalog):
     topics = (ROOT / "topicos" / "index.html").read_text(
         encoding="utf-8", errors="replace"
     )
+    poster_marks = load_poster_marks()
 
-    for index, book in enumerate(catalog, start=1):
+    for book in catalog:
         current = next(
             release
             for release in book["releases"]
@@ -241,9 +257,7 @@ def check_catalog_pages(errors, catalog):
             reading_url,
             pdf["url"],
             repository_url,
-            current["release_url"],
-            "Histórico editorial",
-            "Versões publicadas",
+            "Situação da tradução",
             "Ler o livro",
             "Baixar PDF",
             "Repositório",
@@ -255,6 +269,16 @@ def check_catalog_pages(errors, catalog):
                 errors.append(
                     f"{detail_path.relative_to(ROOT)}: marcador ausente: {marker}"
                 )
+
+        mark = html.escape(poster_marks.get(book["id"], "∑"))
+        if mark not in detail:
+            errors.append(
+                f"{detail_path.relative_to(ROOT)}: marca visual ausente: {mark}"
+            )
+        if "Histórico editorial" in detail or "Versões publicadas" in detail:
+            errors.append(
+                f"{detail_path.relative_to(ROOT)}: histórico repetido na página do livro"
+            )
 
         actions_match = re.search(
             r'<ul class="actions">(.*?)</ul>',
@@ -276,51 +300,97 @@ def check_catalog_pages(errors, catalog):
 
         if book["title"] not in library:
             errors.append(f"livros/index.html: livro ausente: {book['title']}")
-        if book["title"] not in archive:
-            errors.append(f"arquivo/index.html: livro ausente: {book['title']}")
-        if book["subject"] not in topics:
-            errors.append(f"topicos/index.html: assunto ausente: {book['subject']}")
+        displayed_subject = book["subject"].capitalize()
+        if displayed_subject not in topics:
+            errors.append(f"topicos/index.html: assunto ausente: {displayed_subject}")
+        if "Real analysis" in topics:
+            errors.append("topicos/index.html: assunto em inglês ainda presente")
 
-        for release in book["releases"]:
-            if release["version"] not in detail:
+        if poster_marks.get(book["id"]) and poster_marks[book["id"]] not in library:
+            errors.append(f"livros/index.html: marca visual ausente: {book['id']}")
+
+        previous_releases = [
+            release
+            for release in book["releases"]
+            if release["version"] != book["current_version"]
+        ]
+        history_link = f'href="/arquivo/#{book["id"]}"'
+        if previous_releases and history_link not in detail:
+            errors.append(f"{detail_path.relative_to(ROOT)}: link para edições anteriores ausente")
+        if not previous_releases and history_link in detail:
+            errors.append(f"{detail_path.relative_to(ROOT)}: link sem histórico disponível")
+
+        for release in previous_releases:
+            if release["version"] in detail or release["release_url"] in detail:
                 errors.append(
-                    f"{detail_path.relative_to(ROOT)}: versão ausente: {release['version']}"
+                    f"{detail_path.relative_to(ROOT)}: edição histórica repetida: "
+                    f"{release['version']}"
                 )
-            if release["release_url"] not in detail:
-                errors.append(
-                    f"{detail_path.relative_to(ROOT)}: release ausente: {release['release_url']}"
-                )
+
+        if previous_releases and book["title"] not in archive:
+            errors.append(f"arquivo/index.html: obra ausente: {book['title']}")
 
 
 def check_archive_catalog(errors, catalog, archive):
-    articles = re.findall(r"<article>(.*?)</article>", archive, flags=re.S)
-    if len(articles) != len(catalog):
+    history_match = re.search(
+        r'<section class="realmat-updates"[^>]*>(.*?)</section>',
+        archive,
+        flags=re.S,
+    )
+    if not history_match:
+        errors.append("arquivo/index.html: lista de edições anteriores ausente")
+        return
+
+    historic_books = [
+        book for book in catalog
+        if any(release["version"] != book["current_version"] for release in book["releases"])
+    ]
+    articles = re.findall(
+        r'<article id="([^"]+)">(.*?)</article>',
+        history_match.group(1),
+        flags=re.S,
+    )
+    expected_ids = [book["id"] for book in historic_books]
+    rendered_ids = [identifier for identifier, _ in articles]
+    if rendered_ids != expected_ids:
         errors.append(
-            "arquivo/index.html: esperado um artigo por livro, "
-            f"encontrados {len(articles)} para {len(catalog)} livro(s)"
+            "arquivo/index.html: grupos de edições anteriores inesperados: "
+            f"{rendered_ids}"
         )
         return
 
-    for book, article in zip(catalog, articles):
-        current = next(
-            release
-            for release in book["releases"]
-            if release["version"] == book["current_version"]
-        )
-        if book["title"] not in article:
+    for book, (identifier, article) in zip(historic_books, articles):
+        if identifier != book["id"] or book["title"] not in article:
+            errors.append(f"arquivo/index.html: grupo incorreto para {book['id']}")
+        if book["current_version"] in article:
             errors.append(
-                f"arquivo/index.html: livro ausente ou fora da lista atual: {book['title']}"
+                f"arquivo/index.html: edição atual aparece no histórico de {book['id']}"
             )
-        if current["version"] not in article:
-            errors.append(
-                f"arquivo/index.html: versão atual ausente: {book['id']} {current['version']}"
-            )
-        for release in book["releases"]:
-            if release["version"] != current["version"] and release["version"] in article:
+
+        previous_releases = [
+            release for release in book["releases"]
+            if release["version"] != book["current_version"]
+        ]
+        for release in previous_releases:
+            pdf = publication(release, "pdf")
+            if release["version"] not in article:
                 errors.append(
-                    f"arquivo/index.html: versão histórica repetida: "
+                    f"arquivo/index.html: versão anterior ausente: "
                     f"{book['id']} {release['version']}"
                 )
+            if release["release_url"] not in article or pdf["url"] not in article:
+                errors.append(
+                    f"arquivo/index.html: links da edição ausentes: "
+                    f"{book['id']} {release['version']}"
+                )
+            if release.get("release_date"):
+                year, month, day = release["release_date"].split("-")
+                expected_date = f"{day}/{month}/{year}"
+                if expected_date not in article:
+                    errors.append(
+                        f"arquivo/index.html: data fora do padrão brasileiro: "
+                        f"{book['id']} {release['version']}"
+                    )
 
 
 def check_readable_pdf_assets(errors, catalog):
@@ -339,6 +409,70 @@ def check_readable_pdf_assets(errors, catalog):
             continue
         if asset.read_bytes()[:5] != b"%PDF-":
             errors.append(f"arquivo de leitura não é PDF: {asset.relative_to(ROOT)}")
+
+
+
+def _relative_luminance(hex_color):
+    channels = [int(hex_color[index:index + 2], 16) / 255 for index in (1, 3, 5)]
+    linear = [
+        channel / 12.92
+        if channel <= 0.04045
+        else ((channel + 0.055) / 1.055) ** 2.4
+        for channel in channels
+    ]
+    return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+
+def _contrast_ratio(foreground, background):
+    lighter, darker = sorted(
+        (_relative_luminance(foreground), _relative_luminance(background)),
+        reverse=True,
+    )
+    return (lighter + 0.05) / (darker + 0.05)
+
+
+def check_brand_contrast(errors):
+    css = (SOURCE_ROOT / "assets" / "css" / "realmat.css").read_text(encoding="utf-8")
+    palette = {}
+    for token in ("--realmat-blue", "--realmat-blue-dark", "--realmat-muted"):
+        match = re.search(rf"{re.escape(token)}:\s*(#[0-9a-fA-F]{{6}})", css)
+        if not match:
+            errors.append(f"assets/css/realmat.css: variável de cor ausente: {token}")
+            return
+        palette[token] = match.group(1)
+
+    surfaces = ("#ffffff", "#f4f7fb")
+    for token in palette:
+        for surface in surfaces:
+            ratio = _contrast_ratio(palette[token], surface)
+            if ratio < 4.5:
+                errors.append(
+                    f"assets/css/realmat.css: contraste insuficiente para {token} "
+                    f"em {surface}: {ratio:.2f}:1"
+                )
+
+    skip_rule = re.search(r"\.realmat-skip-link\s*\{([^}]+)\}", css, flags=re.S)
+    if not skip_rule or "background: var(--realmat-blue)" not in skip_rule.group(1):
+        errors.append("assets/css/realmat.css: link de foco deve usar o azul de alto contraste")
+    elif "color: #fff !important" not in skip_rule.group(1):
+        errors.append("assets/css/realmat.css: texto do link de foco deve permanecer legível")
+    if "color: var(--realmat-blue-dark) !important;" not in css:
+        errors.append("assets/css/realmat.css: links de interação devem manter contraste elevado")
+
+    footer_rules = re.findall(r"#footer\s*\{([^{}]*)\}", css)
+    footer_link_rules = re.findall(r"#footer a\s*\{([^{}]*)\}", css)
+    if not footer_rules or "color: var(--realmat-muted)" not in footer_rules[-1]:
+        errors.append("assets/css/realmat.css: texto do rodapé deve usar cinza acessível")
+    if not footer_link_rules or "color: var(--realmat-blue)" not in footer_link_rules[-1]:
+        errors.append("assets/css/realmat.css: links do rodapé devem usar azul acessível")
+    if "color: var(--realmat-muted) !important;" not in css:
+        errors.append("assets/css/realmat.css: textos de ajuda devem manter contraste")
+    if not re.search(
+        r"\.realmat-card-mark,\s*\.realmat-facts__number\s*\{\s*color: var\(--realmat-blue\)",
+        css,
+    ):
+        errors.append("assets/css/realmat.css: marcas numéricas devem usar azul acessível")
+
 
 
 def check_branding(errors):
@@ -364,6 +498,8 @@ def main() -> int:
         for marker in markers:
             if marker not in content:
                 errors.append(f"{relative_path}: marcador ausente: {marker}")
+        if relative_path == "index.html" and 'src="/assets/images/realmat-logo.jpg"' in content:
+            errors.append("index.html: imagem de marca repetida no destaque")
         liquid_check_content = (
             _without_search_index_script(content)
             if relative_path == "buscar/index.html"
@@ -383,6 +519,7 @@ def main() -> int:
     check_internal_links(errors)
     check_search_index(errors, catalog)
     check_branding(errors)
+    check_brand_contrast(errors)
 
     if errors:
         print("Generated REALMat site checks failed:")

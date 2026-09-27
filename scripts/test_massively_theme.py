@@ -19,6 +19,21 @@ REQUIRED = {
         '"translation_stage"',
         '"publications"',
         '"release_date"',
+        '"source_title"',
+        '"source_authors"',
+        '"source_license_url"',
+    ),
+    "_data/navigation.yml": ("Edições", "/arquivo/"),
+    "_data/book_visuals.yml": (
+        "forallx:",
+        "forallx-yyc:",
+        "aata:",
+        "ra-volume-i:",
+    ),
+    "_includes/book-poster-content.html": (
+        "site.data.book_visuals",
+        "realmat-book-poster__mark",
+        "poster_book.short_title",
     ),
     "_data/translation_stages.yml": (
         "unreviewed",
@@ -88,9 +103,10 @@ REQUIRED = {
         'class="post featured',
         'class="posts',
         "REALMat",
-        "featured_book",
-        "featured_release",
+        "Livros para estudar e ensinar matemática",
+        "Explorar a biblioteca",
         "/livros/",
+        "/topicos/",
         "/contribuir/",
     ),
     "_pages/livros.md": (
@@ -108,11 +124,13 @@ REQUIRED = {
         "book.releases",
         "release.version",
         "release.release_url",
+        "where_exp:",
     ),
     "_pages/topicos.md": (
         "group_by:",
         "site.data.books",
         "book.title",
+        "group.name | capitalize",
     ),
     "_pages/buscar.md": (
         "REALMAT_SEARCH_INDEX",
@@ -133,7 +151,6 @@ REQUIRED = {
         "--realmat-cyan",
         "--realmat-orange",
         "realmat-bg",
-        "realmat-logo",
         "brand-real",
         "realmat-wordmark__icon",
         "#wrapper.fade-in:before",
@@ -150,9 +167,9 @@ REQUIRED = {
         "URLSearchParams",
         ".every",
     ),
-    "scripts/validate_catalog.py": ("current_version", "RELEASE_FIELDS", "translation_stage", "publications"),
+    "scripts/validate_catalog.py": ("current_version", "RELEASE_FIELDS", "translation_stage", "publications", "source_license_url"),
     "scripts/download_catalog_assets.py": ("current_release", "publications", "canonical PDF"),
-    "scripts/generate_book_pages.py": ("OUTPUT_DIR", "current_release", "stage_label", "publications", "Histórico editorial"),
+    "scripts/generate_book_pages.py": ("OUTPUT_DIR", "current_release", "stage_label", "publications", "book-poster-content.html", "/arquivo/#", "source_authors", "source_license"),
 }
 
 FORBIDDEN = (

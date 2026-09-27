@@ -48,10 +48,10 @@ for book in catalog:
     assert isinstance(book.get("current_version"), str), f"{book.get('id')}: current_version missing"
     assert isinstance(book.get("repository"), str), f"{book.get('id')}: repository missing"
     assert book.get("translation_stage") in {"unreviewed", "reviewed", "adapted"}
-    if "source_url" in book:
-        assert isinstance(book["source_url"], str) and book["source_url"].startswith(("http://", "https://"))
-    if "source_license" in book:
-        assert isinstance(book["source_license"], str) and book["source_license"].strip()
+    for field in ("source_url", "source_title", "source_authors", "source_license", "source_license_url"):
+        assert isinstance(book.get(field), str) and book[field].strip(), f"{book['id']}: {field} missing"
+    assert book["source_url"].startswith(("http://", "https://"))
+    assert book["source_license_url"].startswith(("http://", "https://"))
     releases = book.get("releases")
     assert isinstance(releases, list) and releases, f"{book.get('id')}: releases history missing"
     versions = [release.get("version") for release in releases]
@@ -80,8 +80,17 @@ assert release_013["entrypoint"]["id"] == "pdf"
 assert release_013["publications"][0]["url"].endswith("/v0.1.3/forallx.pdf")
 
 assert forallx["source_url"] == "https://github.com/OpenLogicProject/forallx"
-assert forallx["source_license"] == "CC BY 4.0"
+assert "CC BY 4.0" in forallx["source_license"]
+assert next(book for book in catalog if book["id"] == "aata")["source_license_url"].startswith(
+    "https://github.com/twjudson/aata/blob/"
+)
 
 calgary = next(book for book in catalog if book["id"] == "forallx-yyc")
 assert calgary["title"] == "forall x: Calgary — Uma introdução à lógica formal"
 assert calgary["subject"] == "lógica formal"
+
+abstract_algebra = next(book for book in catalog if book["id"] == "aata")
+assert abstract_algebra["subject"] == "álgebra abstrata"
+real_analysis = next(book for book in catalog if book["id"] == "ra-volume-i")
+assert real_analysis["subject"] == "análise real"
+assert all(book["subject"] != "Real analysis" for book in catalog)

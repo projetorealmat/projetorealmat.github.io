@@ -12,12 +12,12 @@ permalink: /buscar/
       <input id="realmat-search-input" type="search" name="q" placeholder="Digite um título ou assunto" autocomplete="off" aria-describedby="realmat-search-help">
       <button class="button primary" type="submit">Buscar</button>
     </div>
-    <p id="realmat-search-help" class="realmat-search__help">A busca considera títulos, assuntos e textos das páginas do portal.</p>
+    <p id="realmat-search-help" class="realmat-search__help">A busca considera o conteúdo das páginas do portal e os dados básicos dos livros: título, assunto e versão atual. O texto integral dos livros não está indexado.</p>
   </form>
 
   <p id="realmat-search-status" class="realmat-search__status" aria-live="polite"></p>
   <div id="realmat-search-results" class="realmat-search__results"></div>
-  <noscript><p class="realmat-search__noscript">Ative JavaScript para pesquisar no conteúdo do portal.</p></noscript>
+  <noscript><p class="realmat-search__noscript">Ative JavaScript para usar a busca. Você também pode explorar os <a href="{{ '/livros/' | relative_url }}">livros</a> e os <a href="{{ '/topicos/' | relative_url }}">tópicos</a>.</p></noscript>
 </div>
 
 <script>
