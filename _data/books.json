@@ -94,7 +94,10 @@
       }
     ],
     "source_url": "https://github.com/OpenLogicProject/forallx",
-    "source_license": "CC BY 4.0"
+    "source_license": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+    "source_title": "forallx: An Introduction to Formal Logic",
+    "source_authors": "P. D. Magnus; edição mantida pelo Open Logic Project",
+    "source_license_url": "https://creativecommons.org/licenses/by/4.0/"
   },
   {
     "id": "forallx-yyc",
@@ -132,7 +135,12 @@
           }
         ]
       }
-    ]
+    ],
+    "source_url": "https://github.com/rzach/forallx-yyc",
+    "source_title": "forall x: Calgary: An Introduction to Formal Logic",
+    "source_authors": "Aaron Thomas-Bolduc e Richard Zach; baseado também em obras de Tim Button e P. D. Magnus",
+    "source_license": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+    "source_license_url": "https://creativecommons.org/licenses/by/4.0/"
   },
   {
     "id": "aata",
@@ -251,7 +259,12 @@
           }
         ]
       }
-    ]
+    ],
+    "source_url": "https://github.com/twjudson/aata",
+    "source_title": "Abstract Algebra: Theory and Applications",
+    "source_authors": "Thomas W. Judson; exercícios com Sage de Robert A. Beezer",
+    "source_license": "GNU Free Documentation License 1.2 ou posterior, sem seções invariantes, textos de capa ou contracapa",
+    "source_license_url": "https://www.gnu.org/licenses/old-licenses/fdl-1.2.html"
   },
   {
     "id": "ra-volume-i",
@@ -316,6 +329,11 @@
           }
         ]
       }
-    ]
+    ],
+    "source_url": "https://www.jirka.org/ra/",
+    "source_title": "Basic Analysis: Introduction to Real Analysis, Volume I",
+    "source_authors": "Jiří Lebl",
+    "source_license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) ou Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0), conforme a opção compatível indicada pelo autor",
+    "source_license_url": "https://www.jirka.org/ra/"
   }
 ]
