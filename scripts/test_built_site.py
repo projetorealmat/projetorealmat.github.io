@@ -300,8 +300,9 @@ def check_catalog_pages(errors, catalog):
 
         if book["title"] not in library:
             errors.append(f"livros/index.html: livro ausente: {book['title']}")
-        if book["subject"] not in topics:
-            errors.append(f"topicos/index.html: assunto ausente: {book['subject']}")
+        displayed_subject = book["subject"].capitalize()
+        if displayed_subject not in topics:
+            errors.append(f"topicos/index.html: assunto ausente: {displayed_subject}")
         if "Real analysis" in topics:
             errors.append("topicos/index.html: assunto em inglês ainda presente")
 
