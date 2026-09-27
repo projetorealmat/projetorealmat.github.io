@@ -5,7 +5,7 @@ description: "Orientações gerais e caminhos de colaboração para os projetos 
 permalink: /contribuir/
 ---
 
-<p class="realmat-page-lead">O portal é o espaço de leitura. Esta página reúne o fluxo geral para editar, revisar e publicar as obras; cada página de livro encaminha para o repositório correspondente.</p>
+<p class="realmat-page-lead">Participe da revisão, adaptação e manutenção das obras do REALMat. O portal é o espaço de leitura. Esta página reúne o fluxo geral para editar, revisar e publicar as obras; cada página de livro encaminha para o repositório correspondente.</p>
 
 {% for book in site.data.books %}
   {% assign current = book.releases | where: "version", book.current_version | first %}
@@ -14,7 +14,6 @@ permalink: /contribuir/
   <div>
     <span class="date">Projeto de tradução · {{ current.version }} · {{ stage.label }}</span>
     <h2 id="contribute-{{ book.id }}-title">{{ book.title }}</h2>
-    <p>Participe da revisão, adaptação e manutenção desta obra.</p>
   </div>
   <div class="realmat-contribution__links">
     <a href="https://github.com/{{ current.repository }}/issues" class="button primary" target="_blank" rel="noopener noreferrer">Discussões e correções <span aria-hidden="true">↗</span></a>
