@@ -19,6 +19,9 @@ REQUIRED = {
         '"translation_stage"',
         '"publications"',
         '"release_date"',
+        '"source_title"',
+        '"source_authors"',
+        '"source_license_url"',
     ),
     "_data/navigation.yml": ("Edições", "/arquivo/"),
     "_data/book_visuals.yml": (
@@ -121,11 +124,13 @@ REQUIRED = {
         "book.releases",
         "release.version",
         "release.release_url",
+        "where_exp:",
     ),
     "_pages/topicos.md": (
         "group_by:",
         "site.data.books",
         "book.title",
+        "group.name | capitalize",
     ),
     "_pages/buscar.md": (
         "REALMAT_SEARCH_INDEX",
@@ -162,9 +167,9 @@ REQUIRED = {
         "URLSearchParams",
         ".every",
     ),
-    "scripts/validate_catalog.py": ("current_version", "RELEASE_FIELDS", "translation_stage", "publications"),
+    "scripts/validate_catalog.py": ("current_version", "RELEASE_FIELDS", "translation_stage", "publications", "source_license_url"),
     "scripts/download_catalog_assets.py": ("current_release", "publications", "canonical PDF"),
-    "scripts/generate_book_pages.py": ("OUTPUT_DIR", "current_release", "stage_label", "publications", "book-poster-content.html", "/arquivo/#"),
+    "scripts/generate_book_pages.py": ("OUTPUT_DIR", "current_release", "stage_label", "publications", "book-poster-content.html", "/arquivo/#", "source_authors", "source_license"),
 }
 
 FORBIDDEN = (
