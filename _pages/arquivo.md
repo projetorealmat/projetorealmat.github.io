@@ -10,7 +10,7 @@ permalink: /arquivo/
 
 <section class="realmat-updates" aria-label="Edições anteriores por obra">
 {% for book in site.data.books %}
-  {% assign previous_releases = book.releases | reject: "version", book.current_version %}
+  {% assign previous_releases = book.releases | where_exp: "release", "release.version != book.current_version" %}
   {% if previous_releases.size > 0 %}
     {% assign book_url = '/livros/' | append: book.id | append: '/' %}
   <article id="{{ book.id }}">
