@@ -90,15 +90,21 @@ def render_book(index: int, book: dict) -> str:
     source_note = ""
     if book.get("source_url"):
         source_url = html.escape(book["source_url"], quote=True)
+        license_url = html.escape(book["source_license_url"], quote=True)
+        source_title = html.escape(book["source_title"])
+        source_authors = html.escape(book["source_authors"])
+        source_license = html.escape(book["source_license"])
         source_note = (
-            '<p class="realmat-note">Obra de origem: '
+            '<section class="realmat-source" aria-label="Origem e licença da obra">'
+            '<p class="realmat-note"><strong>Obra de origem:</strong> '
+            f'<em>{source_title}</em>, {source_authors}. '
             f'<a href="{source_url}" target="_blank" rel="noopener noreferrer">'
-            "repositório original</a>"
+            "Consultar a fonte</a>.</p>"
+            '<p class="realmat-note"><strong>Licença indicada na fonte:</strong> '
+            f'{source_license}. '
+            f'<a href="{license_url}" target="_blank" rel="noopener noreferrer">'
+            "Ver a declaração original</a>.</p></section>"
         )
-        if book.get("source_license"):
-            source_license = html.escape(book["source_license"])
-            source_note += f" · Licença da obra original: {source_license}"
-        source_note += ".</p>"
 
     previous_count = sum(
         release["version"] != book["current_version"]
